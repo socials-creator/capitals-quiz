@@ -583,7 +583,6 @@
       </div>
     </div>
 
-
     <div class="startArea">
 
       <div class="startButtons">
@@ -595,7 +594,6 @@
           </span>
         </button>
 
-
         <button class="practiceGame" id="practiceGame">
           <strong>Practice</strong>
           <span>
@@ -604,7 +602,6 @@
         </button>
 
       </div>
-
 
       <aside class="history">
 
@@ -617,7 +614,6 @@
       </aside>
 
     </div>
-
 
     <div class="footer">
       Works offline after first load · Add to Home Screen
@@ -636,6 +632,7 @@
         <button
           id="exitPractice"
           class="exitPractice"
+          type="button"
         >
           Exit
         </button>
@@ -652,13 +649,9 @@
 
     </div>
 
-
     <div id="timerWrap" class="timerWrap">
-
       <div id="timer" class="timer"></div>
-
     </div>
-
 
     <section class="questionCard">
 
@@ -677,6 +670,7 @@
       <button
         id="submit"
         class="submit"
+        type="button"
         disabled
       >
         Check answer
@@ -689,7 +683,7 @@
 </div>
 
 
-<!-- NORMAL GAME RESULT -->
+<!-- NORMAL GAME / PRACTICE COMPLETE RESULT -->
 <div id="result" class="result">
 
   <div class="resultCard">
@@ -710,13 +704,14 @@
 
     <div class="resultActions">
 
-      <button id="homeBtn">
+      <button id="homeBtn" type="button">
         Home
       </button>
 
       <button
         id="againBtn"
         class="primary"
+        type="button"
       >
         Play again
       </button>
@@ -745,7 +740,6 @@
       class="answerCountry"
     ></div>
 
-
     <div class="answerLine">
       Correct answer
     </div>
@@ -754,7 +748,6 @@
       id="answerValue"
       class="answerValue"
     ></div>
-
 
     <div
       id="yourAnswerLine"
@@ -769,10 +762,10 @@
       class="answerValue"
     ></div>
 
-
     <button
       id="answerNext"
       class="answerNext"
+      type="button"
     >
       Next
     </button>
@@ -785,101 +778,245 @@
 <script>
 
 const COUNTRIES = [
-["Afghanistan",["Kabul"]],["Albania",["Tirana"]],["Algeria",["Algiers"]],["Andorra",["Andorra la Vella"]],
-["Angola",["Luanda"]],["Antigua and Barbuda",["Saint John's"]],["Argentina",["Buenos Aires"]],["Armenia",["Yerevan"]],
-["Australia",["Canberra"]],["Austria",["Vienna"]],["Azerbaijan",["Baku"]],["Bahamas",["Nassau"]],
-["Bahrain",["Manama"]],["Bangladesh",["Dhaka"]],["Barbados",["Bridgetown"]],["Belarus",["Minsk"]],
-["Belgium",["Brussels"]],["Belize",["Belmopan"]],["Benin",["Porto-Novo","Cotonou"]],["Bhutan",["Thimphu"]],
-["Bolivia",["Sucre","La Paz"]],["Bosnia and Herzegovina",["Sarajevo"]],["Botswana",["Gaborone"]],
-["Brazil",["Brasília"]],["Brunei",["Bandar Seri Begawan"]],["Bulgaria",["Sofia"]],["Burkina Faso",["Ouagadougou"]],
-["Burundi",["Gitega"]],["Cabo Verde",["Praia"]],["Cambodia",["Phnom Penh"]],["Cameroon",["Yaoundé"]],
-["Canada",["Ottawa"]],["Central African Republic",["Bangui"]],["Chad",["N'Djamena"]],["Chile",["Santiago"]],
-["China",["Beijing"]],["Colombia",["Bogotá"]],["Comoros",["Moroni"]],["Congo (Republic of the)",["Brazzaville"]],
-["Costa Rica",["San José"]],["Côte d'Ivoire",["Yamoussoukro","Abidjan"]],["Croatia",["Zagreb"]],
-["Cuba",["Havana"]],["Cyprus",["Nicosia"]],["Czechia",["Prague"]],["Democratic Republic of the Congo",["Kinshasa"]],
-["Denmark",["Copenhagen"]],["Djibouti",["Djibouti"]],["Dominica",["Roseau"]],["Dominican Republic",["Santo Domingo"]],
-["Ecuador",["Quito"]],["Egypt",["Cairo"]],["El Salvador",["San Salvador"]],["Equatorial Guinea",["Malabo"]],
-["Eritrea",["Asmara"]],["Estonia",["Tallinn"]],["Eswatini",["Mbabane","Lobamba"]],["Ethiopia",["Addis Ababa"]],
-["Fiji",["Suva"]],["Finland",["Helsinki"]],["France",["Paris"]],["Gabon",["Libreville"]],
-["Gambia",["Banjul"]],["Georgia",["Tbilisi"]],["Germany",["Berlin"]],["Ghana",["Accra"]],
-["Greece",["Athens"]],["Grenada",["St. George's"]],["Guatemala",["Guatemala City"]],["Guinea",["Conakry"]],
-["Guinea-Bissau",["Bissau"]],["Guyana",["Georgetown"]],["Haiti",["Port-au-Prince"]],["Honduras",["Tegucigalpa"]],
-["Hungary",["Budapest"]],["Iceland",["Reykjavík"]],["India",["New Delhi"]],["Indonesia",["Jakarta"]],
-["Iran",["Tehran"]],["Iraq",["Baghdad"]],["Ireland",["Dublin"]],["Israel",["Jerusalem"]],
-["Italy",["Rome"]],["Jamaica",["Kingston"]],["Japan",["Tokyo"]],["Jordan",["Amman"]],
-["Kazakhstan",["Astana"]],["Kenya",["Nairobi"]],["Kiribati",["South Tarawa"]],["Kuwait",["Kuwait City"]],
-["Kyrgyzstan",["Bishkek"]],["Laos",["Vientiane"]],["Latvia",["Riga"]],["Lebanon",["Beirut"]],
-["Lesotho",["Maseru"]],["Liberia",["Monrovia"]],["Libya",["Tripoli"]],["Liechtenstein",["Vaduz"]],
-["Lithuania",["Vilnius"]],["Luxembourg",["Luxembourg"]],["Madagascar",["Antananarivo"]],["Malawi",["Lilongwe"]],
-["Malaysia",["Kuala Lumpur","Putrajaya"]],["Maldives",["Malé"]],["Mali",["Bamako"]],["Malta",["Valletta"]],
-["Marshall Islands",["Majuro"]],["Mauritania",["Nouakchott"]],["Mauritius",["Port Louis"]],["Mexico",["Mexico City"]],
-["Micronesia",["Palikir"]],["Moldova",["Chișinău"]],["Monaco",["Monaco"]],["Mongolia",["Ulaanbaatar"]],
-["Montenegro",["Podgorica"]],["Morocco",["Rabat"]],["Mozambique",["Maputo"]],["Myanmar",["Naypyidaw"]],
-["Namibia",["Windhoek"]],["Nauru",["Yaren"]],["Nepal",["Kathmandu"]],["Netherlands",["Amsterdam","The Hague"]],
-["New Zealand",["Wellington"]],["Nicaragua",["Managua"]],["Niger",["Niamey"]],["Nigeria",["Abuja"]],
-["North Korea",["Pyongyang"]],["North Macedonia",["Skopje"]],["Norway",["Oslo"]],["Oman",["Muscat"]],
-["Pakistan",["Islamabad"]],["Palau",["Ngerulmud"]],["Palestine",["East Jerusalem","Ramallah"]],["Panama",["Panama City"]],
-["Papua New Guinea",["Port Moresby"]],["Paraguay",["Asunción"]],["Peru",["Lima"]],["Philippines",["Manila"]],
-["Poland",["Warsaw"]],["Portugal",["Lisbon"]],["Qatar",["Doha"]],["Romania",["Bucharest"]],
-["Russia",["Moscow"]],["Rwanda",["Kigali"]],["Saint Kitts and Nevis",["Basseterre"]],["Saint Lucia",["Castries"]],
-["Saint Vincent and the Grenadines",["Kingstown"]],["Samoa",["Apia"]],["San Marino",["San Marino"]],
-["São Tomé and Príncipe",["São Tomé"]],["Saudi Arabia",["Riyadh"]],["Senegal",["Dakar"]],["Serbia",["Belgrade"]],
-["Seychelles",["Victoria"]],["Sierra Leone",["Freetown"]],["Singapore",["Singapore"]],["Slovakia",["Bratislava"]],
-["Slovenia",["Ljubljana"]],["Solomon Islands",["Honiara"]],["Somalia",["Mogadishu"]],
-["South Africa",["Pretoria","Cape Town","Bloemfontein"]],["South Korea",["Seoul"]],["South Sudan",["Juba"]],
-["Spain",["Madrid"]],["Sri Lanka",["Sri Jayawardenepura Kotte","Colombo"]],["Sudan",["Khartoum"]],
-["Suriname",["Paramaribo"]],["Sweden",["Stockholm"]],["Switzerland",["Bern"]],["Syria",["Damascus"]],
-["Tajikistan",["Dushanbe"]],["Tanzania",["Dodoma","Dar es Salaam"]],["Thailand",["Bangkok"]],
-["Timor-Leste",["Dili"]],["Togo",["Lomé"]],["Tonga",["Nuku'alofa"]],["Trinidad and Tobago",["Port of Spain"]],
-["Tunisia",["Tunis"]],["Türkiye",["Ankara"]],["Turkmenistan",["Ashgabat"]],["Tuvalu",["Funafuti"]],
-["Uganda",["Kampala"]],["Ukraine",["Kyiv"]],["United Arab Emirates",["Abu Dhabi"]],["United Kingdom",["London"]],
-["United States",["Washington, D.C."]],["Uruguay",["Montevideo"]],["Uzbekistan",["Tashkent"]],["Vanuatu",["Port Vila"]],
-["Vatican City",["Vatican City"]],["Venezuela",["Caracas"]],["Vietnam",["Hanoi"]],["Yemen",["Sana'a"]],
-["Zambia",["Lusaka"]],["Zimbabwe",["Harare"]]
+["Afghanistan",["Kabul"]],
+["Albania",["Tirana"]],
+["Algeria",["Algiers"]],
+["Andorra",["Andorra la Vella"]],
+["Angola",["Luanda"]],
+["Antigua and Barbuda",["Saint John's"]],
+["Argentina",["Buenos Aires"]],
+["Armenia",["Yerevan"]],
+["Australia",["Canberra"]],
+["Austria",["Vienna"]],
+["Azerbaijan",["Baku"]],
+["Bahamas",["Nassau"]],
+["Bahrain",["Manama"]],
+["Bangladesh",["Dhaka"]],
+["Barbados",["Bridgetown"]],
+["Belarus",["Minsk"]],
+["Belgium",["Brussels"]],
+["Belize",["Belmopan"]],
+["Benin",["Porto-Novo","Cotonou"]],
+["Bhutan",["Thimphu"]],
+["Bolivia",["Sucre","La Paz"]],
+["Bosnia and Herzegovina",["Sarajevo"]],
+["Botswana",["Gaborone"]],
+["Brazil",["Brasília"]],
+["Brunei",["Bandar Seri Begawan"]],
+["Bulgaria",["Sofia"]],
+["Burkina Faso",["Ouagadougou"]],
+["Burundi",["Gitega"]],
+["Cabo Verde",["Praia"]],
+["Cambodia",["Phnom Penh"]],
+["Cameroon",["Yaoundé"]],
+["Canada",["Ottawa"]],
+["Central African Republic",["Bangui"]],
+["Chad",["N'Djamena"]],
+["Chile",["Santiago"]],
+["China",["Beijing"]],
+["Colombia",["Bogotá"]],
+["Comoros",["Moroni"]],
+["Congo (Republic of the)",["Brazzaville"]],
+["Costa Rica",["San José"]],
+["Côte d'Ivoire",["Yamoussoukro","Abidjan"]],
+["Croatia",["Zagreb"]],
+["Cuba",["Havana"]],
+["Cyprus",["Nicosia"]],
+["Czechia",["Prague"]],
+["Democratic Republic of the Congo",["Kinshasa"]],
+["Denmark",["Copenhagen"]],
+["Djibouti",["Djibouti"]],
+["Dominica",["Roseau"]],
+["Dominican Republic",["Santo Domingo"]],
+["Ecuador",["Quito"]],
+["Egypt",["Cairo"]],
+["El Salvador",["San Salvador"]],
+["Equatorial Guinea",["Malabo"]],
+["Eritrea",["Asmara"]],
+["Estonia",["Tallinn"]],
+["Eswatini",["Mbabane","Lobamba"]],
+["Ethiopia",["Addis Ababa"]],
+["Fiji",["Suva"]],
+["Finland",["Helsinki"]],
+["France",["Paris"]],
+["Gabon",["Libreville"]],
+["Gambia",["Banjul"]],
+["Georgia",["Tbilisi"]],
+["Germany",["Berlin"]],
+["Ghana",["Accra"]],
+["Greece",["Athens"]],
+["Grenada",["St. George's"]],
+["Guatemala",["Guatemala City"]],
+["Guinea",["Conakry"]],
+["Guinea-Bissau",["Bissau"]],
+["Guyana",["Georgetown"]],
+["Haiti",["Port-au-Prince"]],
+["Honduras",["Tegucigalpa"]],
+["Hungary",["Budapest"]],
+["Iceland",["Reykjavík"]],
+["India",["New Delhi"]],
+["Indonesia",["Jakarta"]],
+["Iran",["Tehran"]],
+["Iraq",["Baghdad"]],
+["Ireland",["Dublin"]],
+["Israel",["Jerusalem"]],
+["Italy",["Rome"]],
+["Jamaica",["Kingston"]],
+["Japan",["Tokyo"]],
+["Jordan",["Amman"]],
+["Kazakhstan",["Astana"]],
+["Kenya",["Nairobi"]],
+["Kiribati",["South Tarawa"]],
+["Kuwait",["Kuwait City"]],
+["Kyrgyzstan",["Bishkek"]],
+["Laos",["Vientiane"]],
+["Latvia",["Riga"]],
+["Lebanon",["Beirut"]],
+["Lesotho",["Maseru"]],
+["Liberia",["Monrovia"]],
+["Libya",["Tripoli"]],
+["Liechtenstein",["Vaduz"]],
+["Lithuania",["Vilnius"]],
+["Luxembourg",["Luxembourg"]],
+["Madagascar",["Antananarivo"]],
+["Malawi",["Lilongwe"]],
+["Malaysia",["Kuala Lumpur","Putrajaya"]],
+["Maldives",["Malé"]],
+["Mali",["Bamako"]],
+["Malta",["Valletta"]],
+["Marshall Islands",["Majuro"]],
+["Mauritania",["Nouakchott"]],
+["Mauritius",["Port Louis"]],
+["Mexico",["Mexico City"]],
+["Micronesia",["Palikir"]],
+["Moldova",["Chișinău"]],
+["Monaco",["Monaco"]],
+["Mongolia",["Ulaanbaatar"]],
+["Montenegro",["Podgorica"]],
+["Morocco",["Rabat"]],
+["Mozambique",["Maputo"]],
+["Myanmar",["Naypyidaw"]],
+["Namibia",["Windhoek"]],
+["Nauru",["Yaren"]],
+["Nepal",["Kathmandu"]],
+["Netherlands",["Amsterdam","The Hague"]],
+["New Zealand",["Wellington"]],
+["Nicaragua",["Managua"]],
+["Niger",["Niamey"]],
+["Nigeria",["Abuja"]],
+["North Korea",["Pyongyang"]],
+["North Macedonia",["Skopje"]],
+["Norway",["Oslo"]],
+["Oman",["Muscat"]],
+["Pakistan",["Islamabad"]],
+["Palau",["Ngerulmud"]],
+["Palestine",["East Jerusalem","Ramallah"]],
+["Panama",["Panama City"]],
+["Papua New Guinea",["Port Moresby"]],
+["Paraguay",["Asunción"]],
+["Peru",["Lima"]],
+["Philippines",["Manila"]],
+["Poland",["Warsaw"]],
+["Portugal",["Lisbon"]],
+["Qatar",["Doha"]],
+["Romania",["Bucharest"]],
+["Russia",["Moscow"]],
+["Rwanda",["Kigali"]],
+["Saint Kitts and Nevis",["Basseterre"]],
+["Saint Lucia",["Castries"]],
+["Saint Vincent and the Grenadines",["Kingstown"]],
+["Samoa",["Apia"]],
+["San Marino",["San Marino"]],
+["São Tomé and Príncipe",["São Tomé"]],
+["Saudi Arabia",["Riyadh"]],
+["Senegal",["Dakar"]],
+["Serbia",["Belgrade"]],
+["Seychelles",["Victoria"]],
+["Sierra Leone",["Freetown"]],
+["Singapore",["Singapore"]],
+["Slovakia",["Bratislava"]],
+["Slovenia",["Ljubljana"]],
+["Solomon Islands",["Honiara"]],
+["Somalia",["Mogadishu"]],
+["South Africa",["Pretoria","Cape Town","Bloemfontein"]],
+["South Korea",["Seoul"]],
+["South Sudan",["Juba"]],
+["Spain",["Madrid"]],
+["Sri Lanka",["Sri Jayawardenepura Kotte","Colombo"]],
+["Sudan",["Khartoum"]],
+["Suriname",["Paramaribo"]],
+["Sweden",["Stockholm"]],
+["Switzerland",["Bern"]],
+["Syria",["Damascus"]],
+["Tajikistan",["Dushanbe"]],
+["Tanzania",["Dodoma","Dar es Salaam"]],
+["Thailand",["Bangkok"]],
+["Timor-Leste",["Dili"]],
+["Togo",["Lomé"]],
+["Tonga",["Nuku'alofa"]],
+["Trinidad and Tobago",["Port of Spain"]],
+["Tunisia",["Tunis"]],
+["Türkiye",["Ankara"]],
+["Turkmenistan",["Ashgabat"]],
+["Tuvalu",["Funafuti"]],
+["Uganda",["Kampala"]],
+["Ukraine",["Kyiv"]],
+["United Arab Emirates",["Abu Dhabi"]],
+["United Kingdom",["London"]],
+["United States",["Washington, D.C."]],
+["Uruguay",["Montevideo"]],
+["Uzbekistan",["Tashkent"]],
+["Vanuatu",["Port Vila"]],
+["Vatican City",["Vatican City"]],
+["Venezuela",["Caracas"]],
+["Vietnam",["Hanoi"]],
+["Yemen",["Sana'a"]],
+["Zambia",["Lusaka"]],
+["Zimbabwe",["Harare"]]
 ];
 
 
 const $ = id => document.getElementById(id);
 const TOTAL = COUNTRIES.length;
 
-let run=[];
-let index=0;
-let score=0;
-let selected=new Set();
-let timerId=null;
-let deadline=0;
-let locked=false;
-let practiceMode=false;
+let run = [];
+let index = 0;
+let score = 0;
+let selected = new Set();
+let timerId = null;
+let deadline = 0;
+let locked = false;
+let practiceMode = false;
 
 
 /* SHUFFLE */
 
-function shuffle(a){
-  return [...a].sort(()=>Math.random()-.5);
+function shuffle(array){
+  return [...array].sort(() => Math.random() - 0.5);
 }
 
 
-/* CAPITAL POOL */
+/* CAPITALS */
 
 function capitalsPool(){
   return [...new Set(
-    COUNTRIES.flatMap(c=>c[1])
+    COUNTRIES.flatMap(country => country[1])
   )];
 }
 
 
-/* CHOICES */
+/* CREATE SIX CHOICES */
 
 function makeChoices(correct){
 
-  const pool=capitalsPool()
-    .filter(x=>!correct.includes(x));
+  const pool = capitalsPool()
+    .filter(capital => !correct.includes(capital));
 
   return shuffle([
     ...correct,
     ...shuffle(pool).slice(
       0,
-      6-correct.length
+      6 - correct.length
     )
   ]);
 }
@@ -889,37 +1026,43 @@ function makeChoices(correct){
 
 function renderHistory(){
 
-  const h=JSON.parse(
+  const history = JSON.parse(
     localStorage.getItem(
       "capitalRushHistory"
     ) || "[]"
   );
 
-  $("historyList").innerHTML=h.length
+  if(!history.length){
 
-    ? h.slice(0,10).map(x=>
-      `<div class="hist">
-        <span>${x.date}</span>
-        <span>${x.score}/${TOTAL}</span>
-      </div>`
-    ).join("")
+    $("historyList").innerHTML =
+      `<div class="empty">No runs yet.</div>`;
 
-    : `<div class="empty">
-        No runs yet.
-      </div>`;
+    return;
+  }
+
+  $("historyList").innerHTML =
+    history
+      .slice(0,10)
+      .map(item =>
+        `<div class="hist">
+          <span>${item.date}</span>
+          <span>${item.score}/${TOTAL}</span>
+        </div>`
+      )
+      .join("");
 }
 
 
 function saveHistory(){
 
-  const h=JSON.parse(
+  const history = JSON.parse(
     localStorage.getItem(
       "capitalRushHistory"
     ) || "[]"
   );
 
-  h.unshift({
-    score,
+  history.unshift({
+    score:score,
     date:new Date().toLocaleDateString(
       undefined,
       {
@@ -932,7 +1075,7 @@ function saveHistory(){
   localStorage.setItem(
     "capitalRushHistory",
     JSON.stringify(
-      h.slice(0,10)
+      history.slice(0,10)
     )
   );
 
@@ -946,8 +1089,8 @@ function showScreen(id){
 
   document
     .querySelectorAll(".screen")
-    .forEach(x=>
-      x.classList.remove("active")
+    .forEach(screen =>
+      screen.classList.remove("active")
     );
 
   $(id).classList.add("active");
@@ -960,7 +1103,7 @@ function startGame(){
 
   clearInterval(timerId);
 
-  practiceMode=false;
+  practiceMode = false;
 
   $("gameScreen")
     .classList.remove("practiceMode");
@@ -968,9 +1111,9 @@ function startGame(){
   $("timerWrap")
     .classList.remove("practiceTimer");
 
-  run=shuffle(COUNTRIES);
-  index=0;
-  score=0;
+  run = shuffle(COUNTRIES);
+  index = 0;
+  score = 0;
 
   $("result")
     .classList.remove("show");
@@ -984,13 +1127,13 @@ function startGame(){
 }
 
 
-/* PRACTICE */
+/* PRACTICE MODE */
 
 function startPractice(){
 
   clearInterval(timerId);
 
-  practiceMode=true;
+  practiceMode = true;
 
   $("gameScreen")
     .classList.add("practiceMode");
@@ -998,9 +1141,9 @@ function startPractice(){
   $("timerWrap")
     .classList.add("practiceTimer");
 
-  run=shuffle(COUNTRIES);
-  index=0;
-  score=0;
+  run = shuffle(COUNTRIES);
+  index = 0;
+  score = 0;
 
   $("result")
     .classList.remove("show");
@@ -1020,7 +1163,7 @@ function exitPractice(){
 
   clearInterval(timerId);
 
-  practiceMode=false;
+  practiceMode = false;
 
   $("answerPopup")
     .classList.remove("show");
@@ -1049,7 +1192,7 @@ function nextQuestion(){
   $("answerPopup")
     .classList.remove("show");
 
-  if(index>=run.length){
+  if(index >= run.length){
 
     if(practiceMode){
 
@@ -1064,70 +1207,68 @@ function nextQuestion(){
     return;
   }
 
+  locked = false;
+  selected = new Set();
 
-  locked=false;
-  selected=new Set();
+  const [country, correct] = run[index];
 
-  const [country,correct]=run[index];
+  const needsCheck = correct.length > 1;
 
-  const needsCheck=
-    correct.length>1;
+  $("counter").textContent =
+    `${index + 1} / ${TOTAL}`;
 
-
-  $("counter").textContent=
-    `${index+1} / ${TOTAL}`;
-
-  $("score").textContent=
+  $("score").textContent =
     `${score} correct`;
 
-  $("country").textContent=
+  $("country").textContent =
     country;
 
+  if(practiceMode){
 
-  $("instruction").textContent=
-    practiceMode
+    $("instruction").textContent =
+      needsCheck
+        ? "Select all correct capitals, then tap Check."
+        : "Select the capital.";
 
-      ? (
-          needsCheck
-            ? "Select all correct capitals, then tap Check."
-            : "Select the capital."
-        )
+  }else{
 
-      : "Select all correct capitals, then tap Check.";
+    $("instruction").textContent =
+      "Select all correct capitals, then tap Check.";
 
+  }
 
-  $("submit").style.display=
+  $("submit").style.display =
     needsCheck
       ? "block"
       : "none";
 
-  $("submit").disabled=true;
+  $("submit").disabled = true;
 
-  $("choices").innerHTML="";
+  $("choices").innerHTML = "";
 
+  makeChoices(correct).forEach(capital => {
 
-  makeChoices(correct).forEach(cap=>{
+    const button =
+      document.createElement("button");
 
-    const b=document.createElement("button");
+    button.className = "choice";
+    button.textContent = capital;
 
-    b.className="choice";
-    b.textContent=cap;
-
-    b.addEventListener(
+    button.addEventListener(
       "click",
-      ()=>toggleChoice(
-        b,
-        cap,
-        correct,
-        needsCheck
-      )
+      () =>
+        toggleChoice(
+          button,
+          capital,
+          correct,
+          needsCheck
+        )
     );
 
     $("choices")
-      .appendChild(b);
+      .appendChild(button);
 
   });
-
 
   if(!practiceMode){
 
@@ -1137,118 +1278,125 @@ function nextQuestion(){
 }
 
 
-/* CHOICE */
+/* SELECT ANSWER */
 
 function toggleChoice(
-  btn,
-  cap,
+  button,
+  capital,
   correct,
   needsCheck
 ){
 
-  if(locked)return;
-
-
-  if(selected.has(cap)){
-
-    selected.delete(cap);
-
-    btn.classList.remove(
-      "selected"
-    );
-
-    btn.querySelector(
-      ".check"
-    )?.remove();
-
-  }else{
-
-    /*
-      Single-capital questions:
-      only one answer can be selected.
-    */
-
-    if(!needsCheck){
-
-      selected.clear();
-
-      document
-        .querySelectorAll(".choice")
-        .forEach(x=>{
-
-          x.classList.remove(
-            "selected"
-          );
-
-          x.querySelector(
-            ".check"
-          )?.remove();
-
-        });
-    }
-
-
-    selected.add(cap);
-
-    btn.classList.add(
-      "selected"
-    );
-
-
-    const mark=
-      document.createElement(
-        "span"
-      );
-
-    mark.className="check";
-    mark.textContent="✓";
-
-    btn.appendChild(mark);
+  if(locked){
+    return;
   }
 
 
+  /*
+    Multiple-capital countries:
+    allow multiple selections.
+  */
+
   if(needsCheck){
 
-    $("submit").disabled=
-      selected.size===0;
+    if(selected.has(capital)){
+
+      selected.delete(capital);
+
+      button.classList.remove(
+        "selected"
+      );
+
+      button
+        .querySelector(".check")
+        ?.remove();
+
+    }else{
+
+      selected.add(capital);
+
+      button.classList.add(
+        "selected"
+      );
+
+      const check =
+        document.createElement("span");
+
+      check.className = "check";
+      check.textContent = "✓";
+
+      button.appendChild(check);
+
+    }
+
+    $("submit").disabled =
+      selected.size === 0;
 
     return;
   }
 
 
-  submitAnswer(
-    false,
-    cap
-  );
+  /*
+    Single-capital countries:
+    selecting an answer immediately
+    submits the answer.
+  */
+
+  selected.clear();
+
+  document
+    .querySelectorAll(".choice")
+    .forEach(choice => {
+
+      choice.classList.remove(
+        "selected"
+      );
+
+      choice
+        .querySelector(".check")
+        ?.remove();
+
+    });
+
+  selected.add(capital);
+
+  button.classList.add("selected");
+
+  const check =
+    document.createElement("span");
+
+  check.className = "check";
+  check.textContent = "✓";
+
+  button.appendChild(check);
+
+  submitAnswer(false, capital);
 }
 
 
-/* TIMER */
+/* NORMAL GAME TIMER */
 
 function startTimer(){
 
   clearInterval(timerId);
 
-  deadline=
-    performance.now()+7000;
+  deadline =
+    performance.now() + 7000;
 
-  $("timer").style.width=
-    "100%";
+  $("timer").style.width = "100%";
 
+  timerId = setInterval(() => {
 
-  timerId=setInterval(()=>{
-
-    const left=
+    const remaining =
       Math.max(
         0,
-        deadline-performance.now()
+        deadline - performance.now()
       );
 
-    $("timer").style.width=
-      (left/7000*100)+"%";
+    $("timer").style.width =
+      (remaining / 7000 * 100) + "%";
 
-
-    if(left<=0){
+    if(remaining <= 0){
 
       clearInterval(timerId);
 
@@ -1260,86 +1408,88 @@ function startTimer(){
 }
 
 
-/* ANSWER */
+/* SUBMIT ANSWER */
 
 function submitAnswer(
-  timeout=false,
-  clickedCap=null
+  timeout = false,
+  clickedCapital = null
 ){
 
-  if(locked)return;
+  if(locked){
+    return;
+  }
 
-  locked=true;
+  locked = true;
 
   clearInterval(timerId);
 
-
-  const correct=
+  const correct =
     run[index][1];
 
-
-  const right=
-    selected.size===correct.length &&
+  const isCorrect =
+    selected.size === correct.length &&
     correct.every(
-      x=>selected.has(x)
+      capital => selected.has(capital)
     );
 
-
-  const buttons=[
+  const buttons = [
     ...$("choices")
       .querySelectorAll(".choice")
   ];
 
 
-  buttons.forEach(btn=>{
+  /*
+    Reveal correct / incorrect choices.
+  */
 
-    const cap=
-      btn.childNodes[0]?.textContent ||
-      btn.textContent;
+  buttons.forEach(button => {
 
+    const capital =
+      button.childNodes[0]?.textContent ||
+      button.textContent;
 
-    if(correct.includes(cap)){
+    if(correct.includes(capital)){
 
-      btn.classList.add(
+      button.classList.add(
         "correct"
       );
 
     }
 
-
     if(
-      selected.has(cap) &&
-      !correct.includes(cap)
+      selected.has(capital) &&
+      !correct.includes(capital)
     ){
 
-      btn.classList.add(
+      button.classList.add(
         "wrong"
       );
 
     }
 
-
-    btn.disabled=true;
+    button.disabled = true;
 
   });
 
 
-  if(right){
+  if(isCorrect){
 
     score++;
 
-    $("score").textContent=
+    $("score").textContent =
       `${score} correct`;
 
   }
 
 
-  /* PRACTICE */
+  /*
+    PRACTICE MODE
+  */
 
   if(practiceMode){
 
     showPracticeAnswer(
-      right,
+      isCorrect,
       correct,
       selected,
       timeout
@@ -1349,16 +1499,18 @@ function submitAnswer(
   }
 
 
-  /* NORMAL GAME */
+  /*
+    NORMAL GAME
+  */
 
-  if(right){
+  if(isCorrect){
 
-    const nextIndex=
-      index+1;
+    const nextIndex =
+      index + 1;
 
-    setTimeout(()=>{
+    setTimeout(() => {
 
-      index=nextIndex;
+      index = nextIndex;
 
       nextQuestion();
 
@@ -1368,11 +1520,10 @@ function submitAnswer(
   }
 
 
-  const correctText=
+  const correctText =
     correct.join(" · ");
 
-
-  setTimeout(()=>{
+  setTimeout(() => {
 
     endGame(
       false,
@@ -1384,53 +1535,52 @@ function submitAnswer(
 }
 
 
-/* PRACTICE POPUP */
+/* PRACTICE ANSWER POPUP */
 
 function showPracticeAnswer(
-  right,
+  isCorrect,
   correct,
   selectedAnswers,
   timeout
 ){
 
-  const [country]=run[index];
+  const country =
+    run[index][0];
+
+  $("answerCountry").textContent =
+    country;
+
+  $("answerStatus").textContent =
+    isCorrect
+      ? "Correct"
+      : "Incorrect";
+
+  $("answerStatus").className =
+    "answerStatus " +
+    (
+      isCorrect
+        ? "correctStatus"
+        : "wrongStatus"
+    );
 
 
-  $("answerCountry")
-    .textContent=country;
+  /*
+    Correct answer.
+  */
+
+  $("answerValue").textContent =
+    correct.join(" · ");
 
 
-  $("answerStatus")
-    .textContent=
-      right
-        ? "Correct"
-        : "Incorrect";
-
-
-  $("answerStatus")
-    .className=
-      "answerStatus " +
-      (
-        right
-          ? "correctStatus"
-          : "wrongStatus"
-      );
-
-
-  $("answerValue")
-    .textContent=
-      correct.join(" · ");
-
-
-  const yourAnswer=
+  const yourAnswer =
     $("yourAnswer");
 
-  const yourAnswerLine=
+  const yourAnswerLine =
     $("yourAnswerLine");
 
 
   /*
-    Reset incorrect styling first.
+    Always reset previous styling.
   */
 
   yourAnswer.classList.remove(
@@ -1442,36 +1592,39 @@ function showPracticeAnswer(
   );
 
 
-  let yourText;
+  let yourText = "";
 
 
   if(timeout){
 
-    yourText="Time expired";
+    yourText =
+      "Time expired";
 
   }else if(selectedAnswers.size){
 
-    yourText=[
-      ...selectedAnswers
-    ].join(" · ");
+    yourText =
+      [...selectedAnswers].join(" · ");
 
   }else{
 
-    yourText="No answer";
+    yourText =
+      "No answer";
 
   }
 
 
-  yourAnswer.textContent=
+  yourAnswer.textContent =
     yourText;
 
 
   /*
-    Incorrect answer:
-    red + smaller font.
+    When incorrect:
+    - Your answer becomes red
+    - Your answer becomes smaller
+    - Label becomes slightly smaller too
   */
 
-  if(!right){
+  if(!isCorrect){
 
     yourAnswer.classList.add(
       "yourAnswerIncorrect"
@@ -1484,8 +1637,8 @@ function showPracticeAnswer(
   }
 
 
-  $("answerNext").textContent=
-    index+1>=run.length
+  $("answerNext").textContent =
+    index + 1 >= run.length
       ? "Finish"
       : "Next";
 
@@ -1499,7 +1652,9 @@ function showPracticeAnswer(
 
 function practiceNext(){
 
-  if(!practiceMode)return;
+  if(!practiceMode){
+    return;
+  }
 
   $("answerPopup")
     .classList.remove("show");
@@ -1516,17 +1671,18 @@ function endPractice(){
 
   clearInterval(timerId);
 
-  $("resultTitle").textContent=
+  $("resultTitle").textContent =
     "Practice complete";
 
-  $("resultScore").textContent=
+  $("resultScore").textContent =
     `${score}/${TOTAL}`;
 
-  $("resultMeta").textContent=
+  $("resultMeta").textContent =
     `You completed all ${TOTAL} countries in practice mode.`;
 
   /*
-    Practice never affects Last 10.
+    Practice results are NOT
+    saved to Last 10.
   */
 
   $("result")
@@ -1534,15 +1690,20 @@ function endPractice(){
 }
 
 
-/* NORMAL END */
+/* NORMAL GAME END */
 
 function endGame(
   completed,
-  timeout=false,
-  correctText=""
+  timeout = false,
+  correctText = ""
 ){
 
   clearInterval(timerId);
+
+  /*
+    Only New Game results
+    are saved to history.
+  */
 
   if(!practiceMode){
 
@@ -1551,17 +1712,15 @@ function endGame(
   }
 
 
-  $("resultTitle").textContent=
+  $("resultTitle").textContent =
     completed
       ? "Perfect run!"
       : "Game over";
 
-
-  $("resultScore").textContent=
+  $("resultScore").textContent =
     score;
 
-
-  $("resultMeta").textContent=
+  $("resultMeta").textContent =
     completed
 
       ? `You cleared all ${TOTAL} countries.`
@@ -1604,7 +1763,7 @@ $("exitPractice").addEventListener(
 
 $("submit").addEventListener(
   "click",
-  ()=>submitAnswer(false)
+  () => submitAnswer(false)
 );
 
 
@@ -1622,7 +1781,8 @@ $("againBtn").addEventListener(
 
 $("homeBtn").addEventListener(
   "click",
-  ()=>{
+  () => {
+
     clearInterval(timerId);
 
     $("result")
@@ -1631,7 +1791,7 @@ $("homeBtn").addEventListener(
     $("answerPopup")
       .classList.remove("show");
 
-    practiceMode=false;
+    practiceMode = false;
 
     $("timerWrap")
       .classList.remove(
@@ -1646,6 +1806,7 @@ $("homeBtn").addEventListener(
     showScreen("startScreen");
 
     renderHistory();
+
   }
 );
 
@@ -1661,11 +1822,11 @@ if("serviceWorker" in navigator){
 
   window.addEventListener(
     "load",
-    async ()=>{
+    async () => {
 
       try{
 
-        const registration=
+        const registration =
           await navigator.serviceWorker.register(
             "./sw.js",
             {
@@ -1675,11 +1836,11 @@ if("serviceWorker" in navigator){
 
         await registration.update();
 
-      }catch(e){
+      }catch(error){
 
         console.log(
           "Service worker update unavailable",
-          e
+          error
         );
 
       }
