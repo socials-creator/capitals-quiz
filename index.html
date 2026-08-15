@@ -283,7 +283,12 @@ function submitAnswer(timeout=false, clickedCap=null){
   if(right){
     score++;
     $("score").textContent=`${score} correct`;
-    setTimeout(nextQuestion,420);
+    // Advance explicitly so the next country is guaranteed to render.
+    const nextIndex = index + 1;
+    setTimeout(()=>{
+      index = nextIndex;
+      nextQuestion();
+    },420);
     return;
   }
 
