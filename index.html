@@ -10,119 +10,617 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-180.png">
   <title>Capital Rush</title>
-  <meta name="app-version" content="3">
-  <style>
-    :root{--bg:#08090c;--card:#111318;--card2:#171922;--text:#f5f7fb;--muted:#9299a8;--accent:#0a84ff;--danger:#ff453a;--ok:#30d158;--line:#252a35}
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,Arial,sans-serif}
-    body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
-    button{font:inherit;color:inherit;border:0}
-    .app{height:100%;width:100%;display:flex;align-items:center;justify-content:center}
-    .screen{width:100%;height:100%;max-width:760px;display:none;padding:18px 16px 16px}
-    .screen.active{display:flex;flex-direction:column}
-    .brand{margin:auto 0 22px;text-align:left}
-    .eyebrow{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700}
-    h1{font-size:48px;line-height:.95;letter-spacing:-.055em;margin:8px 0 12px}
-    .tagline{font-size:17px;color:var(--muted);line-height:1.35;max-width:420px}
-    .startGrid{display:grid;grid-template-columns:minmax(0,1fr) 118px;gap:12px;margin-bottom:auto}
-    .newGame{background:var(--accent);border-radius:22px;min-height:172px;text-align:left;padding:22px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 12px 35px #0008}
-    .newGame strong{font-size:28px;letter-spacing:-.03em}
-    .newGame span{font-size:14px;opacity:.86}
-    .history{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:14px 10px;min-height:172px}
-    .historyTitle{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:9px}
-    .historyList{display:flex;flex-direction:column;gap:7px}
-    .hist{display:flex;justify-content:space-between;font-variant-numeric:tabular-nums;font-size:13px}
-    .hist span:last-child{font-weight:700}
-    .empty{font-size:12px;color:#626979;line-height:1.3}
-    .footer{margin-top:18px;color:#606777;font-size:11px;text-align:center;padding-bottom:4px}
+  <meta name="app-version" content="5">
 
-    .gameTop{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
-    .counter{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
-    .score{font-size:13px;font-weight:700}
-    .timerWrap{height:7px;background:#20242d;border-radius:999px;overflow:hidden;margin-bottom:20px}
-    .timer{height:100%;width:100%;background:var(--accent);transform-origin:left center}
-    .questionCard{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:22px 18px 18px;display:flex;flex-direction:column;flex:1;min-height:0}
-    .prompt{font-size:15px;color:var(--muted);margin-bottom:5px}
-    .country{font-size:34px;font-weight:750;letter-spacing:-.04em;line-height:1.05;margin-bottom:9px}
-    .instruction{font-size:13px;color:var(--muted);min-height:18px}
-    .choices{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px;flex:1;align-content:center}
-    .choice{background:var(--card2);border:1px solid var(--line);border-radius:15px;padding:14px 10px;min-height:62px;font-size:15px;font-weight:600;line-height:1.1;display:flex;align-items:center;justify-content:center;text-align:center;position:relative}
-    .choice.selected{border-color:var(--accent);background:#0a84ff22;box-shadow:inset 0 0 0 1px var(--accent)}
-    .choice.correct{border-color:var(--ok);background:#30d15820}
-    .choice.wrong{border-color:var(--danger);background:#ff453a20}
-    .choice:disabled{opacity:.8}
-    .check{position:absolute;top:6px;right:7px;font-size:12px;opacity:.9}
-    .submit{margin-top:12px;background:var(--text);color:#090a0d;border-radius:15px;min-height:50px;font-weight:800}
-    .submit:disabled{opacity:.35}
-    .result{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:22px;z-index:10}
-    .result.show{display:flex}
-    .resultCard{width:min(440px,100%);background:#15171d;border:1px solid #303540;border-radius:28px;padding:26px;box-shadow:0 20px 70px #000}
-    .resultCard h2{font-size:30px;margin:0 0 7px;letter-spacing:-.04em}
-    .resultScore{font-size:64px;line-height:1;font-weight:850;letter-spacing:-.07em;margin:15px 0}
-    .resultMeta{color:var(--muted);font-size:14px}
-    .resultActions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:22px}
-    .resultActions button{min-height:50px;border-radius:15px;font-weight:800;background:var(--card2)}
-    .resultActions .primary{background:var(--accent)}
+  <style>
+    :root{
+      --bg:#08090c;
+      --card:#111318;
+      --card2:#171922;
+      --text:#f5f7fb;
+      --muted:#9299a8;
+      --accent:#0a84ff;
+      --danger:#ff453a;
+      --ok:#30d158;
+      --line:#252a35
+    }
+
+    *{
+      box-sizing:border-box;
+      -webkit-tap-highlight-color:transparent
+    }
+
+    html,body{
+      margin:0;
+      width:100%;
+      height:100%;
+      overflow:hidden;
+      background:var(--bg);
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,Arial,sans-serif
+    }
+
+    body{
+      padding-top:env(safe-area-inset-top);
+      padding-bottom:env(safe-area-inset-bottom)
+    }
+
+    button{
+      font:inherit;
+      color:inherit;
+      border:0;
+      cursor:pointer
+    }
+
+    .app{
+      height:100%;
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center
+    }
+
+    .screen{
+      width:100%;
+      height:100%;
+      max-width:760px;
+      display:none;
+      padding:18px 16px 16px
+    }
+
+    .screen.active{
+      display:flex;
+      flex-direction:column
+    }
+
+    .brand{
+      margin:auto 0 22px;
+      text-align:left
+    }
+
+    .eyebrow{
+      font-size:13px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--accent);
+      font-weight:700
+    }
+
+    h1{
+      font-size:48px;
+      line-height:.95;
+      letter-spacing:-.055em;
+      margin:8px 0 12px
+    }
+
+    .tagline{
+      font-size:17px;
+      color:var(--muted);
+      line-height:1.35;
+      max-width:420px
+    }
+
+    /* START SCREEN */
+
+    .startArea{
+      margin-bottom:auto
+    }
+
+    .startButtons{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px
+    }
+
+    .newGame,
+    .practiceGame{
+      border-radius:22px;
+      min-height:172px;
+      text-align:left;
+      padding:22px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      box-shadow:0 12px 35px #0008
+    }
+
+    .newGame{
+      background:var(--accent)
+    }
+
+    .practiceGame{
+      background:var(--card);
+      border:1px solid var(--line)
+    }
+
+    .newGame strong,
+    .practiceGame strong{
+      font-size:26px;
+      letter-spacing:-.03em
+    }
+
+    .newGame span,
+    .practiceGame span{
+      font-size:13px;
+      opacity:.82;
+      line-height:1.3
+    }
+
+    .history{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:14px 12px;
+      margin-top:12px
+    }
+
+    .historyTitle{
+      font-size:11px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.1em;
+      margin-bottom:9px
+    }
+
+    .historyList{
+      display:flex;
+      flex-direction:column;
+      gap:7px
+    }
+
+    .hist{
+      display:flex;
+      justify-content:space-between;
+      font-variant-numeric:tabular-nums;
+      font-size:13px
+    }
+
+    .hist span:last-child{
+      font-weight:700
+    }
+
+    .empty{
+      font-size:12px;
+      color:#626979;
+      line-height:1.3
+    }
+
+    .footer{
+      margin-top:18px;
+      color:#606777;
+      font-size:11px;
+      text-align:center;
+      padding-bottom:4px
+    }
+
+    /* GAME */
+
+    .gameTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px
+    }
+
+    .counter{
+      font-size:13px;
+      color:var(--muted);
+      font-variant-numeric:tabular-nums
+    }
+
+    .score{
+      font-size:13px;
+      font-weight:700
+    }
+
+    .timerWrap{
+      height:7px;
+      background:#20242d;
+      border-radius:999px;
+      overflow:hidden;
+      margin-bottom:20px
+    }
+
+    .timerWrap.practiceTimer{
+      visibility:hidden
+    }
+
+    .timer{
+      height:100%;
+      width:100%;
+      background:var(--accent);
+      transform-origin:left center
+    }
+
+    .questionCard{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:22px 18px 18px;
+      display:flex;
+      flex-direction:column;
+      flex:1;
+      min-height:0
+    }
+
+    .prompt{
+      font-size:15px;
+      color:var(--muted);
+      margin-bottom:5px
+    }
+
+    .country{
+      font-size:34px;
+      font-weight:750;
+      letter-spacing:-.04em;
+      line-height:1.05;
+      margin-bottom:9px
+    }
+
+    .instruction{
+      font-size:13px;
+      color:var(--muted);
+      min-height:18px
+    }
+
+    .choices{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:9px;
+      margin-top:18px;
+      flex:1;
+      align-content:center
+    }
+
+    .choice{
+      background:var(--card2);
+      border:1px solid var(--line);
+      border-radius:15px;
+      padding:14px 10px;
+      min-height:62px;
+      font-size:15px;
+      font-weight:600;
+      line-height:1.1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      position:relative
+    }
+
+    .choice.selected{
+      border-color:var(--accent);
+      background:#0a84ff22;
+      box-shadow:inset 0 0 0 1px var(--accent)
+    }
+
+    .choice.correct{
+      border-color:var(--ok);
+      background:#30d15820;
+      color:#b8f7c8
+    }
+
+    .choice.wrong{
+      border-color:var(--danger);
+      background:#ff453a20;
+      color:#ffb7b2
+    }
+
+    .choice:disabled{
+      opacity:.95
+    }
+
+    .check{
+      position:absolute;
+      top:6px;
+      right:7px;
+      font-size:12px;
+      opacity:.9
+    }
+
+    .submit{
+      margin-top:12px;
+      background:var(--text);
+      color:#090a0d;
+      border-radius:15px;
+      min-height:50px;
+      font-weight:800
+    }
+
+    .submit:disabled{
+      opacity:.35
+    }
+
+    /* RESULT */
+
+    .result{
+      position:fixed;
+      inset:0;
+      background:#000b;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:22px;
+      z-index:20
+    }
+
+    .result.show{
+      display:flex
+    }
+
+    .resultCard{
+      width:min(440px,100%);
+      background:#15171d;
+      border:1px solid #303540;
+      border-radius:28px;
+      padding:26px;
+      box-shadow:0 20px 70px #000
+    }
+
+    .resultCard h2{
+      font-size:30px;
+      margin:0 0 7px;
+      letter-spacing:-.04em
+    }
+
+    .resultScore{
+      font-size:64px;
+      line-height:1;
+      font-weight:850;
+      letter-spacing:-.07em;
+      margin:15px 0
+    }
+
+    .resultMeta{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.45
+    }
+
+    .resultActions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:9px;
+      margin-top:22px
+    }
+
+    .resultActions button{
+      min-height:50px;
+      border-radius:15px;
+      font-weight:800;
+      background:var(--card2)
+    }
+
+    .resultActions .primary{
+      background:var(--accent)
+    }
+
+    /* PRACTICE ANSWER POPUP */
+
+    .answerPopup{
+      position:fixed;
+      inset:0;
+      background:#0009;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:30
+    }
+
+    .answerPopup.show{
+      display:flex
+    }
+
+    .answerCard{
+      width:min(360px,100%);
+      background:#15171d;
+      border:1px solid #303540;
+      border-radius:22px;
+      padding:19px;
+      box-shadow:0 20px 70px #000
+    }
+
+    .answerStatus{
+      font-size:11px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.11em;
+      margin-bottom:6px
+    }
+
+    .answerStatus.correctStatus{
+      color:var(--ok)
+    }
+
+    .answerStatus.wrongStatus{
+      color:var(--danger)
+    }
+
+    .answerCountry{
+      font-size:20px;
+      font-weight:750;
+      letter-spacing:-.025em;
+      margin-bottom:12px
+    }
+
+    .answerLine{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.45;
+      margin-bottom:4px
+    }
+
+    .answerValue{
+      color:var(--text);
+      font-size:14px;
+      font-weight:700;
+      line-height:1.35
+    }
+
+    .answerNext{
+      width:100%;
+      min-height:45px;
+      border-radius:13px;
+      background:var(--accent);
+      margin-top:16px;
+      font-weight:800
+    }
 
     @media (max-height:700px){
-      h1{font-size:40px}.brand{margin-bottom:14px}.newGame,.history{min-height:145px}
-      .country{font-size:28px}.choice{min-height:52px;padding:10px 8px}.choices{gap:7px;margin-top:12px}
-      .questionCard{padding:17px 14px 13px}.submit{min-height:46px;margin-top:8px}
+      h1{font-size:40px}
+      .brand{margin-bottom:14px}
+      .newGame,.practiceGame{min-height:145px}
+      .country{font-size:28px}
+      .choice{min-height:52px;padding:10px 8px}
+      .choices{gap:7px;margin-top:12px}
+      .questionCard{padding:17px 14px 13px}
+      .submit{min-height:46px;margin-top:8px}
     }
-    @media (min-width:600px){.screen{padding:28px}.choices{gap:12px}.choice{min-height:72px}}
+
+    @media (min-width:600px){
+      .screen{padding:28px}
+      .choices{gap:12px}
+      .choice{min-height:72px}
+    }
   </style>
 </head>
+
 <body>
+
 <div class="app">
+
+  <!-- START -->
   <main id="startScreen" class="screen active">
+
     <div class="brand">
       <div class="eyebrow">195 countries</div>
       <h1>Capital Rush</h1>
-      <div class="tagline">Name every capital. One mistake ends the run. You have 7 seconds per country.</div>
+      <div class="tagline">
+        Name every capital. One mistake ends the run.
+        You have 7 seconds per country.
+      </div>
     </div>
-    <div class="startGrid">
-      <button class="newGame" id="newGame">
-        <strong>New Game</strong>
-        <span>6 choices · 7 seconds · no second chances</span>
-      </button>
+
+    <div class="startArea">
+
+      <div class="startButtons">
+
+        <button class="newGame" id="newGame">
+          <strong>New Game</strong>
+          <span>6 choices · 7 seconds · no second chances</span>
+        </button>
+
+        <button class="practiceGame" id="practiceGame">
+          <strong>Practice</strong>
+          <span>No timer · learn from every answer</span>
+        </button>
+
+      </div>
+
       <aside class="history">
         <div class="historyTitle">Last 10</div>
         <div id="historyList" class="historyList"></div>
       </aside>
+
     </div>
-    <div class="footer">Works offline after first load · Add to Home Screen</div>
+
+    <div class="footer">
+      Works offline after first load · Add to Home Screen
+    </div>
+
   </main>
 
+
+  <!-- GAME -->
   <main id="gameScreen" class="screen">
+
     <div class="gameTop">
       <div id="counter" class="counter">1 / 195</div>
       <div id="score" class="score">0 correct</div>
     </div>
-    <div class="timerWrap"><div id="timer" class="timer"></div></div>
+
+    <div id="timerWrap" class="timerWrap">
+      <div id="timer" class="timer"></div>
+    </div>
+
     <section class="questionCard">
+
       <div class="prompt">What is the capital of</div>
+
       <div id="country" class="country"></div>
-      <div class="instruction">Select all correct capitals, then tap Check.</div>
+
+      <div id="instruction" class="instruction">
+        Select all correct capitals, then tap Check.
+      </div>
+
       <div id="choices" class="choices"></div>
-      <button id="submit" class="submit" disabled>Check answer</button>
+
+      <button id="submit" class="submit" disabled>
+        Check answer
+      </button>
+
     </section>
+
   </main>
+
 </div>
 
+
+<!-- NORMAL GAME RESULT -->
 <div id="result" class="result">
+
   <div class="resultCard">
+
     <div class="eyebrow">Run over</div>
+
     <h2 id="resultTitle">Game over</h2>
+
     <div id="resultScore" class="resultScore">0</div>
+
     <div id="resultMeta" class="resultMeta"></div>
+
     <div class="resultActions">
       <button id="homeBtn">Home</button>
       <button id="againBtn" class="primary">Play again</button>
     </div>
+
   </div>
+
 </div>
 
+
+<!-- PRACTICE ANSWER POPUP -->
+<div id="answerPopup" class="answerPopup">
+
+  <div class="answerCard">
+
+    <div id="answerStatus" class="answerStatus">
+      Correct
+    </div>
+
+    <div id="answerCountry" class="answerCountry"></div>
+
+    <div class="answerLine">Correct answer</div>
+    <div id="answerValue" class="answerValue"></div>
+
+    <div id="yourAnswerLine" class="answerLine" style="margin-top:10px">
+      Your answer
+    </div>
+    <div id="yourAnswer" class="answerValue"></div>
+
+    <button id="answerNext" class="answerNext">
+      Next
+    </button>
+
+  </div>
+
+</div>
+
+
 <script>
+
 const COUNTRIES = [
 ["Afghanistan",["Kabul"]],["Albania",["Tirana"]],["Algeria",["Algiers"]],["Andorra",["Andorra la Vella"]],
 ["Angola",["Luanda"]],["Antigua and Barbuda",["Saint John's"]],["Argentina",["Buenos Aires"]],["Armenia",["Yerevan"]],
@@ -177,151 +675,621 @@ const COUNTRIES = [
 ["Zambia",["Lusaka"]],["Zimbabwe",["Harare"]]
 ];
 
+
 const $ = id => document.getElementById(id);
 const TOTAL = COUNTRIES.length;
-let run = [], index = 0, score = 0, selected = new Set(), timerId = null, deadline = 0, locked = false;
 
-function shuffle(a){ return [...a].sort(()=>Math.random()-.5); }
+let run = [];
+let index = 0;
+let score = 0;
+let selected = new Set();
+let timerId = null;
+let deadline = 0;
+let locked = false;
+let practiceMode = false;
+let pendingPracticeAdvance = false;
+
+
+function shuffle(a){
+  return [...a].sort(()=>Math.random()-.5);
+}
+
 
 function capitalsPool(){
   return [...new Set(COUNTRIES.flatMap(c=>c[1]))];
 }
 
+
 function makeChoices(correct){
-  const pool = capitalsPool().filter(x=>!correct.includes(x));
-  return shuffle([...correct, ...shuffle(pool).slice(0,6-correct.length)]);
+
+  const pool = capitalsPool()
+    .filter(x=>!correct.includes(x));
+
+  return shuffle([
+    ...correct,
+    ...shuffle(pool).slice(0,6-correct.length)
+  ]);
 }
+
+
+/* HISTORY */
 
 function renderHistory(){
-  const h = JSON.parse(localStorage.getItem("capitalRushHistory")||"[]");
-  $("historyList").innerHTML = h.length ? h.slice(0,10).map(x=>`<div class="hist"><span>${x.date}</span><span>${x.score}/${TOTAL}</span></div>`).join("") : `<div class="empty">No runs yet.</div>`;
+
+  const h = JSON.parse(
+    localStorage.getItem("capitalRushHistory") || "[]"
+  );
+
+  $("historyList").innerHTML = h.length
+    ? h.slice(0,10).map(x =>
+        `<div class="hist">
+          <span>${x.date}</span>
+          <span>${x.score}/${TOTAL}</span>
+        </div>`
+      ).join("")
+    : `<div class="empty">No runs yet.</div>`;
 }
+
+
 function saveHistory(){
-  const h = JSON.parse(localStorage.getItem("capitalRushHistory")||"[]");
-  h.unshift({score,date:new Date().toLocaleDateString(undefined,{month:"short",day:"numeric"})});
-  localStorage.setItem("capitalRushHistory",JSON.stringify(h.slice(0,10)));
+
+  const h = JSON.parse(
+    localStorage.getItem("capitalRushHistory") || "[]"
+  );
+
+  h.unshift({
+    score,
+    date:new Date().toLocaleDateString(undefined,{
+      month:"short",
+      day:"numeric"
+    })
+  });
+
+  localStorage.setItem(
+    "capitalRushHistory",
+    JSON.stringify(h.slice(0,10))
+  );
+
   renderHistory();
 }
+
+
+/* SCREEN */
+
 function showScreen(id){
-  document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
+
+  document
+    .querySelectorAll(".screen")
+    .forEach(x=>x.classList.remove("active"));
+
   $(id).classList.add("active");
 }
+
+
+/* NEW GAME */
+
 function startGame(){
-  run=shuffle(COUNTRIES); index=0; score=0; $("result").classList.remove("show"); showScreen("gameScreen"); nextQuestion();
+
+  practiceMode=false;
+
+  run=shuffle(COUNTRIES);
+  index=0;
+  score=0;
+
+  $("result").classList.remove("show");
+  $("answerPopup").classList.remove("show");
+
+  $("timerWrap").classList.remove("practiceTimer");
+
+  showScreen("gameScreen");
+
+  nextQuestion();
 }
+
+
+/* PRACTICE */
+
+function startPractice(){
+
+  practiceMode=true;
+
+  run=shuffle(COUNTRIES);
+  index=0;
+  score=0;
+
+  $("result").classList.remove("show");
+  $("answerPopup").classList.remove("show");
+
+  $("timerWrap").classList.add("practiceTimer");
+
+  showScreen("gameScreen");
+
+  nextQuestion();
+}
+
+
+/* QUESTION */
+
 function nextQuestion(){
-  if(index>=run.length){ endGame(true); return; }
-  locked=false; selected=new Set();
+
+  clearInterval(timerId);
+
+  $("answerPopup").classList.remove("show");
+
+  if(index>=run.length){
+
+    if(practiceMode){
+      endPractice();
+    }else{
+      endGame(true);
+    }
+
+    return;
+  }
+
+  locked=false;
+  selected=new Set();
+
   const [country,correct]=run[index];
+
   const needsCheck=correct.length>1;
 
-  $("counter").textContent=`${index+1} / ${TOTAL}`;
-  $("score").textContent=`${score} correct`;
+  $("counter").textContent =
+    `${index+1} / ${TOTAL}`;
+
+  $("score").textContent =
+    `${score} correct`;
+
   $("country").textContent=country;
-  $("submit").style.display=needsCheck ? "block" : "none";
+
+  $("instruction").textContent =
+    practiceMode
+      ? (
+          needsCheck
+            ? "Select all correct capitals, then tap Check."
+            : "Select the capital."
+        )
+      : "Select all correct capitals, then tap Check.";
+
+  $("submit").style.display =
+    needsCheck ? "block" : "none";
+
   $("submit").disabled=true;
+
   $("choices").innerHTML="";
 
   makeChoices(correct).forEach(cap=>{
+
     const b=document.createElement("button");
-    b.className="choice"; b.textContent=cap;
-    b.addEventListener("click",()=>toggleChoice(b,cap,correct,needsCheck));
+
+    b.className="choice";
+    b.textContent=cap;
+
+    b.addEventListener(
+      "click",
+      ()=>toggleChoice(b,cap,correct,needsCheck)
+    );
+
     $("choices").appendChild(b);
   });
-  startTimer();
+
+  if(!practiceMode){
+    startTimer();
+  }
 }
+
+
+/* CHOICE */
+
 function toggleChoice(btn,cap,correct,needsCheck){
+
   if(locked)return;
 
   if(selected.has(cap)){
+
     selected.delete(cap);
     btn.classList.remove("selected");
     btn.querySelector(".check")?.remove();
-  } else {
+
+  }else{
+
+    /*
+      For single-capital questions only one choice
+      can be selected.
+    */
+    if(!needsCheck){
+
+      selected.clear();
+
+      document
+        .querySelectorAll(".choice")
+        .forEach(x=>{
+          x.classList.remove("selected");
+          x.querySelector(".check")?.remove();
+        });
+    }
+
     selected.add(cap);
+
     btn.classList.add("selected");
+
     const mark=document.createElement("span");
+
     mark.className="check";
     mark.textContent="✓";
+
     btn.appendChild(mark);
   }
 
+
   if(needsCheck){
-    $("submit").disabled=selected.size===0;
+
+    $("submit").disabled =
+      selected.size===0;
+
     return;
   }
 
-  // Single-capital questions are answered immediately.
-  submitAnswer(false, cap);
+
+  /*
+    Single-capital questions answer immediately.
+  */
+  submitAnswer(false,cap);
 }
+
+
+/* TIMER */
+
 function startTimer(){
-  clearInterval(timerId); deadline=performance.now()+7000;
+
+  clearInterval(timerId);
+
+  deadline=performance.now()+7000;
+
   $("timer").style.width="100%";
+
   timerId=setInterval(()=>{
-    const left=Math.max(0,deadline-performance.now());
-    $("timer").style.width=(left/7000*100)+"%";
-    if(left<=0){clearInterval(timerId);submitAnswer(true);}
+
+    const left=Math.max(
+      0,
+      deadline-performance.now()
+    );
+
+    $("timer").style.width =
+      (left/7000*100)+"%";
+
+    if(left<=0){
+
+      clearInterval(timerId);
+
+      submitAnswer(true);
+    }
+
   },40);
 }
-function submitAnswer(timeout=false, clickedCap=null){
+
+
+/* ANSWER */
+
+function submitAnswer(timeout=false,clickedCap=null){
+
   if(locked)return;
+
   locked=true;
+
   clearInterval(timerId);
 
   const correct=run[index][1];
-  const right=selected.size===correct.length && correct.every(x=>selected.has(x));
-  const buttons=[...$("choices").querySelectorAll(".choice")];
 
-  // Show the answer directly on the choices.
+  const right =
+    selected.size===correct.length &&
+    correct.every(x=>selected.has(x));
+
+  const buttons=[
+    ...$("choices").querySelectorAll(".choice")
+  ];
+
+
   buttons.forEach(btn=>{
-    const cap=btn.childNodes[0]?.textContent || btn.textContent;
-    if(correct.includes(cap)) btn.classList.add("correct");
-    if(selected.has(cap) && !correct.includes(cap)) btn.classList.add("wrong");
+
+    const cap =
+      btn.childNodes[0]?.textContent ||
+      btn.textContent;
+
+    if(correct.includes(cap))
+      btn.classList.add("correct");
+
+    if(
+      selected.has(cap) &&
+      !correct.includes(cap)
+    )
+      btn.classList.add("wrong");
+
     btn.disabled=true;
   });
 
+
   if(right){
+
     score++;
-    $("score").textContent=`${score} correct`;
-    // Advance explicitly so the next country is guaranteed to render.
-    const nextIndex = index + 1;
-    setTimeout(()=>{
-      index = nextIndex;
-      nextQuestion();
-    },420);
+
+    $("score").textContent =
+      `${score} correct`;
+  }
+
+
+  /*
+    PRACTICE MODE
+    Always show the answer popup.
+  */
+  if(practiceMode){
+
+    showPracticeAnswer(
+      right,
+      correct,
+      selected,
+      timeout
+    );
+
     return;
   }
 
-  // Wrong or timed out: correct answer remains green and the run ends.
+
+  /*
+    NORMAL GAME
+  */
+
+  if(right){
+
+    const nextIndex=index+1;
+
+    setTimeout(()=>{
+
+      index=nextIndex;
+      nextQuestion();
+
+    },420);
+
+    return;
+  }
+
+
   const correctText=correct.join(" · ");
+
   setTimeout(()=>{
-    endGame(false,timeout,correctText);
+
+    endGame(
+      false,
+      timeout,
+      correctText
+    );
+
   },700);
 }
-function endGame(completed,timeout=false,correctText=""){
+
+
+/* PRACTICE ANSWER POPUP */
+
+function showPracticeAnswer(
+  right,
+  correct,
+  selectedAnswers,
+  timeout
+){
+
+  const [country]=run[index];
+
+  $("answerCountry").textContent=country;
+
+  $("answerStatus").textContent =
+    right ? "Correct" : "Incorrect";
+
+  $("answerStatus").className =
+    "answerStatus " +
+    (right
+      ? "correctStatus"
+      : "wrongStatus");
+
+
+  $("answerValue").textContent =
+    correct.join(" · ");
+
+
+  let yourText;
+
+  if(timeout){
+
+    yourText="Time expired";
+
+  }else if(selectedAnswers.size){
+
+    yourText=[
+      ...selectedAnswers
+    ].join(" · ");
+
+  }else{
+
+    yourText="No answer";
+  }
+
+
+  $("yourAnswer").textContent=yourText;
+
+
+  $("answerNext").textContent =
+    index+1>=run.length
+      ? "Finish"
+      : "Next";
+
+
+  $("answerPopup").classList.add("show");
+}
+
+
+/* PRACTICE NEXT */
+
+function practiceNext(){
+
+  if(!practiceMode)return;
+
+  $("answerPopup").classList.remove("show");
+
+  index++;
+
+  nextQuestion();
+}
+
+
+/* PRACTICE END */
+
+function endPractice(){
+
   clearInterval(timerId);
-  saveHistory();
-  $("resultTitle").textContent=completed?"Perfect run!":"Game over";
-  $("resultScore").textContent=score;
-  $("resultMeta").textContent=completed
-    ? `You cleared all ${TOTAL} countries.`
-    : `You reached ${score} / ${TOTAL}${timeout?" · time ran out":""}${correctText ? " · Correct: " + correctText : ""}.`;
+
+  $("resultTitle").textContent =
+    "Practice complete";
+
+  $("resultScore").textContent =
+    `${score}/${TOTAL}`;
+
+  $("resultMeta").textContent =
+    `You completed all ${TOTAL} countries in practice mode.`;
+
+  /*
+    Practice results are intentionally NOT
+    saved to the Last 10 history.
+  */
+
   $("result").classList.add("show");
 }
-$("newGame").addEventListener("click",startGame);
-$("submit").addEventListener("click",()=>submitAnswer(false));
-$("againBtn").addEventListener("click",startGame);
-$("homeBtn").addEventListener("click",()=>{ $("result").classList.remove("show"); showScreen("startScreen"); renderHistory(); });
+
+
+/* NORMAL END */
+
+function endGame(
+  completed,
+  timeout=false,
+  correctText=""
+){
+
+  clearInterval(timerId);
+
+  /*
+    Only normal games affect history.
+  */
+  if(!practiceMode){
+    saveHistory();
+  }
+
+  $("resultTitle").textContent =
+    completed
+      ? "Perfect run!"
+      : "Game over";
+
+  $("resultScore").textContent=score;
+
+  $("resultMeta").textContent =
+    completed
+      ? `You cleared all ${TOTAL} countries.`
+      : `You reached ${score} / ${TOTAL}${
+          timeout
+            ? " · time ran out"
+            : ""
+        }${
+          correctText
+            ? " · Correct: " + correctText
+            : ""
+        }.`;
+
+  $("result").classList.add("show");
+}
+
+
+/* BUTTONS */
+
+$("newGame").addEventListener(
+  "click",
+  startGame
+);
+
+$("practiceGame").addEventListener(
+  "click",
+  startPractice
+);
+
+$("submit").addEventListener(
+  "click",
+  ()=>submitAnswer(false)
+);
+
+$("answerNext").addEventListener(
+  "click",
+  practiceNext
+);
+
+$("againBtn").addEventListener(
+  "click",
+  startGame
+);
+
+$("homeBtn").addEventListener(
+  "click",
+  ()=>{
+    clearInterval(timerId);
+
+    $("result").classList.remove("show");
+    $("answerPopup").classList.remove("show");
+
+    practiceMode=false;
+
+    $("timerWrap").classList.remove(
+      "practiceTimer"
+    );
+
+    showScreen("startScreen");
+
+    renderHistory();
+  }
+);
+
+
+/* INITIALIZE */
+
 renderHistory();
 
+
+/* SERVICE WORKER */
+
 if("serviceWorker" in navigator){
-  window.addEventListener("load", async ()=>{
-    try{
-      const registration=await navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"});
-      await registration.update();
-    }catch(e){ console.log("Service worker update unavailable",e); }
-  });
+
+  window.addEventListener(
+    "load",
+    async ()=>{
+
+      try{
+
+        const registration =
+          await navigator.serviceWorker.register(
+            "./sw.js",
+            {updateViaCache:"none"}
+          );
+
+        await registration.update();
+
+      }catch(e){
+
+        console.log(
+          "Service worker update unavailable",
+          e
+        );
+
+      }
+
+    }
+  );
 }
+
 </script>
+
 </body>
 </html>
