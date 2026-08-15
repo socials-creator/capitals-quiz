@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#0b0b0f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Capital Rush">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <title>Capital Rush</title>
+  <style>
+    :root{--bg:#08090c;--card:#111318;--card2:#171922;--text:#f5f7fb;--muted:#9299a8;--accent:#0a84ff;--danger:#ff453a;--ok:#30d158;--line:#252a35}
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,Arial,sans-serif}
+    body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+    button{font:inherit;color:inherit;border:0}
+    .app{height:100%;width:100%;display:flex;align-items:center;justify-content:center}
+    .screen{width:100%;height:100%;max-width:760px;display:none;padding:18px 16px 16px}
+    .screen.active{display:flex;flex-direction:column}
+    .brand{margin:auto 0 22px;text-align:left}
+    .eyebrow{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700}
+    h1{font-size:48px;line-height:.95;letter-spacing:-.055em;margin:8px 0 12px}
+    .tagline{font-size:17px;color:var(--muted);line-height:1.35;max-width:420px}
+    .startGrid{display:grid;grid-template-columns:minmax(0,1fr) 118px;gap:12px;margin-bottom:auto}
+    .newGame{background:var(--accent);border-radius:22px;min-height:172px;text-align:left;padding:22px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 12px 35px #0008}
+    .newGame strong{font-size:28px;letter-spacing:-.03em}
+    .newGame span{font-size:14px;opacity:.86}
+    .history{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:14px 10px;min-height:172px}
+    .historyTitle{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:9px}
+    .historyList{display:flex;flex-direction:column;gap:7px}
+    .hist{display:flex;justify-content:space-between;font-variant-numeric:tabular-nums;font-size:13px}
+    .hist span:last-child{font-weight:700}
+    .empty{font-size:12px;color:#626979;line-height:1.3}
+    .footer{margin-top:18px;color:#606777;font-size:11px;text-align:center;padding-bottom:4px}
+
+    .gameTop{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+    .counter{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+    .score{font-size:13px;font-weight:700}
+    .timerWrap{height:7px;background:#20242d;border-radius:999px;overflow:hidden;margin-bottom:20px}
+    .timer{height:100%;width:100%;background:var(--accent);transform-origin:left center}
+    .questionCard{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:22px 18px 18px;display:flex;flex-direction:column;flex:1;min-height:0}
+    .prompt{font-size:15px;color:var(--muted);margin-bottom:5px}
+    .country{font-size:34px;font-weight:750;letter-spacing:-.04em;line-height:1.05;margin-bottom:9px}
+    .instruction{font-size:13px;color:var(--muted);min-height:18px}
+    .choices{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px;flex:1;align-content:center}
+    .choice{background:var(--card2);border:1px solid var(--line);border-radius:15px;padding:14px 10px;min-height:62px;font-size:15px;font-weight:600;line-height:1.1;display:flex;align-items:center;justify-content:center;text-align:center;position:relative}
+    .choice.selected{border-color:var(--accent);background:#0a84ff22;box-shadow:inset 0 0 0 1px var(--accent)}
+    .choice.correct{border-color:var(--ok);background:#30d15820}
+    .choice.wrong{border-color:var(--danger);background:#ff453a20}
+    .choice:disabled{opacity:.8}
+    .check{position:absolute;top:6px;right:7px;font-size:12px;opacity:.9}
+    .submit{margin-top:12px;background:var(--text);color:#090a0d;border-radius:15px;min-height:50px;font-weight:800}
+    .submit:disabled{opacity:.35}
+    .result{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:22px;z-index:10}
+    .result.show{display:flex}
+    .resultCard{width:min(440px,100%);background:#15171d;border:1px solid #303540;border-radius:28px;padding:26px;box-shadow:0 20px 70px #000}
+    .resultCard h2{font-size:30px;margin:0 0 7px;letter-spacing:-.04em}
+    .resultScore{font-size:64px;line-height:1;font-weight:850;letter-spacing:-.07em;margin:15px 0}
+    .resultMeta{color:var(--muted);font-size:14px}
+    .resultActions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:22px}
+    .resultActions button{min-height:50px;border-radius:15px;font-weight:800;background:var(--card2)}
+    .resultActions .primary{background:var(--accent)}
+
+    @media (max-height:700px){
+      h1{font-size:40px}.brand{margin-bottom:14px}.newGame,.history{min-height:145px}
+      .country{font-size:28px}.choice{min-height:52px;padding:10px 8px}.choices{gap:7px;margin-top:12px}
+      .questionCard{padding:17px 14px 13px}.submit{min-height:46px;margin-top:8px}
+    }
+    @media (min-width:600px){.screen{padding:28px}.choices{gap:12px}.choice{min-height:72px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <main id="startScreen" class="screen active">
+    <div class="brand">
+      <div class="eyebrow">195 countries</div>
+      <h1>Capital Rush</h1>
+      <div class="tagline">Name every capital. One mistake ends the run. You have 7 seconds per country.</div>
+    </div>
+    <div class="startGrid">
+      <button class="newGame" id="newGame">
+        <strong>New Game</strong>
+        <span>6 choices · 7 seconds · no second chances</span>
+      </button>
+      <aside class="history">
+        <div class="historyTitle">Last 10</div>
+        <div id="historyList" class="historyList"></div>
+      </aside>
+    </div>
+    <div class="footer">Works offline after first load · Add to Home Screen</div>
+  </main>
+
+  <main id="gameScreen" class="screen">
+    <div class="gameTop">
+      <div id="counter" class="counter">1 / 195</div>
+      <div id="score" class="score">0 correct</div>
+    </div>
+    <div class="timerWrap"><div id="timer" class="timer"></div></div>
+    <section class="questionCard">
+      <div class="prompt">What is the capital of</div>
+      <div id="country" class="country"></div>
+      <div class="instruction">Select all correct capitals, then tap Check.</div>
+      <div id="choices" class="choices"></div>
+      <button id="submit" class="submit" disabled>Check answer</button>
+    </section>
+  </main>
+</div>
+
+<div id="result" class="result">
+  <div class="resultCard">
+    <div class="eyebrow">Run over</div>
+    <h2 id="resultTitle">Game over</h2>
+    <div id="resultScore" class="resultScore">0</div>
+    <div id="resultMeta" class="resultMeta"></div>
+    <div class="resultActions">
+      <button id="homeBtn">Home</button>
+      <button id="againBtn" class="primary">Play again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const COUNTRIES = [
+["Afghanistan",["Kabul"]],["Albania",["Tirana"]],["Algeria",["Algiers"]],["Andorra",["Andorra la Vella"]],
+["Angola",["Luanda"]],["Antigua and Barbuda",["Saint John's"]],["Argentina",["Buenos Aires"]],["Armenia",["Yerevan"]],
+["Australia",["Canberra"]],["Austria",["Vienna"]],["Azerbaijan",["Baku"]],["Bahamas",["Nassau"]],
+["Bahrain",["Manama"]],["Bangladesh",["Dhaka"]],["Barbados",["Bridgetown"]],["Belarus",["Minsk"]],
+["Belgium",["Brussels"]],["Belize",["Belmopan"]],["Benin",["Porto-Novo","Cotonou"]],["Bhutan",["Thimphu"]],
+["Bolivia",["Sucre","La Paz"]],["Bosnia and Herzegovina",["Sarajevo"]],["Botswana",["Gaborone"]],
+["Brazil",["Brasília"]],["Brunei",["Bandar Seri Begawan"]],["Bulgaria",["Sofia"]],["Burkina Faso",["Ouagadougou"]],
+["Burundi",["Gitega"]],["Cabo Verde",["Praia"]],["Cambodia",["Phnom Penh"]],["Cameroon",["Yaoundé"]],
+["Canada",["Ottawa"]],["Central African Republic",["Bangui"]],["Chad",["N'Djamena"]],["Chile",["Santiago"]],
+["China",["Beijing"]],["Colombia",["Bogotá"]],["Comoros",["Moroni"]],["Congo (Republic of the)",["Brazzaville"]],
+["Costa Rica",["San José"]],["Côte d'Ivoire",["Yamoussoukro","Abidjan"]],["Croatia",["Zagreb"]],
+["Cuba",["Havana"]],["Cyprus",["Nicosia"]],["Czechia",["Prague"]],["Democratic Republic of the Congo",["Kinshasa"]],
+["Denmark",["Copenhagen"]],["Djibouti",["Djibouti"]],["Dominica",["Roseau"]],["Dominican Republic",["Santo Domingo"]],
+["Ecuador",["Quito"]],["Egypt",["Cairo"]],["El Salvador",["San Salvador"]],["Equatorial Guinea",["Malabo"]],
+["Eritrea",["Asmara"]],["Estonia",["Tallinn"]],["Eswatini",["Mbabane","Lobamba"]],["Ethiopia",["Addis Ababa"]],
+["Fiji",["Suva"]],["Finland",["Helsinki"]],["France",["Paris"]],["Gabon",["Libreville"]],
+["Gambia",["Banjul"]],["Georgia",["Tbilisi"]],["Germany",["Berlin"]],["Ghana",["Accra"]],
+["Greece",["Athens"]],["Grenada",["St. George's"]],["Guatemala",["Guatemala City"]],["Guinea",["Conakry"]],
+["Guinea-Bissau",["Bissau"]],["Guyana",["Georgetown"]],["Haiti",["Port-au-Prince"]],["Honduras",["Tegucigalpa"]],
+["Hungary",["Budapest"]],["Iceland",["Reykjavík"]],["India",["New Delhi"]],["Indonesia",["Jakarta"]],
+["Iran",["Tehran"]],["Iraq",["Baghdad"]],["Ireland",["Dublin"]],["Israel",["Jerusalem"]],
+["Italy",["Rome"]],["Jamaica",["Kingston"]],["Japan",["Tokyo"]],["Jordan",["Amman"]],
+["Kazakhstan",["Astana"]],["Kenya",["Nairobi"]],["Kiribati",["South Tarawa"]],["Kuwait",["Kuwait City"]],
+["Kyrgyzstan",["Bishkek"]],["Laos",["Vientiane"]],["Latvia",["Riga"]],["Lebanon",["Beirut"]],
+["Lesotho",["Maseru"]],["Liberia",["Monrovia"]],["Libya",["Tripoli"]],["Liechtenstein",["Vaduz"]],
+["Lithuania",["Vilnius"]],["Luxembourg",["Luxembourg"]],["Madagascar",["Antananarivo"]],["Malawi",["Lilongwe"]],
+["Malaysia",["Kuala Lumpur","Putrajaya"]],["Maldives",["Malé"]],["Mali",["Bamako"]],["Malta",["Valletta"]],
+["Marshall Islands",["Majuro"]],["Mauritania",["Nouakchott"]],["Mauritius",["Port Louis"]],["Mexico",["Mexico City"]],
+["Micronesia",["Palikir"]],["Moldova",["Chișinău"]],["Monaco",["Monaco"]],["Mongolia",["Ulaanbaatar"]],
+["Montenegro",["Podgorica"]],["Morocco",["Rabat"]],["Mozambique",["Maputo"]],["Myanmar",["Naypyidaw"]],
+["Namibia",["Windhoek"]],["Nauru",["Yaren"]],["Nepal",["Kathmandu"]],["Netherlands",["Amsterdam","The Hague"]],
+["New Zealand",["Wellington"]],["Nicaragua",["Managua"]],["Niger",["Niamey"]],["Nigeria",["Abuja"]],
+["North Korea",["Pyongyang"]],["North Macedonia",["Skopje"]],["Norway",["Oslo"]],["Oman",["Muscat"]],
+["Pakistan",["Islamabad"]],["Palau",["Ngerulmud"]],["Palestine",["East Jerusalem","Ramallah"]],["Panama",["Panama City"]],
+["Papua New Guinea",["Port Moresby"]],["Paraguay",["Asunción"]],["Peru",["Lima"]],["Philippines",["Manila"]],
+["Poland",["Warsaw"]],["Portugal",["Lisbon"]],["Qatar",["Doha"]],["Romania",["Bucharest"]],
+["Russia",["Moscow"]],["Rwanda",["Kigali"]],["Saint Kitts and Nevis",["Basseterre"]],["Saint Lucia",["Castries"]],
+["Saint Vincent and the Grenadines",["Kingstown"]],["Samoa",["Apia"]],["San Marino",["San Marino"]],
+["São Tomé and Príncipe",["São Tomé"]],["Saudi Arabia",["Riyadh"]],["Senegal",["Dakar"]],["Serbia",["Belgrade"]],
+["Seychelles",["Victoria"]],["Sierra Leone",["Freetown"]],["Singapore",["Singapore"]],["Slovakia",["Bratislava"]],
+["Slovenia",["Ljubljana"]],["Solomon Islands",["Honiara"]],["Somalia",["Mogadishu"]],
+["South Africa",["Pretoria","Cape Town","Bloemfontein"]],["South Korea",["Seoul"]],["South Sudan",["Juba"]],
+["Spain",["Madrid"]],["Sri Lanka",["Sri Jayawardenepura Kotte","Colombo"]],["Sudan",["Khartoum"]],
+["Suriname",["Paramaribo"]],["Sweden",["Stockholm"]],["Switzerland",["Bern"]],["Syria",["Damascus"]],
+["Tajikistan",["Dushanbe"]],["Tanzania",["Dodoma","Dar es Salaam"]],["Thailand",["Bangkok"]],
+["Timor-Leste",["Dili"]],["Togo",["Lomé"]],["Tonga",["Nuku'alofa"]],["Trinidad and Tobago",["Port of Spain"]],
+["Tunisia",["Tunis"]],["Türkiye",["Ankara"]],["Turkmenistan",["Ashgabat"]],["Tuvalu",["Funafuti"]],
+["Uganda",["Kampala"]],["Ukraine",["Kyiv"]],["United Arab Emirates",["Abu Dhabi"]],["United Kingdom",["London"]],
+["United States",["Washington, D.C."]],["Uruguay",["Montevideo"]],["Uzbekistan",["Tashkent"]],["Vanuatu",["Port Vila"]],
+["Vatican City",["Vatican City"]],["Venezuela",["Caracas"]],["Vietnam",["Hanoi"]],["Yemen",["Sana'a"]],
+["Zambia",["Lusaka"]],["Zimbabwe",["Harare"]]
+];
+
+const $ = id => document.getElementById(id);
+const TOTAL = COUNTRIES.length;
+let run = [], index = 0, score = 0, selected = new Set(), timerId = null, deadline = 0, locked = false;
+
+function shuffle(a){ return [...a].sort(()=>Math.random()-.5); }
+
+function capitalsPool(){
+  return [...new Set(COUNTRIES.flatMap(c=>c[1]))];
+}
+
+function makeChoices(correct){
+  const pool = capitalsPool().filter(x=>!correct.includes(x));
+  return shuffle([...correct, ...shuffle(pool).slice(0,6-correct.length)]);
+}
+
+function renderHistory(){
+  const h = JSON.parse(localStorage.getItem("capitalRushHistory")||"[]");
+  $("historyList").innerHTML = h.length ? h.slice(0,10).map(x=>`<div class="hist"><span>${x.date}</span><span>${x.score}/${TOTAL}</span></div>`).join("") : `<div class="empty">No runs yet.</div>`;
+}
+function saveHistory(){
+  const h = JSON.parse(localStorage.getItem("capitalRushHistory")||"[]");
+  h.unshift({score,date:new Date().toLocaleDateString(undefined,{month:"short",day:"numeric"})});
+  localStorage.setItem("capitalRushHistory",JSON.stringify(h.slice(0,10)));
+  renderHistory();
+}
+function showScreen(id){
+  document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
+  $(id).classList.add("active");
+}
+function startGame(){
+  run=shuffle(COUNTRIES); index=0; score=0; $("result").classList.remove("show"); showScreen("gameScreen"); nextQuestion();
+}
+function nextQuestion(){
+  if(index>=run.length){ endGame(true); return; }
+  locked=false; selected=new Set();
+  const [country,correct]=run[index];
+  $("counter").textContent=`${index+1} / ${TOTAL}`;
+  $("score").textContent=`${score} correct`;
+  $("country").textContent=country;
+  $("submit").disabled=true;
+  $("choices").innerHTML="";
+  makeChoices(correct).forEach(cap=>{
+    const b=document.createElement("button");
+    b.className="choice"; b.textContent=cap;
+    b.addEventListener("click",()=>toggleChoice(b,cap));
+    $("choices").appendChild(b);
+  });
+  startTimer();
+}
+function toggleChoice(btn,cap){
+  if(locked)return;
+  if(selected.has(cap)){selected.delete(cap);btn.classList.remove("selected");btn.querySelector(".check")?.remove();}
+  else {selected.add(cap);btn.classList.add("selected");const s=document.createElement("span");s.className="check";s.textContent="✓";btn.appendChild(s);}
+  $("submit").disabled=selected.size===0;
+}
+function startTimer(){
+  clearInterval(timerId); deadline=performance.now()+7000;
+  $("timer").style.width="100%";
+  timerId=setInterval(()=>{
+    const left=Math.max(0,deadline-performance.now());
+    $("timer").style.width=(left/7000*100)+"%";
+    if(left<=0){clearInterval(timerId);submitAnswer(true);}
+  },40);
+}
+function submitAnswer(timeout=false){
+  if(locked)return; locked=true; clearInterval(timerId);
+  const correct=run[index][1];
+  const right=selected.size===correct.length && correct.every(x=>selected.has(x));
+  if(!right){
+    endGame(false,timeout); return;
+  }
+  score++; index++;
+  $("score").textContent=`${score} correct`;
+  setTimeout(nextQuestion,180);
+}
+function endGame(completed,timeout=false){
+  clearInterval(timerId);
+  saveHistory();
+  $("resultTitle").textContent=completed?"Perfect run!":"Game over";
+  $("resultScore").textContent=score;
+  $("resultMeta").textContent=completed ? `You cleared all ${TOTAL} countries.` : `You reached ${score} / ${TOTAL}${timeout?" · time ran out":""}.`;
+  $("result").classList.add("show");
+}
+$("newGame").addEventListener("click",startGame);
+$("submit").addEventListener("click",()=>submitAnswer(false));
+$("againBtn").addEventListener("click",startGame);
+$("homeBtn").addEventListener("click",()=>{ $("result").classList.remove("show"); showScreen("startScreen"); renderHistory(); });
+renderHistory();
+
+if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
+</script>
+</body>
+</html>
