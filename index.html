@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-180.png">
   <title>Capital Rush</title>
-  <meta name="app-version" content="5">
+  <meta name="app-version" content="6">
 
   <style>
     :root{
@@ -73,6 +73,8 @@
       flex-direction:column
     }
 
+    /* START SCREEN */
+
     .brand{
       margin:auto 0 22px;
       text-align:left
@@ -99,8 +101,6 @@
       line-height:1.35;
       max-width:420px
     }
-
-    /* START SCREEN */
 
     .startArea{
       margin-bottom:auto
@@ -193,7 +193,7 @@
       padding-bottom:4px
     }
 
-    /* GAME */
+    /* GAME TOP */
 
     .gameTop{
       display:flex;
@@ -201,6 +201,30 @@
       justify-content:space-between;
       gap:12px;
       margin-bottom:14px
+    }
+
+    .gameTopLeft{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0
+    }
+
+    .exitPractice{
+      display:none;
+      background:var(--card);
+      border:1px solid var(--line);
+      color:var(--muted);
+      border-radius:11px;
+      min-height:34px;
+      padding:0 12px;
+      font-size:12px;
+      font-weight:700;
+      white-space:nowrap
+    }
+
+    .practiceMode .exitPractice{
+      display:block
     }
 
     .counter{
@@ -232,6 +256,8 @@
       background:var(--accent);
       transform-origin:left center
     }
+
+    /* QUESTION */
 
     .questionCard{
       background:var(--card);
@@ -459,6 +485,20 @@
       line-height:1.35
     }
 
+    /* INCORRECT PRACTICE ANSWER */
+
+    .answerValue.yourAnswerIncorrect{
+      color:var(--danger);
+      font-size:11px;
+      font-weight:600;
+      line-height:1.3
+    }
+
+    .answerLine.yourAnswerIncorrectLabel{
+      color:#777d8a;
+      font-size:11px
+    }
+
     .answerNext{
       width:100%;
       min-height:45px;
@@ -469,21 +509,59 @@
     }
 
     @media (max-height:700px){
-      h1{font-size:40px}
-      .brand{margin-bottom:14px}
-      .newGame,.practiceGame{min-height:145px}
-      .country{font-size:28px}
-      .choice{min-height:52px;padding:10px 8px}
-      .choices{gap:7px;margin-top:12px}
-      .questionCard{padding:17px 14px 13px}
-      .submit{min-height:46px;margin-top:8px}
+
+      h1{
+        font-size:40px
+      }
+
+      .brand{
+        margin-bottom:14px
+      }
+
+      .newGame,
+      .practiceGame{
+        min-height:145px
+      }
+
+      .country{
+        font-size:28px
+      }
+
+      .choice{
+        min-height:52px;
+        padding:10px 8px
+      }
+
+      .choices{
+        gap:7px;
+        margin-top:12px
+      }
+
+      .questionCard{
+        padding:17px 14px 13px
+      }
+
+      .submit{
+        min-height:46px;
+        margin-top:8px
+      }
     }
 
     @media (min-width:600px){
-      .screen{padding:28px}
-      .choices{gap:12px}
-      .choice{min-height:72px}
+
+      .screen{
+        padding:28px
+      }
+
+      .choices{
+        gap:12px
+      }
+
+      .choice{
+        min-height:72px
+      }
     }
+
   </style>
 </head>
 
@@ -491,17 +569,20 @@
 
 <div class="app">
 
-  <!-- START -->
+  <!-- START SCREEN -->
   <main id="startScreen" class="screen active">
 
     <div class="brand">
       <div class="eyebrow">195 countries</div>
+
       <h1>Capital Rush</h1>
+
       <div class="tagline">
         Name every capital. One mistake ends the run.
         You have 7 seconds per country.
       </div>
     </div>
+
 
     <div class="startArea">
 
@@ -509,22 +590,34 @@
 
         <button class="newGame" id="newGame">
           <strong>New Game</strong>
-          <span>6 choices · 7 seconds · no second chances</span>
+          <span>
+            6 choices · 7 seconds · no second chances
+          </span>
         </button>
+
 
         <button class="practiceGame" id="practiceGame">
           <strong>Practice</strong>
-          <span>No timer · learn from every answer</span>
+          <span>
+            No timer · learn from every answer
+          </span>
         </button>
 
       </div>
 
+
       <aside class="history">
-        <div class="historyTitle">Last 10</div>
+
+        <div class="historyTitle">
+          Last 10
+        </div>
+
         <div id="historyList" class="historyList"></div>
+
       </aside>
 
     </div>
+
 
     <div class="footer">
       Works offline after first load · Add to Home Screen
@@ -533,21 +626,45 @@
   </main>
 
 
-  <!-- GAME -->
+  <!-- GAME SCREEN -->
   <main id="gameScreen" class="screen">
 
     <div class="gameTop">
-      <div id="counter" class="counter">1 / 195</div>
-      <div id="score" class="score">0 correct</div>
+
+      <div class="gameTopLeft">
+
+        <button
+          id="exitPractice"
+          class="exitPractice"
+        >
+          Exit
+        </button>
+
+        <div id="counter" class="counter">
+          1 / 195
+        </div>
+
+      </div>
+
+      <div id="score" class="score">
+        0 correct
+      </div>
+
     </div>
 
+
     <div id="timerWrap" class="timerWrap">
+
       <div id="timer" class="timer"></div>
+
     </div>
+
 
     <section class="questionCard">
 
-      <div class="prompt">What is the capital of</div>
+      <div class="prompt">
+        What is the capital of
+      </div>
 
       <div id="country" class="country"></div>
 
@@ -557,7 +674,11 @@
 
       <div id="choices" class="choices"></div>
 
-      <button id="submit" class="submit" disabled>
+      <button
+        id="submit"
+        class="submit"
+        disabled
+      >
         Check answer
       </button>
 
@@ -573,17 +694,33 @@
 
   <div class="resultCard">
 
-    <div class="eyebrow">Run over</div>
+    <div class="eyebrow">
+      Run over
+    </div>
 
-    <h2 id="resultTitle">Game over</h2>
+    <h2 id="resultTitle">
+      Game over
+    </h2>
 
-    <div id="resultScore" class="resultScore">0</div>
+    <div id="resultScore" class="resultScore">
+      0
+    </div>
 
     <div id="resultMeta" class="resultMeta"></div>
 
     <div class="resultActions">
-      <button id="homeBtn">Home</button>
-      <button id="againBtn" class="primary">Play again</button>
+
+      <button id="homeBtn">
+        Home
+      </button>
+
+      <button
+        id="againBtn"
+        class="primary"
+      >
+        Play again
+      </button>
+
     </div>
 
   </div>
@@ -596,21 +733,47 @@
 
   <div class="answerCard">
 
-    <div id="answerStatus" class="answerStatus">
+    <div
+      id="answerStatus"
+      class="answerStatus"
+    >
       Correct
     </div>
 
-    <div id="answerCountry" class="answerCountry"></div>
+    <div
+      id="answerCountry"
+      class="answerCountry"
+    ></div>
 
-    <div class="answerLine">Correct answer</div>
-    <div id="answerValue" class="answerValue"></div>
 
-    <div id="yourAnswerLine" class="answerLine" style="margin-top:10px">
+    <div class="answerLine">
+      Correct answer
+    </div>
+
+    <div
+      id="answerValue"
+      class="answerValue"
+    ></div>
+
+
+    <div
+      id="yourAnswerLine"
+      class="answerLine"
+      style="margin-top:10px"
+    >
       Your answer
     </div>
-    <div id="yourAnswer" class="answerValue"></div>
 
-    <button id="answerNext" class="answerNext">
+    <div
+      id="yourAnswer"
+      class="answerValue"
+    ></div>
+
+
+    <button
+      id="answerNext"
+      class="answerNext"
+    >
       Next
     </button>
 
@@ -679,35 +842,45 @@ const COUNTRIES = [
 const $ = id => document.getElementById(id);
 const TOTAL = COUNTRIES.length;
 
-let run = [];
-let index = 0;
-let score = 0;
-let selected = new Set();
-let timerId = null;
-let deadline = 0;
-let locked = false;
-let practiceMode = false;
-let pendingPracticeAdvance = false;
+let run=[];
+let index=0;
+let score=0;
+let selected=new Set();
+let timerId=null;
+let deadline=0;
+let locked=false;
+let practiceMode=false;
 
+
+/* SHUFFLE */
 
 function shuffle(a){
   return [...a].sort(()=>Math.random()-.5);
 }
 
 
+/* CAPITAL POOL */
+
 function capitalsPool(){
-  return [...new Set(COUNTRIES.flatMap(c=>c[1]))];
+  return [...new Set(
+    COUNTRIES.flatMap(c=>c[1])
+  )];
 }
 
 
+/* CHOICES */
+
 function makeChoices(correct){
 
-  const pool = capitalsPool()
+  const pool=capitalsPool()
     .filter(x=>!correct.includes(x));
 
   return shuffle([
     ...correct,
-    ...shuffle(pool).slice(0,6-correct.length)
+    ...shuffle(pool).slice(
+      0,
+      6-correct.length
+    )
   ]);
 }
 
@@ -716,38 +889,51 @@ function makeChoices(correct){
 
 function renderHistory(){
 
-  const h = JSON.parse(
-    localStorage.getItem("capitalRushHistory") || "[]"
+  const h=JSON.parse(
+    localStorage.getItem(
+      "capitalRushHistory"
+    ) || "[]"
   );
 
-  $("historyList").innerHTML = h.length
-    ? h.slice(0,10).map(x =>
-        `<div class="hist">
-          <span>${x.date}</span>
-          <span>${x.score}/${TOTAL}</span>
-        </div>`
-      ).join("")
-    : `<div class="empty">No runs yet.</div>`;
+  $("historyList").innerHTML=h.length
+
+    ? h.slice(0,10).map(x=>
+      `<div class="hist">
+        <span>${x.date}</span>
+        <span>${x.score}/${TOTAL}</span>
+      </div>`
+    ).join("")
+
+    : `<div class="empty">
+        No runs yet.
+      </div>`;
 }
 
 
 function saveHistory(){
 
-  const h = JSON.parse(
-    localStorage.getItem("capitalRushHistory") || "[]"
+  const h=JSON.parse(
+    localStorage.getItem(
+      "capitalRushHistory"
+    ) || "[]"
   );
 
   h.unshift({
     score,
-    date:new Date().toLocaleDateString(undefined,{
-      month:"short",
-      day:"numeric"
-    })
+    date:new Date().toLocaleDateString(
+      undefined,
+      {
+        month:"short",
+        day:"numeric"
+      }
+    )
   });
 
   localStorage.setItem(
     "capitalRushHistory",
-    JSON.stringify(h.slice(0,10))
+    JSON.stringify(
+      h.slice(0,10)
+    )
   );
 
   renderHistory();
@@ -760,26 +946,37 @@ function showScreen(id){
 
   document
     .querySelectorAll(".screen")
-    .forEach(x=>x.classList.remove("active"));
+    .forEach(x=>
+      x.classList.remove("active")
+    );
 
   $(id).classList.add("active");
 }
 
 
-/* NEW GAME */
+/* NORMAL GAME */
 
 function startGame(){
 
+  clearInterval(timerId);
+
   practiceMode=false;
+
+  $("gameScreen")
+    .classList.remove("practiceMode");
+
+  $("timerWrap")
+    .classList.remove("practiceTimer");
 
   run=shuffle(COUNTRIES);
   index=0;
   score=0;
 
-  $("result").classList.remove("show");
-  $("answerPopup").classList.remove("show");
+  $("result")
+    .classList.remove("show");
 
-  $("timerWrap").classList.remove("practiceTimer");
+  $("answerPopup")
+    .classList.remove("show");
 
   showScreen("gameScreen");
 
@@ -791,16 +988,25 @@ function startGame(){
 
 function startPractice(){
 
+  clearInterval(timerId);
+
   practiceMode=true;
+
+  $("gameScreen")
+    .classList.add("practiceMode");
+
+  $("timerWrap")
+    .classList.add("practiceTimer");
 
   run=shuffle(COUNTRIES);
   index=0;
   score=0;
 
-  $("result").classList.remove("show");
-  $("answerPopup").classList.remove("show");
+  $("result")
+    .classList.remove("show");
 
-  $("timerWrap").classList.add("practiceTimer");
+  $("answerPopup")
+    .classList.remove("show");
 
   showScreen("gameScreen");
 
@@ -808,55 +1014,97 @@ function startPractice(){
 }
 
 
-/* QUESTION */
+/* EXIT PRACTICE */
+
+function exitPractice(){
+
+  clearInterval(timerId);
+
+  practiceMode=false;
+
+  $("answerPopup")
+    .classList.remove("show");
+
+  $("result")
+    .classList.remove("show");
+
+  $("timerWrap")
+    .classList.remove("practiceTimer");
+
+  $("gameScreen")
+    .classList.remove("practiceMode");
+
+  showScreen("startScreen");
+
+  renderHistory();
+}
+
+
+/* NEXT QUESTION */
 
 function nextQuestion(){
 
   clearInterval(timerId);
 
-  $("answerPopup").classList.remove("show");
+  $("answerPopup")
+    .classList.remove("show");
 
   if(index>=run.length){
 
     if(practiceMode){
+
       endPractice();
+
     }else{
+
       endGame(true);
+
     }
 
     return;
   }
+
 
   locked=false;
   selected=new Set();
 
   const [country,correct]=run[index];
 
-  const needsCheck=correct.length>1;
+  const needsCheck=
+    correct.length>1;
 
-  $("counter").textContent =
+
+  $("counter").textContent=
     `${index+1} / ${TOTAL}`;
 
-  $("score").textContent =
+  $("score").textContent=
     `${score} correct`;
 
-  $("country").textContent=country;
+  $("country").textContent=
+    country;
 
-  $("instruction").textContent =
+
+  $("instruction").textContent=
     practiceMode
+
       ? (
           needsCheck
             ? "Select all correct capitals, then tap Check."
             : "Select the capital."
         )
+
       : "Select all correct capitals, then tap Check.";
 
-  $("submit").style.display =
-    needsCheck ? "block" : "none";
+
+  $("submit").style.display=
+    needsCheck
+      ? "block"
+      : "none";
 
   $("submit").disabled=true;
 
   $("choices").innerHTML="";
+
 
   makeChoices(correct).forEach(cap=>{
 
@@ -867,36 +1115,59 @@ function nextQuestion(){
 
     b.addEventListener(
       "click",
-      ()=>toggleChoice(b,cap,correct,needsCheck)
+      ()=>toggleChoice(
+        b,
+        cap,
+        correct,
+        needsCheck
+      )
     );
 
-    $("choices").appendChild(b);
+    $("choices")
+      .appendChild(b);
+
   });
 
+
   if(!practiceMode){
+
     startTimer();
+
   }
 }
 
 
 /* CHOICE */
 
-function toggleChoice(btn,cap,correct,needsCheck){
+function toggleChoice(
+  btn,
+  cap,
+  correct,
+  needsCheck
+){
 
   if(locked)return;
+
 
   if(selected.has(cap)){
 
     selected.delete(cap);
-    btn.classList.remove("selected");
-    btn.querySelector(".check")?.remove();
+
+    btn.classList.remove(
+      "selected"
+    );
+
+    btn.querySelector(
+      ".check"
+    )?.remove();
 
   }else{
 
     /*
-      For single-capital questions only one choice
-      can be selected.
+      Single-capital questions:
+      only one answer can be selected.
     */
+
     if(!needsCheck){
 
       selected.clear();
@@ -904,16 +1175,30 @@ function toggleChoice(btn,cap,correct,needsCheck){
       document
         .querySelectorAll(".choice")
         .forEach(x=>{
-          x.classList.remove("selected");
-          x.querySelector(".check")?.remove();
+
+          x.classList.remove(
+            "selected"
+          );
+
+          x.querySelector(
+            ".check"
+          )?.remove();
+
         });
     }
 
+
     selected.add(cap);
 
-    btn.classList.add("selected");
+    btn.classList.add(
+      "selected"
+    );
 
-    const mark=document.createElement("span");
+
+    const mark=
+      document.createElement(
+        "span"
+      );
 
     mark.className="check";
     mark.textContent="✓";
@@ -924,17 +1209,17 @@ function toggleChoice(btn,cap,correct,needsCheck){
 
   if(needsCheck){
 
-    $("submit").disabled =
+    $("submit").disabled=
       selected.size===0;
 
     return;
   }
 
 
-  /*
-    Single-capital questions answer immediately.
-  */
-  submitAnswer(false,cap);
+  submitAnswer(
+    false,
+    cap
+  );
 }
 
 
@@ -944,25 +1229,31 @@ function startTimer(){
 
   clearInterval(timerId);
 
-  deadline=performance.now()+7000;
+  deadline=
+    performance.now()+7000;
 
-  $("timer").style.width="100%";
+  $("timer").style.width=
+    "100%";
+
 
   timerId=setInterval(()=>{
 
-    const left=Math.max(
-      0,
-      deadline-performance.now()
-    );
+    const left=
+      Math.max(
+        0,
+        deadline-performance.now()
+      );
 
-    $("timer").style.width =
+    $("timer").style.width=
       (left/7000*100)+"%";
+
 
     if(left<=0){
 
       clearInterval(timerId);
 
       submitAnswer(true);
+
     }
 
   },40);
@@ -971,7 +1262,10 @@ function startTimer(){
 
 /* ANSWER */
 
-function submitAnswer(timeout=false,clickedCap=null){
+function submitAnswer(
+  timeout=false,
+  clickedCap=null
+){
 
   if(locked)return;
 
@@ -979,33 +1273,54 @@ function submitAnswer(timeout=false,clickedCap=null){
 
   clearInterval(timerId);
 
-  const correct=run[index][1];
 
-  const right =
+  const correct=
+    run[index][1];
+
+
+  const right=
     selected.size===correct.length &&
-    correct.every(x=>selected.has(x));
+    correct.every(
+      x=>selected.has(x)
+    );
+
 
   const buttons=[
-    ...$("choices").querySelectorAll(".choice")
+    ...$("choices")
+      .querySelectorAll(".choice")
   ];
 
 
   buttons.forEach(btn=>{
 
-    const cap =
+    const cap=
       btn.childNodes[0]?.textContent ||
       btn.textContent;
 
-    if(correct.includes(cap))
-      btn.classList.add("correct");
+
+    if(correct.includes(cap)){
+
+      btn.classList.add(
+        "correct"
+      );
+
+    }
+
 
     if(
       selected.has(cap) &&
       !correct.includes(cap)
-    )
-      btn.classList.add("wrong");
+    ){
+
+      btn.classList.add(
+        "wrong"
+      );
+
+    }
+
 
     btn.disabled=true;
+
   });
 
 
@@ -1013,15 +1328,14 @@ function submitAnswer(timeout=false,clickedCap=null){
 
     score++;
 
-    $("score").textContent =
+    $("score").textContent=
       `${score} correct`;
+
   }
 
 
-  /*
-    PRACTICE MODE
-    Always show the answer popup.
-  */
+  /* PRACTICE */
+
   if(practiceMode){
 
     showPracticeAnswer(
@@ -1035,17 +1349,17 @@ function submitAnswer(timeout=false,clickedCap=null){
   }
 
 
-  /*
-    NORMAL GAME
-  */
+  /* NORMAL GAME */
 
   if(right){
 
-    const nextIndex=index+1;
+    const nextIndex=
+      index+1;
 
     setTimeout(()=>{
 
       index=nextIndex;
+
       nextQuestion();
 
     },420);
@@ -1054,7 +1368,9 @@ function submitAnswer(timeout=false,clickedCap=null){
   }
 
 
-  const correctText=correct.join(" · ");
+  const correctText=
+    correct.join(" · ");
+
 
   setTimeout(()=>{
 
@@ -1068,7 +1384,7 @@ function submitAnswer(timeout=false,clickedCap=null){
 }
 
 
-/* PRACTICE ANSWER POPUP */
+/* PRACTICE POPUP */
 
 function showPracticeAnswer(
   right,
@@ -1079,23 +1395,55 @@ function showPracticeAnswer(
 
   const [country]=run[index];
 
-  $("answerCountry").textContent=country;
 
-  $("answerStatus").textContent =
-    right ? "Correct" : "Incorrect";
-
-  $("answerStatus").className =
-    "answerStatus " +
-    (right
-      ? "correctStatus"
-      : "wrongStatus");
+  $("answerCountry")
+    .textContent=country;
 
 
-  $("answerValue").textContent =
-    correct.join(" · ");
+  $("answerStatus")
+    .textContent=
+      right
+        ? "Correct"
+        : "Incorrect";
+
+
+  $("answerStatus")
+    .className=
+      "answerStatus " +
+      (
+        right
+          ? "correctStatus"
+          : "wrongStatus"
+      );
+
+
+  $("answerValue")
+    .textContent=
+      correct.join(" · ");
+
+
+  const yourAnswer=
+    $("yourAnswer");
+
+  const yourAnswerLine=
+    $("yourAnswerLine");
+
+
+  /*
+    Reset incorrect styling first.
+  */
+
+  yourAnswer.classList.remove(
+    "yourAnswerIncorrect"
+  );
+
+  yourAnswerLine.classList.remove(
+    "yourAnswerIncorrectLabel"
+  );
 
 
   let yourText;
+
 
   if(timeout){
 
@@ -1110,19 +1458,40 @@ function showPracticeAnswer(
   }else{
 
     yourText="No answer";
+
   }
 
 
-  $("yourAnswer").textContent=yourText;
+  yourAnswer.textContent=
+    yourText;
 
 
-  $("answerNext").textContent =
+  /*
+    Incorrect answer:
+    red + smaller font.
+  */
+
+  if(!right){
+
+    yourAnswer.classList.add(
+      "yourAnswerIncorrect"
+    );
+
+    yourAnswerLine.classList.add(
+      "yourAnswerIncorrectLabel"
+    );
+
+  }
+
+
+  $("answerNext").textContent=
     index+1>=run.length
       ? "Finish"
       : "Next";
 
 
-  $("answerPopup").classList.add("show");
+  $("answerPopup")
+    .classList.add("show");
 }
 
 
@@ -1132,7 +1501,8 @@ function practiceNext(){
 
   if(!practiceMode)return;
 
-  $("answerPopup").classList.remove("show");
+  $("answerPopup")
+    .classList.remove("show");
 
   index++;
 
@@ -1140,27 +1510,27 @@ function practiceNext(){
 }
 
 
-/* PRACTICE END */
+/* PRACTICE COMPLETE */
 
 function endPractice(){
 
   clearInterval(timerId);
 
-  $("resultTitle").textContent =
+  $("resultTitle").textContent=
     "Practice complete";
 
-  $("resultScore").textContent =
+  $("resultScore").textContent=
     `${score}/${TOTAL}`;
 
-  $("resultMeta").textContent =
+  $("resultMeta").textContent=
     `You completed all ${TOTAL} countries in practice mode.`;
 
   /*
-    Practice results are intentionally NOT
-    saved to the Last 10 history.
+    Practice never affects Last 10.
   */
 
-  $("result").classList.add("show");
+  $("result")
+    .classList.add("show");
 }
 
 
@@ -1174,34 +1544,41 @@ function endGame(
 
   clearInterval(timerId);
 
-  /*
-    Only normal games affect history.
-  */
   if(!practiceMode){
+
     saveHistory();
+
   }
 
-  $("resultTitle").textContent =
+
+  $("resultTitle").textContent=
     completed
       ? "Perfect run!"
       : "Game over";
 
-  $("resultScore").textContent=score;
 
-  $("resultMeta").textContent =
+  $("resultScore").textContent=
+    score;
+
+
+  $("resultMeta").textContent=
     completed
+
       ? `You cleared all ${TOTAL} countries.`
+
       : `You reached ${score} / ${TOTAL}${
           timeout
             ? " · time ran out"
             : ""
         }${
           correctText
-            ? " · Correct: " + correctText
+            ? " · Correct: " +
+              correctText
             : ""
         }.`;
 
-  $("result").classList.add("show");
+  $("result")
+    .classList.add("show");
 }
 
 
@@ -1212,39 +1589,59 @@ $("newGame").addEventListener(
   startGame
 );
 
+
 $("practiceGame").addEventListener(
   "click",
   startPractice
 );
+
+
+$("exitPractice").addEventListener(
+  "click",
+  exitPractice
+);
+
 
 $("submit").addEventListener(
   "click",
   ()=>submitAnswer(false)
 );
 
+
 $("answerNext").addEventListener(
   "click",
   practiceNext
 );
+
 
 $("againBtn").addEventListener(
   "click",
   startGame
 );
 
+
 $("homeBtn").addEventListener(
   "click",
   ()=>{
     clearInterval(timerId);
 
-    $("result").classList.remove("show");
-    $("answerPopup").classList.remove("show");
+    $("result")
+      .classList.remove("show");
+
+    $("answerPopup")
+      .classList.remove("show");
 
     practiceMode=false;
 
-    $("timerWrap").classList.remove(
-      "practiceTimer"
-    );
+    $("timerWrap")
+      .classList.remove(
+        "practiceTimer"
+      );
+
+    $("gameScreen")
+      .classList.remove(
+        "practiceMode"
+      );
 
     showScreen("startScreen");
 
@@ -1268,10 +1665,12 @@ if("serviceWorker" in navigator){
 
       try{
 
-        const registration =
+        const registration=
           await navigator.serviceWorker.register(
             "./sw.js",
-            {updateViaCache:"none"}
+            {
+              updateViaCache:"none"
+            }
           );
 
         await registration.update();
