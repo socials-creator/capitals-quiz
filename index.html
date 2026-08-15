@@ -212,24 +212,46 @@ function nextQuestion(){
   if(index>=run.length){ endGame(true); return; }
   locked=false; selected=new Set();
   const [country,correct]=run[index];
+  const needsCheck=correct.length>1;
+
   $("counter").textContent=`${index+1} / ${TOTAL}`;
   $("score").textContent=`${score} correct`;
   $("country").textContent=country;
+  $("submit").style.display=needsCheck ? "block" : "none";
   $("submit").disabled=true;
   $("choices").innerHTML="";
+
   makeChoices(correct).forEach(cap=>{
     const b=document.createElement("button");
     b.className="choice"; b.textContent=cap;
-    b.addEventListener("click",()=>toggleChoice(b,cap));
+    b.addEventListener("click",()=>toggleChoice(b,cap,correct,needsCheck));
     $("choices").appendChild(b);
   });
   startTimer();
 }
-function toggleChoice(btn,cap){
+function toggleChoice(btn,cap,correct,needsCheck){
   if(locked)return;
-  if(selected.has(cap)){selected.delete(cap);btn.classList.remove("selected");btn.querySelector(".check")?.remove();}
-  else {selected.add(cap);btn.classList.add("selected");const s=document.createElement("span");s.className="check";s.textContent="✓";btn.appendChild(s);}
-  $("submit").disabled=selected.size===0;
+
+  if(selected.has(cap)){
+    selected.delete(cap);
+    btn.classList.remove("selected");
+    btn.querySelector(".check")?.remove();
+  } else {
+    selected.add(cap);
+    btn.classList.add("selected");
+    const mark=document.createElement("span");
+    mark.className="check";
+    mark.textContent="✓";
+    btn.appendChild(mark);
+  }
+
+  if(needsCheck){
+    $("submit").disabled=selected.size===0;
+    return;
+  }
+
+  // Single-capital questions are answered immediately.
+  submitAnswer(false, cap);
 }
 function startTimer(){
   clearInterval(timerId); deadline=performance.now()+7000;
@@ -240,23 +262,44 @@ function startTimer(){
     if(left<=0){clearInterval(timerId);submitAnswer(true);}
   },40);
 }
-function submitAnswer(timeout=false){
-  if(locked)return; locked=true; clearInterval(timerId);
+function submitAnswer(timeout=false, clickedCap=null){
+  if(locked)return;
+  locked=true;
+  clearInterval(timerId);
+
   const correct=run[index][1];
   const right=selected.size===correct.length && correct.every(x=>selected.has(x));
-  if(!right){
-    endGame(false,timeout); return;
+  const buttons=[...$("choices").querySelectorAll(".choice")];
+
+  // Show the answer directly on the choices.
+  buttons.forEach(btn=>{
+    const cap=btn.childNodes[0]?.textContent || btn.textContent;
+    if(correct.includes(cap)) btn.classList.add("correct");
+    if(selected.has(cap) && !correct.includes(cap)) btn.classList.add("wrong");
+    btn.disabled=true;
+  });
+
+  if(right){
+    score++;
+    $("score").textContent=`${score} correct`;
+    setTimeout(nextQuestion,420);
+    return;
   }
-  score++; index++;
-  $("score").textContent=`${score} correct`;
-  setTimeout(nextQuestion,180);
+
+  // Wrong or timed out: correct answer remains green and the run ends.
+  const correctText=correct.join(" · ");
+  setTimeout(()=>{
+    endGame(false,timeout,correctText);
+  },700);
 }
-function endGame(completed,timeout=false){
+function endGame(completed,timeout=false,correctText=""){
   clearInterval(timerId);
   saveHistory();
   $("resultTitle").textContent=completed?"Perfect run!":"Game over";
   $("resultScore").textContent=score;
-  $("resultMeta").textContent=completed ? `You cleared all ${TOTAL} countries.` : `You reached ${score} / ${TOTAL}${timeout?" · time ran out":""}.`;
+  $("resultMeta").textContent=completed
+    ? `You cleared all ${TOTAL} countries.`
+    : `You reached ${score} / ${TOTAL}${timeout?" · time ran out":""}${correctText ? " · Correct: " + correctText : ""}.`;
   $("result").classList.add("show");
 }
 $("newGame").addEventListener("click",startGame);

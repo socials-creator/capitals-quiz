@@ -1,4 +1,4 @@
-const CACHE="capital-rush-v1";
+const CACHE="capital-rush-v2";
 const ASSETS=["./","./index.html","./manifest.webmanifest","./icon-180.png"];
 self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS))));
 self.addEventListener("activate",e=>e.waitUntil(self.clients.claim()));
