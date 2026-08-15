@@ -10,6 +10,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-180.png">
   <title>Capital Rush</title>
+  <meta name="app-version" content="3">
   <style>
     :root{--bg:#08090c;--card:#111318;--card2:#171922;--text:#f5f7fb;--muted:#9299a8;--accent:#0a84ff;--danger:#ff453a;--ok:#30d158;--line:#252a35}
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -308,7 +309,14 @@ $("againBtn").addEventListener("click",startGame);
 $("homeBtn").addEventListener("click",()=>{ $("result").classList.remove("show"); showScreen("startScreen"); renderHistory(); });
 renderHistory();
 
-if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
+if("serviceWorker" in navigator){
+  window.addEventListener("load", async ()=>{
+    try{
+      const registration=await navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"});
+      await registration.update();
+    }catch(e){ console.log("Service worker update unavailable",e); }
+  });
+}
 </script>
 </body>
 </html>
