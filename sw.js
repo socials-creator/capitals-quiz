@@ -1,4 +1,4 @@
-const CACHE = "capital-rush-v5";
+const CACHE = "capital-rush-v6";
 
 const ASSETS = [
   "./",
@@ -7,13 +7,16 @@ const ASSETS = [
   "./icon-180.png"
 ];
 
+
 self.addEventListener("install", event => {
 
   event.waitUntil(
+
     caches
       .open(CACHE)
       .then(cache => cache.addAll(ASSETS))
       .then(() => self.skipWaiting())
+
   );
 
 });
@@ -27,9 +30,11 @@ self.addEventListener("activate", event => {
       .keys()
       .then(keys =>
         Promise.all(
+
           keys
             .filter(key => key !== CACHE)
             .map(key => caches.delete(key))
+
         )
       )
       .then(() => self.clients.claim())
@@ -41,13 +46,22 @@ self.addEventListener("activate", event => {
 
 self.addEventListener("fetch", event => {
 
+  /*
+    Never cache the service worker itself.
+    This allows GitHub Pages to deliver
+    the newest version.
+  */
+
   if(
     new URL(event.request.url)
       .pathname
       .endsWith("/sw.js")
   ){
+
     return;
+
   }
+
 
   event.respondWith(
 
@@ -56,7 +70,9 @@ self.addEventListener("fetch", event => {
       .then(cached => {
 
         if(cached){
+
           return cached;
+
         }
 
         return fetch(event.request);
