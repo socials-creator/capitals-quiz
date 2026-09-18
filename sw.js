@@ -1,4 +1,4 @@
-const CACHE = "capital-rush-v6";
+const CACHE = "capital-rush-v7";
 
 const ASSETS = [
   "./",

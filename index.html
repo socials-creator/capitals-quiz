@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-180.png">
   <title>Capital Rush</title>
-  <meta name="app-version" content="6">
+  <meta name="app-version" content="7">
 
   <style>
     :root{
@@ -104,6 +104,34 @@
 
     .startArea{
       margin-bottom:auto
+    }
+
+    /* MODE SWITCH */
+
+    .modeSwitch{
+      display:flex;
+      gap:6px;
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:4px;
+      margin-bottom:16px
+    }
+
+    .modeBtn{
+      flex:1;
+      background:transparent;
+      border-radius:11px;
+      padding:11px 8px;
+      font-size:13px;
+      font-weight:700;
+      color:var(--muted);
+      transition:background .15s,color .15s
+    }
+
+    .modeBtn.active{
+      background:var(--accent);
+      color:#fff
     }
 
     .startButtons{
@@ -282,6 +310,15 @@
       letter-spacing:-.04em;
       line-height:1.05;
       margin-bottom:9px
+    }
+
+    .country.code{
+      font-family:"SF Mono",Menlo,Consolas,monospace;
+      font-size:60px;
+      font-weight:800;
+      letter-spacing:.06em;
+      color:var(--accent);
+      text-transform:uppercase
     }
 
     .instruction{
@@ -527,6 +564,14 @@
         font-size:28px
       }
 
+      .country.code{
+        font-size:46px
+      }
+
+      .modeSwitch{
+        margin-bottom:12px
+      }
+
       .choice{
         min-height:52px;
         padding:10px 8px
@@ -573,11 +618,11 @@
   <main id="startScreen" class="screen active">
 
     <div class="brand">
-      <div class="eyebrow">195 countries</div>
+      <div class="eyebrow" id="eyebrowText">195 countries</div>
 
-      <h1>Capital Rush</h1>
+      <h1 id="mainTitle">Capital Rush</h1>
 
-      <div class="tagline">
+      <div class="tagline" id="taglineText">
         Name every capital. One mistake ends the run.
         You have 7 seconds per country.
       </div>
@@ -585,11 +630,20 @@
 
     <div class="startArea">
 
+      <div class="modeSwitch" role="tablist">
+        <button class="modeBtn" data-mode="capitals" type="button">
+          🌍 Capitals
+        </button>
+        <button class="modeBtn" data-mode="airports" type="button">
+          ✈️ Airports
+        </button>
+      </div>
+
       <div class="startButtons">
 
         <button class="newGame" id="newGame">
           <strong>New Game</strong>
-          <span>
+          <span id="newGameSub">
             6 choices · 7 seconds · no second chances
           </span>
         </button>
@@ -655,7 +709,7 @@
 
     <section class="questionCard">
 
-      <div class="prompt">
+      <div class="prompt" id="promptLabel">
         What is the capital of
       </div>
 
@@ -976,8 +1030,179 @@ const COUNTRIES = [
 ];
 
 
+/* AIRPORT CODES — top 35 India, top 25 USA, top 15 Canada,
+   top 25 remaining busiest in the rest of the world */
+
+const AIRPORTS_RAW = [
+["DEL","Indira Gandhi International Airport","Delhi","IN"],
+["BOM","Chhatrapati Shivaji Maharaj International Airport","Mumbai","IN"],
+["BLR","Kempegowda International Airport","Bengaluru","IN"],
+["HYD","Rajiv Gandhi International Airport","Hyderabad","IN"],
+["MAA","Chennai International Airport","Chennai","IN"],
+["CCU","Netaji Subhas Chandra Bose International Airport","Kolkata","IN"],
+["AMD","Sardar Vallabhbhai Patel International Airport","Ahmedabad","IN"],
+["PNQ","Pune Airport","Pune","IN"],
+["GOI","Goa International Airport","Dabolim","IN"],
+["COK","Cochin International Airport","Kochi","IN"],
+["JAI","Jaipur International Airport","Jaipur","IN"],
+["LKO","Chaudhary Charan Singh International Airport","Lucknow","IN"],
+["GAU","Lokpriya Gopinath Bordoloi International Airport","Guwahati","IN"],
+["PAT","Jay Prakash Narayan International Airport","Patna","IN"],
+["BHO","Raja Bhoj Airport","Bhopal","IN"],
+["TRV","Trivandrum International Airport","Thiruvananthapuram","IN"],
+["NAG","Dr. Babasaheb Ambedkar International Airport","Nagpur","IN"],
+["IDR","Devi Ahilyabai Holkar Airport","Indore","IN"],
+["VNS","Lal Bahadur Shastri Airport","Varanasi","IN"],
+["CJB","Coimbatore International Airport","Coimbatore","IN"],
+["VGA","Vijayawada Airport","Vijayawada","IN"],
+["VTZ","Visakhapatnam Airport","Visakhapatnam","IN"],
+["IXB","Bagdogra Airport","Bagdogra","IN"],
+["IXR","Birsa Munda Airport","Ranchi","IN"],
+["SXR","Sheikh ul-Alam International Airport","Srinagar","IN"],
+["ATQ","Sri Guru Ram Dass Jee International Airport","Amritsar","IN"],
+["RPR","Swami Vivekananda Airport","Raipur","IN"],
+["IXC","Chandigarh International Airport","Chandigarh","IN"],
+["BBI","Biju Patnaik International Airport","Bhubaneswar","IN"],
+["IXM","Madurai Airport","Madurai","IN"],
+["UDR","Maharana Pratap Airport","Udaipur","IN"],
+["DED","Jolly Grant Airport","Dehradun","IN"],
+["IMF","Bir Tikendrajit International Airport","Imphal","IN"],
+["BDQ","Vadodara Airport","Vadodara","IN"],
+["IXA","Maharaja Bir Bikram Airport","Agartala","IN"],
+
+["ATL","Hartsfield–Jackson Atlanta International Airport","Atlanta","US"],
+["DFW","Dallas/Fort Worth International Airport","Dallas","US"],
+["DEN","Denver International Airport","Denver","US"],
+["ORD","O'Hare International Airport","Chicago","US"],
+["LAX","Los Angeles International Airport","Los Angeles","US"],
+["JFK","John F. Kennedy International Airport","New York","US"],
+["LAS","Harry Reid International Airport","Las Vegas","US"],
+["MCO","Orlando International Airport","Orlando","US"],
+["MIA","Miami International Airport","Miami","US"],
+["CLT","Charlotte Douglas International Airport","Charlotte","US"],
+["SEA","Seattle–Tacoma International Airport","Seattle","US"],
+["PHX","Phoenix Sky Harbor International Airport","Phoenix","US"],
+["EWR","Newark Liberty International Airport","Newark","US"],
+["SFO","San Francisco International Airport","San Francisco","US"],
+["IAH","George Bush Intercontinental Airport","Houston","US"],
+["BOS","Logan International Airport","Boston","US"],
+["FLL","Fort Lauderdale–Hollywood International Airport","Fort Lauderdale","US"],
+["MSP","Minneapolis–Saint Paul International Airport","Minneapolis","US"],
+["LGA","LaGuardia Airport","New York","US"],
+["DTW","Detroit Metropolitan Airport","Detroit","US"],
+["PHL","Philadelphia International Airport","Philadelphia","US"],
+["SLC","Salt Lake City International Airport","Salt Lake City","US"],
+["DCA","Ronald Reagan Washington National Airport","Washington, D.C.","US"],
+["IAD","Washington Dulles International Airport","Washington, D.C.","US"],
+["BNA","Nashville International Airport","Nashville","US"],
+
+["YYZ","Toronto Pearson International Airport","Toronto","CA"],
+["YVR","Vancouver International Airport","Vancouver","CA"],
+["YUL","Montréal–Trudeau International Airport","Montréal","CA"],
+["YYC","Calgary International Airport","Calgary","CA"],
+["YEG","Edmonton International Airport","Edmonton","CA"],
+["YOW","Ottawa Macdonald–Cartier International Airport","Ottawa","CA"],
+["YWG","Winnipeg James Armstrong Richardson International Airport","Winnipeg","CA"],
+["YHZ","Halifax Stanfield International Airport","Halifax","CA"],
+["YQB","Québec City Jean Lesage International Airport","Québec City","CA"],
+["YXE","Saskatoon John G. Diefenbaker International Airport","Saskatoon","CA"],
+["YQR","Regina International Airport","Regina","CA"],
+["YYT","St. John's International Airport","St. John's","CA"],
+["YLW","Kelowna International Airport","Kelowna","CA"],
+["YHM","John C. Munro Hamilton International Airport","Hamilton","CA"],
+["YXU","London International Airport","London, Ontario","CA"],
+
+["PEK","Beijing Capital International Airport","Beijing","WORLD"],
+["HND","Haneda Airport","Tokyo","WORLD"],
+["DXB","Dubai International Airport","Dubai","WORLD"],
+["LHR","Heathrow Airport","London","WORLD"],
+["CDG","Charles de Gaulle Airport","Paris","WORLD"],
+["IST","Istanbul Airport","Istanbul","WORLD"],
+["CAN","Guangzhou Baiyun International Airport","Guangzhou","WORLD"],
+["PVG","Shanghai Pudong International Airport","Shanghai","WORLD"],
+["AMS","Amsterdam Airport Schiphol","Amsterdam","WORLD"],
+["FRA","Frankfurt Airport","Frankfurt","WORLD"],
+["ICN","Incheon International Airport","Seoul","WORLD"],
+["SIN","Singapore Changi Airport","Singapore","WORLD"],
+["NRT","Narita International Airport","Tokyo","WORLD"],
+["MAD","Adolfo Suárez Madrid–Barajas Airport","Madrid","WORLD"],
+["HKG","Hong Kong International Airport","Hong Kong","WORLD"],
+["BKK","Suvarnabhumi Airport","Bangkok","WORLD"],
+["SYD","Sydney Kingsford Smith Airport","Sydney","WORLD"],
+["GRU","São Paulo/Guarulhos International Airport","São Paulo","WORLD"],
+["MEX","Mexico City International Airport","Mexico City","WORLD"],
+["FCO","Leonardo da Vinci–Fiumicino Airport","Rome","WORLD"],
+["KUL","Kuala Lumpur International Airport","Kuala Lumpur","WORLD"],
+["CGK","Soekarno–Hatta International Airport","Jakarta","WORLD"],
+["GIG","Rio de Janeiro–Galeão International Airport","Rio de Janeiro","WORLD"],
+["DOH","Hamad International Airport","Doha","WORLD"],
+["MUC","Munich Airport","Munich","WORLD"]
+];
+
+const AIRPORTS = AIRPORTS_RAW.map(
+  a => [a[0], [`${a[1]} (${a[2]})`]]
+);
+
+const airportNames = AIRPORTS_RAW.map(
+  a => `${a[1]} (${a[2]})`
+);
+
+const airportRegionByName = new Map(
+  AIRPORTS_RAW.map(
+    a => [`${a[1]} (${a[2]})`, a[3]]
+  )
+);
+
+
+/* QUIZ MODES */
+
+const MODES = {
+
+  capitals:{
+    icon:"🌍",
+    title:"Capital Rush",
+    eyebrow: n => `${n} countries`,
+    tagline:
+      "Name every capital. One mistake ends the run. " +
+      "You have 7 seconds per country.",
+    dataset:COUNTRIES,
+    promptLabel:"What is the capital of",
+    choiceCount:6,
+    timeLimit:7000,
+    historyKey:"capitalRushHistory",
+    newGameSub:"6 choices · 7 seconds · no second chances",
+    codeStyle:false
+  },
+
+  airports:{
+    icon:"✈️",
+    title:"Airport Rush",
+    eyebrow: n => `${n} airports`,
+    tagline:
+      "Match every airport code to its name. One mistake ends the run. " +
+      "You have 8 seconds per airport.",
+    dataset:AIRPORTS,
+    promptLabel:"Airport code",
+    choiceCount:4,
+    timeLimit:8000,
+    historyKey:"airportRushHistory",
+    newGameSub:"4 choices · 8 seconds · no second chances",
+    codeStyle:true
+  }
+
+};
+
+
 const $ = id => document.getElementById(id);
-const TOTAL = COUNTRIES.length;
+
+let quizMode =
+  localStorage.getItem("geoRushMode") || "capitals";
+
+if(!MODES[quizMode]){
+  quizMode = "capitals";
+}
+
+let TOTAL = MODES[quizMode].dataset.length;
 
 let run = [];
 let index = 0;
@@ -1005,9 +1230,13 @@ function capitalsPool(){
 }
 
 
-/* CREATE SIX CHOICES */
+/* CREATE CHOICES */
 
 function makeChoices(correct){
+
+  if(quizMode === "airports"){
+    return airportChoices(correct[0]);
+  }
 
   const pool = capitalsPool()
     .filter(capital => !correct.includes(capital));
@@ -1016,8 +1245,60 @@ function makeChoices(correct){
     ...correct,
     ...shuffle(pool).slice(
       0,
-      6 - correct.length
+      MODES.capitals.choiceCount - correct.length
     )
+  ]);
+}
+
+
+/* AIRPORT DISTRACTORS
+   Mixes in at least one same-region airport
+   (so codes/names from the same country stay
+   genuinely confusing) plus airports from
+   anywhere else, for 4 total options. */
+
+function airportChoices(correctName){
+
+  const region =
+    airportRegionByName.get(correctName);
+
+  const pool =
+    shuffle(
+      airportNames.filter(
+        name => name !== correctName
+      )
+    );
+
+  const sameRegion =
+    pool.filter(
+      name => airportRegionByName.get(name) === region
+    );
+
+  const rest =
+    pool.filter(
+      name => airportRegionByName.get(name) !== region
+    );
+
+  const distractors = [];
+
+  if(sameRegion.length){
+    distractors.push(sameRegion[0]);
+  }
+
+  for(const name of [...rest, ...sameRegion.slice(1)]){
+
+    if(distractors.length >= 3){
+      break;
+    }
+
+    if(!distractors.includes(name)){
+      distractors.push(name);
+    }
+  }
+
+  return shuffle([
+    correctName,
+    ...distractors.slice(0,3)
   ]);
 }
 
@@ -1026,9 +1307,11 @@ function makeChoices(correct){
 
 function renderHistory(){
 
+  const mode = MODES[quizMode];
+
   const history = JSON.parse(
     localStorage.getItem(
-      "capitalRushHistory"
+      mode.historyKey
     ) || "[]"
   );
 
@@ -1046,7 +1329,9 @@ function renderHistory(){
       .map(item =>
         `<div class="hist">
           <span>${item.date}</span>
-          <span>${item.score}/${TOTAL}</span>
+          <span>${item.score}/${
+            item.total ?? mode.dataset.length
+          }</span>
         </div>`
       )
       .join("");
@@ -1055,14 +1340,17 @@ function renderHistory(){
 
 function saveHistory(){
 
+  const mode = MODES[quizMode];
+
   const history = JSON.parse(
     localStorage.getItem(
-      "capitalRushHistory"
+      mode.historyKey
     ) || "[]"
   );
 
   history.unshift({
     score:score,
+    total:TOTAL,
     date:new Date().toLocaleDateString(
       undefined,
       {
@@ -1073,11 +1361,46 @@ function saveHistory(){
   });
 
   localStorage.setItem(
-    "capitalRushHistory",
+    mode.historyKey,
     JSON.stringify(
       history.slice(0,10)
     )
   );
+
+  renderHistory();
+}
+
+
+/* MODE SWITCH UI */
+
+function updateModeUI(){
+
+  const mode = MODES[quizMode];
+
+  document
+    .querySelectorAll(".modeBtn")
+    .forEach(btn => {
+
+      btn.classList.toggle(
+        "active",
+        btn.dataset.mode === quizMode
+      );
+
+    });
+
+  $("eyebrowText").textContent =
+    mode.eyebrow(mode.dataset.length);
+
+  $("mainTitle").textContent =
+    mode.title;
+
+  $("taglineText").textContent =
+    mode.tagline;
+
+  $("newGameSub").textContent =
+    mode.newGameSub;
+
+  document.title = mode.title;
 
   renderHistory();
 }
@@ -1111,7 +1434,8 @@ function startGame(){
   $("timerWrap")
     .classList.remove("practiceTimer");
 
-  run = shuffle(COUNTRIES);
+  TOTAL = MODES[quizMode].dataset.length;
+  run = shuffle(MODES[quizMode].dataset);
   index = 0;
   score = 0;
 
@@ -1141,7 +1465,8 @@ function startPractice(){
   $("timerWrap")
     .classList.add("practiceTimer");
 
-  run = shuffle(COUNTRIES);
+  TOTAL = MODES[quizMode].dataset.length;
+  run = shuffle(MODES[quizMode].dataset);
   index = 0;
   score = 0;
 
@@ -1210,7 +1535,9 @@ function nextQuestion(){
   locked = false;
   selected = new Set();
 
-  const [country, correct] = run[index];
+  const mode = MODES[quizMode];
+
+  const [promptValue, correct] = run[index];
 
   const needsCheck = correct.length > 1;
 
@@ -1220,22 +1547,19 @@ function nextQuestion(){
   $("score").textContent =
     `${score} correct`;
 
+  $("promptLabel").textContent =
+    mode.promptLabel;
+
   $("country").textContent =
-    country;
+    promptValue;
 
-  if(practiceMode){
+  $("country").classList.toggle(
+    "code",
+    !!mode.codeStyle
+  );
 
-    $("instruction").textContent =
-      needsCheck
-        ? "Select all correct capitals, then tap Check."
-        : "Select the capital.";
-
-  }else{
-
-    $("instruction").textContent =
-      "Select all correct capitals, then tap Check.";
-
-  }
+  $("instruction").textContent =
+    instructionText(needsCheck);
 
   $("submit").style.display =
     needsCheck
@@ -1272,9 +1596,31 @@ function nextQuestion(){
 
   if(!practiceMode){
 
-    startTimer();
+    startTimer(mode.timeLimit);
 
   }
+}
+
+
+/* INSTRUCTION TEXT */
+
+function instructionText(needsCheck){
+
+  if(quizMode === "airports"){
+
+    return "Tap the airport that matches the code.";
+
+  }
+
+  if(practiceMode){
+
+    return needsCheck
+      ? "Select all correct capitals, then tap Check."
+      : "Select the capital.";
+
+  }
+
+  return "Select all correct capitals, then tap Check.";
 }
 
 
@@ -1376,12 +1722,15 @@ function toggleChoice(
 
 /* NORMAL GAME TIMER */
 
-function startTimer(){
+function startTimer(ms){
 
   clearInterval(timerId);
 
+  const duration =
+    ms || MODES[quizMode].timeLimit;
+
   deadline =
-    performance.now() + 7000;
+    performance.now() + duration;
 
   $("timer").style.width = "100%";
 
@@ -1394,7 +1743,7 @@ function startTimer(){
       );
 
     $("timer").style.width =
-      (remaining / 7000 * 100) + "%";
+      (remaining / duration * 100) + "%";
 
     if(remaining <= 0){
 
@@ -1743,6 +2092,29 @@ function endGame(
 
 /* BUTTONS */
 
+document
+  .querySelectorAll(".modeBtn")
+  .forEach(btn => {
+
+    btn.addEventListener(
+      "click",
+      () => {
+
+        quizMode = btn.dataset.mode;
+
+        localStorage.setItem(
+          "geoRushMode",
+          quizMode
+        );
+
+        updateModeUI();
+
+      }
+    );
+
+  });
+
+
 $("newGame").addEventListener(
   "click",
   startGame
@@ -1813,7 +2185,7 @@ $("homeBtn").addEventListener(
 
 /* INITIALIZE */
 
-renderHistory();
+updateModeUI();
 
 
 /* SERVICE WORKER */
