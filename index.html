@@ -653,6 +653,14 @@
 .areaRevealRow img{width:57px;height:37px;object-fit:contain;flex:none}
 .areaRevealName{font-size:13px;font-weight:750;flex:1}
 .areaRevealSize{font-size:11px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+/* Area Rush v12.1: clear answer comparison and compact scrollable reveal */
+.areaReviewTitle{font-size:17px;font-weight:850;letter-spacing:-.025em;margin:13px 0 4px}
+.areaReviewGroup + .areaReviewGroup{border-top:1px solid var(--line);padding-top:9px}
+.areaReview .areaReveal{gap:5px;margin:8px 0 12px}
+.areaReview .areaRevealRow{padding:7px 9px}
+.areaReview .areaRevealRow img{width:47px;height:31px}
+.areaReview .areaRevealName{font-size:12px}
+.areaReview .areaRevealSize{font-size:10px}
 @media(max-height:700px){.areaCard{padding:13px}.areaItem{max-height:76px}.areaFlag{width:59px;height:38px}.areaItems{gap:6px}}
 
   </style>
@@ -764,7 +772,7 @@
     <section id="areaCard" class="questionCard areaCard" hidden>
       <div class="areaEyebrow">AREA RUSH</div>
       <div class="areaHeading">Largest to smallest</div>
-      <div class="areaHint">Tap two countries to swap their positions.</div>
+      <div class="areaHint">How to play: Tap a country (or its rank), then tap another rank to swap their positions. Arrange from largest to smallest.</div>
       <div id="areaItems" class="areaItems"></div>
       <button id="areaCheck" class="submit" type="button">Lock in order</button>
     </section>
@@ -844,9 +852,15 @@
 <div id="areaPopup" class="answerPopup" role="dialog" aria-modal="true" aria-label="Area results">
   <div class="answerCard areaReview">
     <div id="areaVerdict" class="answerStatus"></div>
-    <div class="answerCountry">Correct order</div>
-    <div class="areaHint">Largest → smallest · total area in km²</div>
-    <div id="areaReveal" class="areaReveal"></div>
+    <div id="areaYourGroup" class="areaReviewGroup" hidden>
+      <div class="areaReviewTitle wrongLabel">Your selected order</div>
+      <div id="areaYourReveal" class="areaReveal"></div>
+    </div>
+    <div class="areaReviewGroup">
+      <div class="areaReviewTitle">Correct order</div>
+      <div class="areaHint">Largest → smallest · total area in km²</div>
+      <div id="areaReveal" class="areaReveal"></div>
+    </div>
     <button id="areaNext" class="answerNext" type="button">Next</button>
   </div>
 </div>
@@ -1536,7 +1550,7 @@ function beginArea(){
   $("result").classList.remove("show");
   $("answerPopup").classList.remove("show");
   areaRounds=buildAreaRounds();run=areaRounds;TOTAL=run.length;
-  index=0;score=0;areaResolved=false;
+  index=0;score=0;areaResolved=false;areaRunEnded=false;
   $("areaPopup").classList.remove("show");
   $("standardCard").hidden=true;$("areaCard").hidden=false;
   showScreen("gameScreen");nextAreaRound();
@@ -1548,7 +1562,7 @@ function nextAreaRound(){
   $("counter").textContent=`${index+1} / ${TOTAL}`;
   $("score").textContent=`${score} correct`;
   renderArea();
-  if(!practiceMode)startTimer(12000);
+  if(!practiceMode)startTimer(15000);
 }
 function renderArea(){
   const root=$("areaItems");root.replaceChildren();
@@ -1569,16 +1583,9 @@ function renderArea(){
     });root.appendChild(btn);
   });
 }
-function checkArea(timeout=false){
-  if(areaResolved)return;
-  areaResolved=true;clearInterval(timerId);
-  const ordered=[...areaRounds[index]].sort((a,b)=>AREA_SIZES[b]-AREA_SIZES[a]);
-  const right=ordered.every((name,i)=>name===areaOrder[i]);
-  if(right){score++;$("score").textContent=`${score} correct`;}
-  const verdict=$("areaVerdict");verdict.textContent=right?"You are right!":(timeout?"Time's up!":"Incorrect");
-  verdict.className="answerStatus "+(right?"correctStatus":"wrongStatus");
-  const root=$("areaReveal");root.replaceChildren();
-  ordered.forEach((name,i)=>{
+function renderAreaRanking(root, names){
+  root.replaceChildren();
+  names.forEach((name,i)=>{
     const row=document.createElement("div");row.className="areaRevealRow";
     const num=document.createElement("span");num.className="areaRank";num.textContent=i+1;
     const img=document.createElement("img");img.src=flagPath(name);img.alt="";
@@ -1586,18 +1593,39 @@ function checkArea(timeout=false){
     const size=document.createElement("span");size.className="areaRevealSize";size.textContent=AREA_SIZES[name].toLocaleString()+" km²";
     row.append(num,img,label,size);root.appendChild(row);
   });
-  $("areaNext").textContent=index===TOTAL-1?"Finish":"Next";
+}
+let areaRunEnded=false;
+function checkArea(timeout=false){
+  if(areaResolved)return;
+  areaResolved=true;clearInterval(timerId);
+  const ordered=[...areaRounds[index]].sort((a,b)=>AREA_SIZES[b]-AREA_SIZES[a]);
+  const selected=[...areaOrder];
+  const right=ordered.every((name,i)=>name===selected[i]);
+  if(right){score++;$("score").textContent=`${score} correct`;}
+  areaRunEnded=!practiceMode&&!right;
+  const verdict=$("areaVerdict");verdict.textContent=right?"You are right!":(timeout?"Time's up!":"Incorrect");
+  verdict.className="answerStatus "+(right?"correctStatus":"wrongStatus");
+  $("areaYourGroup").hidden=right;
+  if(!right)renderAreaRanking($("areaYourReveal"),selected);
+  renderAreaRanking($("areaReveal"),ordered);
+  $("areaNext").textContent=areaRunEnded?"See results":index===TOTAL-1?"Finish":"Next";
   $("areaPopup").classList.add("show");
 }
 function nextArea(){
-  $("areaPopup").classList.remove("show");index++;nextAreaRound();
+  $("areaPopup").classList.remove("show");
+  if(areaRunEnded){finishArea();return;}
+  index++;nextAreaRound();
 }
 function finishArea(){
   clearInterval(timerId);
   if(!practiceMode)saveHistory();
-  $("resultTitle").textContent="Area Rush complete";
+  $("resultTitle").textContent=practiceMode?"Area Rush practice complete":areaRunEnded?"Game over":"Area Rush complete";
   $("resultScore").textContent=`${score}/${TOTAL}`;
-  $("resultMeta").textContent=`${TOTAL} rounds · 4 countries per round · largest to smallest. ${practiceMode?"Practice results aren't saved.":"Saved to Last 10."}`;
+  const played=Math.min(index+1,TOTAL);
+  $("resultMeta").textContent=areaRunEnded
+    ? `${played} of ${TOTAL} rounds played · one mistake ends the run. Saved to Last 10.`
+    : `${TOTAL} rounds · 4 countries per round · largest to smallest. ${practiceMode?"Practice results aren't saved.":"Saved to Last 10."}`;
+  $("againBtn").textContent=practiceMode?"Practice again":"Play again";
   $("result").classList.add("show");
 }
 $("areaCheck").addEventListener("click",()=>checkArea(false));
@@ -2298,7 +2326,7 @@ $("answerNext").addEventListener(
 
 $("againBtn").addEventListener(
   "click",
-  startGame
+  () => practiceMode ? startPractice() : startGame()
 );
 
 
