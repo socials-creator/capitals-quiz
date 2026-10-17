@@ -1244,10 +1244,10 @@ const MODES = {
   },
 
   area:{
-    icon:"◈",title:"Area Rush",eyebrow:n=>`${n} eligible countries`,
-    tagline:"Sort four countries by total area, largest to smallest. Twelve seconds per round.",
-    dataset:AREA_COUNTRIES,promptLabel:"Sort by area",choiceCount:4,timeLimit:12000,
-    historyKey:"areaRushHistory",newGameSub:"4 flags · 12 seconds · largest first",codeStyle:false
+    icon:"◈",title:"Area Rush",eyebrow:n=>`${n} large countries(>100,000 sq.km.)`,
+    tagline:"How to play: Tap a country (or its rank), then tap another rank to swap their positions. Arrange from largest to smallest by total area. Fifteen seconds per round.",
+    dataset:AREA_COUNTRIES,promptLabel:"Sort by area",choiceCount:4,timeLimit:15000,
+    historyKey:"areaRushHistory",newGameSub:"4 flags · 15 seconds · largest first",codeStyle:false
   },
 
   airports:{
