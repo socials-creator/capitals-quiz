@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-180.png">
   <title>Capital Rush</title>
-  <meta name="app-version" content="8">
+  <meta name="app-version" content="9">
 
   <style>
     .questionFlag{display:block;width:108px;height:72px;object-fit:contain;margin:3px 0 12px;border:0;border-radius:0;filter:drop-shadow(0 6px 12px #0006)}
@@ -615,6 +615,23 @@
       }
     }
 
+
+[hidden]{display:none!important}
+/* Practice feedback: compact, clear hierarchy, borderless flag artwork */
+.practiceReview .answerStatus{font-size:16px;font-weight:850;letter-spacing:.01em;text-transform:none;margin-bottom:10px}
+.practiceReview .answerCountry{font-size:clamp(23px,6vw,30px);font-weight:850;line-height:1.13;letter-spacing:-.035em;margin-bottom:19px}
+.practiceReview .reviewGroup{margin:0 0 15px}
+.practiceReview .reviewLabel{font-size:13px;font-weight:750;margin-bottom:8px;color:#f5f7fb}
+.practiceReview .reviewAnswer{font-size:17px;font-weight:750;color:#f5f7fb;line-height:1.4;display:flex;flex-direction:column;gap:9px}
+.practiceReview .reviewItem{display:flex;align-items:center;gap:11px;min-height:28px}
+.practiceReview .reviewItem img{width:78px;height:49px;object-fit:contain;flex:none;border:0;border-radius:0;filter:drop-shadow(0 2px 5px #0007)}
+.practiceReview .reviewItem .reviewName{min-width:0;overflow-wrap:anywhere}
+.practiceReview .reviewAnswer.wrongAnswer{font-size:12px;font-weight:650;color:var(--danger);gap:6px}
+.practiceReview .wrongAnswer .reviewItem img{width:57px;height:36px}
+.practiceReview .wrongLabel{color:var(--danger)}
+.practiceReview .rightLabel,.practiceReview .rightAnswer{color:var(--ok)}
+.practiceReview .answerNext{margin-top:8px}
+
   </style>
 </head>
 
@@ -790,56 +807,21 @@
 
 
 <!-- PRACTICE ANSWER POPUP -->
-<div id="answerPopup" class="answerPopup">
-
-  <div class="answerCard">
-
-    <div
-      id="answerStatus"
-      class="answerStatus"
-    >
-      Correct
+<div id="answerPopup" class="answerPopup" role="dialog" aria-modal="true" aria-labelledby="answerStatus">
+  <div class="answerCard practiceReview">
+    <div id="answerStatus" class="answerStatus"></div>
+    <div id="answerCountry" class="answerCountry"></div>
+    <div id="correctAnswerGroup" class="reviewGroup">
+      <div id="correctAnswerLabel" class="reviewLabel">Correct answer is</div>
+      <div id="answerValue" class="reviewAnswer"></div>
     </div>
-
-    <div
-      id="answerCountry"
-      class="answerCountry"
-    ></div>
-
-    <div class="answerLine">
-      Correct answer
+    <div id="yourAnswerGroup" class="reviewGroup">
+      <div id="yourAnswerLine" class="reviewLabel">Your answer</div>
+      <div id="yourAnswer" class="reviewAnswer"></div>
     </div>
-
-    <div
-      id="answerValue"
-      class="answerValue"
-    ></div>
-
-    <div
-      id="yourAnswerLine"
-      class="answerLine"
-      style="margin-top:10px"
-    >
-      Your answer
-    </div>
-
-    <div
-      id="yourAnswer"
-      class="answerValue"
-    ></div>
-
-    <button
-      id="answerNext"
-      class="answerNext"
-      type="button"
-    >
-      Next
-    </button>
-
+    <button id="answerNext" class="answerNext" type="button">Next</button>
   </div>
-
 </div>
-
 
 <script>
 
@@ -1933,116 +1915,60 @@ function submitAnswer(
 
 /* PRACTICE ANSWER POPUP */
 
-function showPracticeAnswer(
-  isCorrect,
-  correct,
-  selectedAnswers,
-  timeout
-){
+function showPracticeAnswer(isCorrect, correct, selectedAnswers, timeout){
+  const country = run[index][0];
+  const isFlags = quizMode === "flags";
+  const correctGroup = $("correctAnswerGroup");
+  const yourGroup = $("yourAnswerGroup");
+  const correctValue = $("answerValue");
+  const yourValue = $("yourAnswer");
+  const yourLabel = $("yourAnswerLine");
+  const correctLabel = $("correctAnswerLabel");
+  const selectedList = timeout ? [] : [...selectedAnswers];
 
-  const country =
-    run[index][0];
+  $("answerStatus").textContent = isCorrect ? "You are right!" : "Incorrect";
+  $("answerStatus").className = "answerStatus " + (isCorrect ? "correctStatus" : "wrongStatus");
+  $("answerCountry").textContent = isFlags ? `Find the flag of ${country}` : `What is the capital of ${country}?`;
 
-  $("answerCountry").textContent =
-    country;
-
-  $("answerStatus").textContent =
-    isCorrect
-      ? "Correct"
-      : "Incorrect";
-
-  $("answerStatus").className =
-    "answerStatus " +
-    (
-      isCorrect
-        ? "correctStatus"
-        : "wrongStatus"
-    );
-
-
-  /*
-    Correct answer.
-  */
-
-  $("answerValue").textContent =
-    correct.join(" · ");
-
-
-  const yourAnswer =
-    $("yourAnswer");
-
-  const yourAnswerLine =
-    $("yourAnswerLine");
-
-
-  /*
-    Always reset previous styling.
-  */
-
-  yourAnswer.classList.remove(
-    "yourAnswerIncorrect"
-  );
-
-  yourAnswerLine.classList.remove(
-    "yourAnswerIncorrectLabel"
-  );
-
-
-  let yourText = "";
-
-
-  if(timeout){
-
-    yourText =
-      "Time expired";
-
-  }else if(selectedAnswers.size){
-
-    yourText =
-      [...selectedAnswers].join(" · ");
-
-  }else{
-
-    yourText =
-      "No answer";
-
+  // Build DOM nodes instead of HTML strings: country names are always rendered safely.
+  function populate(target, values, wrong){
+    target.replaceChildren();
+    target.className = "reviewAnswer" + (wrong ? " wrongAnswer" : "");
+    if(!values.length){
+      const missing = document.createElement("span");
+      missing.textContent = timeout ? "Time expired" : "No answer";
+      target.appendChild(missing);
+      return;
+    }
+    values.forEach(value => {
+      const item = document.createElement("div");
+      item.className = "reviewItem";
+      if(isFlags){
+        const img = document.createElement("img");
+        img.src = flagPath(value);
+        img.alt = `Flag of ${value}`;
+        item.appendChild(img);
+      }
+      const name = document.createElement("span");
+      name.className = "reviewName";
+      name.textContent = isFlags ? value : `${value} · ${country}`;
+      item.appendChild(name);
+      target.appendChild(item);
+    });
   }
 
+  correctGroup.hidden = isCorrect;
+  yourGroup.hidden = false;
+  yourLabel.textContent = isCorrect ? "Selected answer" : "Your answer";
+  yourLabel.className = "reviewLabel " + (isCorrect ? "rightLabel" : "wrongLabel");
+  correctLabel.textContent = "Correct answer is";
+  populate(correctValue, correct, false);
+  populate(yourValue, selectedList, !isCorrect);
+  if(isCorrect) yourValue.classList.add("rightAnswer");
 
-  yourAnswer.textContent =
-    yourText;
-
-
-  /*
-    When incorrect:
-    - Your answer becomes red
-    - Your answer becomes smaller
-    - Label becomes slightly smaller too
-  */
-
-  if(!isCorrect){
-
-    yourAnswer.classList.add(
-      "yourAnswerIncorrect"
-    );
-
-    yourAnswerLine.classList.add(
-      "yourAnswerIncorrectLabel"
-    );
-
-  }
-
-
-  $("answerNext").textContent =
-    index + 1 >= run.length
-      ? "Finish"
-      : "Next";
-
-
-  $("answerPopup")
-    .classList.add("show");
+  $("answerNext").textContent = index + 1 >= run.length ? "Finish" : "Next";
+  $("answerPopup").classList.add("show");
 }
-
 
 /* PRACTICE NEXT */
 
