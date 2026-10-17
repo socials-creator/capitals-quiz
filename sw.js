@@ -1,84 +1,12 @@
-const CACHE = "capital-rush-v7";
-
-const ASSETS = [
-  "./",
-  "./index.html",
-  "./manifest.webmanifest",
-  "./icon-180.png"
-];
-
-
-self.addEventListener("install", event => {
-
-  event.waitUntil(
-
-    caches
-      .open(CACHE)
-      .then(cache => cache.addAll(ASSETS))
-      .then(() => self.skipWaiting())
-
-  );
-
-});
-
-
-self.addEventListener("activate", event => {
-
-  event.waitUntil(
-
-    caches
-      .keys()
-      .then(keys =>
-        Promise.all(
-
-          keys
-            .filter(key => key !== CACHE)
-            .map(key => caches.delete(key))
-
-        )
-      )
-      .then(() => self.clients.claim())
-
-  );
-
-});
-
-
-self.addEventListener("fetch", event => {
-
-  /*
-    Never cache the service worker itself.
-    This allows GitHub Pages to deliver
-    the newest version.
-  */
-
-  if(
-    new URL(event.request.url)
-      .pathname
-      .endsWith("/sw.js")
-  ){
-
-    return;
-
-  }
-
-
-  event.respondWith(
-
-    caches
-      .match(event.request)
-      .then(cached => {
-
-        if(cached){
-
-          return cached;
-
-        }
-
-        return fetch(event.request);
-
-      })
-
-  );
-
+const CACHE="capital-rush-v8";
+const CORE=["./","./index.html","./manifest.webmanifest","./icon-180.png"];
+self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())));
+self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith("capital-rush-")&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
+self.addEventListener("fetch",e=>{
+ if(e.request.method!=="GET"||new URL(e.request.url).origin!==self.location.origin)return;
+ if(new URL(e.request.url).pathname.endsWith("/sw.js"))return;
+ e.respondWith(caches.match(e.request).then(hit=>hit||fetch(e.request).then(response=>{
+  if(response.ok){const copy=response.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));}
+  return response;
+ })));
 });
