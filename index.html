@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-180.png">
   <title>Capital Rush</title>
-  <meta name="app-version" content="9">
+  <meta name="app-version" content="10">
 
   <style>
     .questionFlag{display:block;width:108px;height:72px;object-fit:contain;margin:3px 0 12px;border:0;border-radius:0;filter:drop-shadow(0 6px 12px #0006)}
@@ -1928,7 +1928,7 @@ function showPracticeAnswer(isCorrect, correct, selectedAnswers, timeout){
 
   $("answerStatus").textContent = isCorrect ? "You are right!" : "Incorrect";
   $("answerStatus").className = "answerStatus " + (isCorrect ? "correctStatus" : "wrongStatus");
-  $("answerCountry").textContent = isFlags ? `Find the flag of ${country}` : `What is the capital of ${country}?`;
+  $("answerCountry").textContent = isFlags ? country : `What is the capital of ${country}?`;
 
   // Build DOM nodes instead of HTML strings: country names are always rendered safely.
   function populate(target, values, wrong){
@@ -1951,7 +1951,10 @@ function showPracticeAnswer(isCorrect, correct, selectedAnswers, timeout){
       }
       const name = document.createElement("span");
       name.className = "reviewName";
-      name.textContent = isFlags ? value : `${value} · ${country}`;
+      const capitalCountry = !isFlags && wrong
+        ? (COUNTRIES.find(entry => entry[1].includes(value))?.[0] || "Unknown country")
+        : country;
+      name.textContent = isFlags ? value : (wrong ? `${value} · ${capitalCountry}` : value);
       item.appendChild(name);
       target.appendChild(item);
     });
