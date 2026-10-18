@@ -467,38 +467,7 @@
       background:var(--accent)
     }
 
-    /* Flag Rush: explain all five choices after an incorrect timed answer. */
-function showTimedFlagReview(answer, selectedFlags, choices){
-  const panel=$("flagRunReview");
-  const selectedRoot=$("flagRunSelected");
-  const correctRoot=$("flagRunCorrect");
-  const othersRoot=$("flagRunOthers");
-  selectedRoot.replaceChildren();correctRoot.replaceChildren();othersRoot.replaceChildren();
-  function flagRow(name,kind){
-    const row=document.createElement("div");
-    row.className="flagRunReviewItem"+(kind?" "+kind:"");
-    const img=document.createElement("img");
-    img.src=flagPath(name);img.alt=`Flag of ${name}`;
-    const label=document.createElement("span");
-    label.textContent=name;
-    row.append(img,label);
-    return row;
-  }
-  const picked=[...selectedFlags][0];
-  if(picked){selectedRoot.append(flagRow(picked,"incorrect"));}
-  else{
-    const empty=document.createElement("div");
-    empty.className="flagRunReviewItem incorrect";
-    empty.textContent="No flag selected — time expired";
-    selectedRoot.append(empty);
-  }
-  correctRoot.append(flagRow(answer,"correct"));
-  choices.filter(name=>name!==answer&&name!==picked)
-    .forEach(name=>othersRoot.append(flagRow(name,"")));
-  panel.hidden=false;
-}
-
-/* PRACTICE ANSWER POPUP */
+    /* PRACTICE ANSWER POPUP */
 
     .answerPopup{
       position:fixed;
@@ -2046,6 +2015,38 @@ function startTimer(ms){
     }
 
   },40);
+}
+
+
+/* Flag Rush: explain all five choices after an incorrect timed answer. */
+function showTimedFlagReview(answer, selectedFlags, choices){
+  const panel=$("flagRunReview");
+  const selectedRoot=$("flagRunSelected");
+  const correctRoot=$("flagRunCorrect");
+  const othersRoot=$("flagRunOthers");
+  selectedRoot.replaceChildren();correctRoot.replaceChildren();othersRoot.replaceChildren();
+  function flagRow(name,kind){
+    const row=document.createElement("div");
+    row.className="flagRunReviewItem"+(kind?" "+kind:"");
+    const img=document.createElement("img");
+    img.src=flagPath(name);img.alt=`Flag of ${name}`;
+    const label=document.createElement("span");
+    label.textContent=name;
+    row.append(img,label);
+    return row;
+  }
+  const picked=[...selectedFlags][0];
+  if(picked){selectedRoot.append(flagRow(picked,"incorrect"));}
+  else{
+    const empty=document.createElement("div");
+    empty.className="flagRunReviewItem incorrect";
+    empty.textContent="No flag selected — time expired";
+    selectedRoot.append(empty);
+  }
+  correctRoot.append(flagRow(answer,"correct"));
+  choices.filter(name=>name!==answer&&name!==picked)
+    .forEach(name=>othersRoot.append(flagRow(name,"")));
+  panel.hidden=false;
 }
 
 
