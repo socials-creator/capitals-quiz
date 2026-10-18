@@ -467,7 +467,38 @@
       background:var(--accent)
     }
 
-    /* PRACTICE ANSWER POPUP */
+    /* Flag Rush: explain all five choices after an incorrect timed answer. */
+function showTimedFlagReview(answer, selectedFlags, choices){
+  const panel=$("flagRunReview");
+  const selectedRoot=$("flagRunSelected");
+  const correctRoot=$("flagRunCorrect");
+  const othersRoot=$("flagRunOthers");
+  selectedRoot.replaceChildren();correctRoot.replaceChildren();othersRoot.replaceChildren();
+  function flagRow(name,kind){
+    const row=document.createElement("div");
+    row.className="flagRunReviewItem"+(kind?" "+kind:"");
+    const img=document.createElement("img");
+    img.src=flagPath(name);img.alt=`Flag of ${name}`;
+    const label=document.createElement("span");
+    label.textContent=name;
+    row.append(img,label);
+    return row;
+  }
+  const picked=[...selectedFlags][0];
+  if(picked){selectedRoot.append(flagRow(picked,"incorrect"));}
+  else{
+    const empty=document.createElement("div");
+    empty.className="flagRunReviewItem incorrect";
+    empty.textContent="No flag selected — time expired";
+    selectedRoot.append(empty);
+  }
+  correctRoot.append(flagRow(answer,"correct"));
+  choices.filter(name=>name!==answer&&name!==picked)
+    .forEach(name=>othersRoot.append(flagRow(name,"")));
+  panel.hidden=false;
+}
+
+/* PRACTICE ANSWER POPUP */
 
     .answerPopup{
       position:fixed;
@@ -663,7 +694,23 @@
 .areaReview .areaRevealSize{font-size:10px}
 @media(max-height:700px){.areaCard{padding:13px}.areaItem{max-height:76px}.areaFlag{width:59px;height:38px}.areaItems{gap:6px}}
 
-  </style>
+  
+/* v12_2: Flag Rush timed-game answer review */
+.flagRunReview{margin:18px 0 6px;text-align:left;border-top:1px solid var(--line);padding-top:14px}
+.flagRunReview[hidden]{display:none}
+.flagRunReviewTitle{font-size:13px;font-weight:800;letter-spacing:.02em;margin:12px 0 7px}
+.flagRunReviewTitle.correct{color:var(--success)}
+.flagRunReviewTitle.incorrect{color:var(--danger)}
+.flagRunReviewItem{display:flex;align-items:center;gap:12px;padding:7px 8px;border-radius:10px;background:rgba(255,255,255,.045);margin-bottom:5px;font-size:13px;font-weight:650}
+.flagRunReviewItem img{width:65px;height:42px;object-fit:contain;flex:none;filter:drop-shadow(0 2px 5px #0007)}
+.flagRunReviewItem span{min-width:0;overflow-wrap:anywhere}
+.flagRunReviewItem.correct{outline:1px solid rgba(45,205,120,.35)}
+.flagRunReviewItem.incorrect{outline:1px solid rgba(255,80,90,.35)}
+.flagRunReviewOther{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.flagRunReviewOther .flagRunReviewItem{font-size:11px;gap:7px;margin:0;padding:6px}
+.flagRunReviewOther .flagRunReviewItem img{width:45px;height:29px}
+@media(max-width:370px){.flagRunReviewOther{grid-template-columns:1fr}}
+</style>
 </head>
 
 <body>
@@ -826,6 +873,14 @@
     </div>
 
     <div id="resultMeta" class="resultMeta"></div>
+    <div id="flagRunReview" class="flagRunReview" hidden>
+      <div class="flagRunReviewTitle incorrect">Your selected flag</div>
+      <div id="flagRunSelected"></div>
+      <div class="flagRunReviewTitle correct">Correct flag</div>
+      <div id="flagRunCorrect"></div>
+      <div class="flagRunReviewTitle">Other flags in this question</div>
+      <div id="flagRunOthers" class="flagRunReviewOther"></div>
+    </div>
 
     <div class="resultActions">
 
@@ -1619,6 +1674,7 @@ function nextArea(){
 function finishArea(){
   clearInterval(timerId);
   if(!practiceMode)saveHistory();
+  $("flagRunReview").hidden=true;
   $("resultTitle").textContent=practiceMode?"Area Rush practice complete":areaRunEnded?"Game over":"Area Rush complete";
   $("resultScore").textContent=`${score}/${TOTAL}`;
   const played=Math.min(index+1,TOTAL);
@@ -1751,6 +1807,7 @@ function nextQuestion(){
   }
 
   locked = false;
+  $("flagRunReview").hidden=true;
   selected = new Set();
 
   const mode = MODES[quizMode];
@@ -2101,6 +2158,11 @@ function submitAnswer(
   }
 
 
+  if(quizMode==="flags"){
+    const choices=buttons.map(button=>button.dataset.answer);
+    showTimedFlagReview(correct[0],selected,choices);
+  }
+
   const correctText =
     correct.join(" · ");
 
@@ -2199,6 +2261,7 @@ function endPractice(){
 
   clearInterval(timerId);
 
+  $("flagRunReview").hidden=true;
   $("resultTitle").textContent =
     "Practice complete";
 
@@ -2240,6 +2303,7 @@ function endGame(
   }
 
 
+  if(quizMode!=="flags" || completed) $("flagRunReview").hidden=true;
   $("resultTitle").textContent =
     completed
       ? "Perfect run!"
