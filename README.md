@@ -1,3 +1,39 @@
+# Capital Rush v13.0 — Three strikes, 10-second rounds, and Airport Rush flags
+
+## What's new in v13.0
+
+- Timed runs now allow **three strikes** in every game mode. A wrong answer or a timeout counts as one strike; the run ends on the third. Correct answers continue the run and add to the score.
+- This applies to Capital Rush, Flag Rush, Outline Rush, Airport Rush, and Area Rush. Area Rush keeps its **15-second** round timer; all other modes now use **10 seconds** per question.
+- Practice and mistake-review remain untimed and do not consume strikes, so they continue to work as learning modes.
+- Airport Rush answer choices now include a small flag for the country or territory each airport serves. Five territory flag assets (Hong Kong, Macao, French Polynesia, Puerto Rico, and Taiwan) are included for airport entries that are not represented in the 195-country flag set.
+- Updated the service-worker cache to **v13.0** and added the new airport flag assets to offline verification and pre-caching.
+
+## Deployment
+
+For an existing v12.9 deployment, upload: `index.html`, `sw.js`, `offline-assets.js`, and the five new files in `flags/` (`hk.svg`, `mo.svg`, `pf.svg`, `pr.svg`, `tw.svg`). Keep the existing 195 national flag SVGs, all 195 outline SVGs, `manifest.webmanifest`, and `icon-180.png` unchanged. `README.md` is recommended but not required for the app to run.
+
+After deployment, open the app online once and wait for **Ready offline · all 5 modes** before using it offline.
+
+---
+
+# Capital Rush v13.0 — Three strikes, 10-second rounds, and Airport Rush flags
+
+## What's new in v13.0
+
+- Timed runs now allow **three strikes** in every game mode. A wrong answer or a timeout counts as one strike; the run ends on the third. Correct answers continue the run and add to the score.
+- This applies to Capital Rush, Flag Rush, Outline Rush, Airport Rush, and Area Rush. Area Rush keeps its **15-second** round timer; all other modes now use **10 seconds** per question.
+- Practice and mistake-review remain untimed and do not consume strikes, so they continue to work as learning modes.
+- Airport Rush answer choices now include a small flag for the country or territory each airport serves. Five territory flag assets (Hong Kong, Macao, French Polynesia, Puerto Rico, and Taiwan) are included for airport entries that are not represented in the 195-country flag set.
+- Updated the service-worker cache to **v13.0** and added the new airport flag assets to offline verification and pre-caching.
+
+## Deployment
+
+Upload the complete project structure from this ZIP, or for an existing v12.9 deployment upload: `index.html`, `sw.js`, `offline-assets.js`, and the five new files in `flags/` (`hk.svg`, `mo.svg`, `pf.svg`, `pr.svg`, `tw.svg`). Keep the existing 195 national flag SVGs, all 195 outline SVGs, `manifest.webmanifest`, and `icon-180.png` unchanged. `README.md` is recommended but not required for the app to run.
+
+After deployment, open the app online once and wait for **Ready offline · all 5 modes** before using it offline.
+
+---
+
 # Capital Rush v12.9 — Expanded Airport Rush and current flags
 
 ## Changes from v12.8

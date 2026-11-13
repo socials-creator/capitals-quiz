@@ -1,6 +1,6 @@
-/* Capital Rush v12.9: pre-cache all 5 modes including outlines. */
+/* Capital Rush v13.0: pre-cache all modes and airport territory flags. */
 importScripts('./offline-assets.js');
-const CACHE = 'capital-rush-v12.9-all-modes';
+const CACHE = 'capital-rush-v13.0-all-modes';
 const ASSETS = self.OFFLINE_ASSETS;
 async function seedCache(){
   const cache = await caches.open(CACHE);
