@@ -1,5 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-label="Country outline" preserveAspectRatio="xMidYMid meet">
-  <g fill="#ffffff" stroke="#ffffff" stroke-width="1.2" fill-rule="evenodd" stroke-linejoin="round">
-    <path d="M 111.12 25.17 L 136.07 46.20 L 146.00 74.06 L 135.29 100.70 L 111.70 94.11 L 77.49 99.79 L 66.08 97.90 L 38.66 65.18 L 19.66 50.45 L 12.00 36.66 L 36.26 38.22 L 71.61 29.09 L 111.12 25.17 Z M 307.00 154.65 L 245.94 154.83 L 215.74 144.76 L 205.03 144.67 L 179.14 123.53 L 175.18 112.46 L 188.77 105.18 L 216.99 101.33 L 273.63 117.39 L 282.21 131.62 L 295.24 133.13 L 305.37 139.30 L 308.00 149.30 L 307.00 154.65 Z"/>
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path fill="#ffffff" fill-rule="evenodd" stroke="none" d="M110.63,42.60L135.94,64.44L145.99,93.36L135.09,120.98L111.18,114.13L76.49,120.01L64.92,118.05L37.09,84.12L17.80,68.87L10.00,54.57L34.63,56.16L70.51,46.67L110.63,42.60Z M308.96,177.40L247.12,177.36L216.56,166.83L205.70,166.71L179.52,144.73L175.52,133.24L189.31,125.71L217.93,121.77L275.30,138.60L283.94,153.40L297.14,155.02L307.38,161.47L310.00,171.85L308.96,177.40Z"/></svg>
