@@ -10,16 +10,18 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-180.png">
   <title>Capital Rush</title>
-  <meta name="app-version" content="12.5">
+  <meta name="app-version" content="12.7">
 
   <style>
     .questionFlag{display:block;width:108px;height:72px;object-fit:contain;margin:3px 0 12px;border:0;border-radius:0;filter:drop-shadow(0 6px 12px #0006)}
     .questionFlag[hidden]{display:none}
+    .questionFlag.outlineVisual{width:min(260px,100%);height:152px;object-fit:contain;padding:14px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(180deg,#0d1015,#090b0f);filter:none;margin:0 0 14px}
+    .country.outlinePrompt{display:none}
     .choices.flagsChoices{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-content:center}
     .choice.flagChoice{padding:10px;min-height:88px;overflow:hidden}
     .flagChoice img{display:block;width:100%;height:66px;object-fit:contain;border:0;border-radius:0;filter:drop-shadow(0 3px 7px #0006);pointer-events:none}
     .flagChoice:last-child:nth-child(odd){grid-column:1/-1;width:calc(50% - 5px);justify-self:center}
-    @media(max-height:700px){.choice.flagChoice{min-height:65px;padding:6px}.flagChoice img{height:49px}.questionFlag{height:52px;width:84px;margin-bottom:7px}}
+    @media(max-height:700px){.choice.flagChoice{min-height:65px;padding:6px}.flagChoice img{height:49px}.questionFlag{height:52px;width:84px;margin-bottom:7px}.questionFlag.outlineVisual{width:min(210px,100%);height:118px;padding:11px}}
 
     :root{
       --bg:#08090c;
@@ -690,8 +692,9 @@ body:has(#gameScreen.active) .offline-game-status{display:block}
 button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 @media(hover:hover){.choice:not(:disabled):hover{border-color:var(--accent);transform:translateY(-1px)}.modeBtn:hover{color:var(--text)}.newGame:hover,.practiceGame:hover{filter:brightness(1.07)}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
-@media(max-width:430px){.screen{padding:13px 12px 12px}.modeSwitch{gap:2px}.modeBtn{font-size:clamp(10px,2.65vw,12px);padding:11px 1px}.newGame,.practiceGame{padding:16px;min-height:146px}.newGame strong,.practiceGame strong{font-size:clamp(20px,6vw,25px)}.questionCard{border-radius:19px}.choice{min-height:52px}}
+@media(max-width:430px){.screen{padding:13px 12px 12px}.modeSwitch{gap:7px}.modeBtn{font-size:clamp(10px,2.9vw,12px);padding:12px 10px;min-height:60px}.newGame,.practiceGame{padding:16px;min-height:146px}.newGame strong,.practiceGame strong{font-size:clamp(20px,6vw,25px)}.questionCard{border-radius:19px}.choice{min-height:52px}.questionFlag.outlineVisual{height:108px}}
 @media(max-height:680px){.brand{margin:auto 0 12px}.history{padding:10px 12px}.footer{margin-top:9px}.offline-status{margin-bottom:7px}}
+@media(min-width:600px){.modeSwitch{grid-template-columns:repeat(5,minmax(0,1fr))}}
 
 
 /* Capital Rush v12.5 · Premium Hybrid · responsive and accessible */
@@ -765,6 +768,9 @@ h1{font-size:clamp(36px,7vw,52px)}
         <button class="modeBtn" data-mode="airports" type="button">
           ✈️ Airports
         </button>
+        <button class="modeBtn" data-mode="outlines" type="button">
+          🗺️ Outline
+        </button>
         <button class="modeBtn" data-mode="area" type="button">
           ◈ Area
         </button>
@@ -804,7 +810,7 @@ h1{font-size:clamp(36px,7vw,52px)}
     </div>
 
     <div class="footer">
-      Add to Home Screen · All four modes available offline when ready
+      Add to Home Screen · All five modes available offline when ready
     </div>
 
   </main>
@@ -1299,6 +1305,9 @@ const flagPath = name => "./flags/" + FLAG_CODES[name] + ".svg";
 const AREA_SIZES = {"Afghanistan":652230,"Algeria":2381741,"Angola":1246700,"Argentina":2780400,"Australia":7692024,"Bangladesh":147570,"Belarus":207600,"Benin":112622,"Bolivia":1098581,"Botswana":582000,"Brazil":8515767,"Bulgaria":110879,"Burkina Faso":272967,"Cambodia":181035,"Cameroon":475442,"Canada":9984670,"Central African Republic":622984,"Chad":1284000,"Chile":756102,"China":9640011,"Colombia":1141748,"Congo (Republic of the)":342000,"Côte d'Ivoire":322463,"Cuba":109884,"Democratic Republic of the Congo":2344858,"Ecuador":276841,"Egypt":1002450,"Eritrea":117600,"Ethiopia":1104300,"Finland":338424,"France":640679,"Gabon":267668,"Germany":357114,"Ghana":238533,"Greece":131990,"Guatemala":108889,"Guinea":245857,"Guyana":214969,"Honduras":112492,"Iceland":103000,"India":3287590,"Indonesia":1904569,"Iran":1648195,"Iraq":438317,"Italy":301336,"Japan":377930,"Kazakhstan":2724900,"Kenya":580367,"Kyrgyzstan":199951,"Laos":236800,"Liberia":111369,"Libya":1759540,"Madagascar":587041,"Malawi":118484,"Malaysia":330803,"Mali":1240192,"Mauritania":1030700,"Mexico":1964375,"Mongolia":1564110,"Morocco":446550,"Mozambique":801590,"Myanmar":676578,"Namibia":825615,"Nepal":147181,"New Zealand":270467,"Nicaragua":130373,"Niger":1267000,"Nigeria":923768,"North Korea":120538,"Norway":323802,"Oman":309500,"Pakistan":881912,"Papua New Guinea":462840,"Paraguay":406752,"Peru":1285216,"Philippines":342353,"Poland":312679,"Romania":238391,"Russia":17124442,"Saudi Arabia":2149690,"Senegal":196722,"Somalia":637657,"South Africa":1221037,"South Korea":100210,"South Sudan":619745,"Spain":505992,"Sudan":1886068,"Suriname":163820,"Sweden":450295,"Syria":185180,"Tajikistan":143100,"Tanzania":945087,"Thailand":513120,"Tunisia":163610,"Türkiye":783562,"Turkmenistan":488100,"Uganda":241550,"Ukraine":603700,"United Kingdom":242900,"United States":9629091,"Uruguay":181034,"Uzbekistan":447400,"Venezuela":916445,"Vietnam":331212,"Yemen":527968,"Zambia":752612,"Zimbabwe":390757};
 const AREA_COUNTRIES = Object.keys(AREA_SIZES).sort((a,b)=>AREA_SIZES[b]-AREA_SIZES[a]);
 
+const OUTLINE_COUNTRIES = COUNTRIES.map(([name]) => [name,[name]]);
+const OUTLINE_SIMILAR = {"Afghanistan":["Yemen","Monaco","Honduras","North Macedonia","Burkina Faso","Central African Republic","Syria","Andorra","Slovenia","North Korea"],"Albania":["Sri Lanka","Qatar","Tunisia","Dominica","Chad","Guyana","Saint Lucia","Bahrain","Ghana","Liechtenstein"],"Algeria":["Iraq","Zimbabwe","Nicaragua","Democratic Republic of the Congo","South Sudan","Kuwait","Eswatini","San Marino","Sierra Leone","Vatican City"],"Andorra":["North Macedonia","Monaco","Poland","Bulgaria","Montenegro","Singapore","Syria","Burkina Faso","Dominican Republic","Cambodia"],"Angola":["Uruguay","Bolivia","Eswatini","Luxembourg","Uganda","Mauritius","Kenya","Finland","Nauru","Barbados"],"Antigua and Barbuda":["Maldives","Palau","Tonga","Marshall Islands","Chile","São Tomé and Príncipe","Saint Vincent and the Grenadines","France","Vanuatu","Micronesia"],"Argentina":["Belize","South Korea","Mozambique","Myanmar","Thailand","Qatar","Madagascar","Benin","Tunisia","Albania"],"Armenia":["Guinea","Laos","Eritrea","Costa Rica","Belgium","Turkmenistan","Mexico","Liberia","Iran","Saudi Arabia"],"Australia":["Poland","Guinea","North Macedonia","Vatican City","El Salvador","Belarus","Andorra","Libya","Monaco","Bhutan"],"Austria":["Iceland","Kazakhstan","Estonia","Latvia","Türkiye","Slovakia","Hungary","Mongolia","Switzerland","Czechia"],"Azerbaijan":["Singapore","Lithuania","Belarus","Bulgaria","Belgium","Switzerland","Bhutan","Romania","Dominican Republic","Honduras"],"Bahamas":["Marshall Islands","Palau","Tonga","Maldives","France","São Tomé and Príncipe","Micronesia","Portugal","Solomon Islands","Cabo Verde"],"Bahrain":["Togo","Tuvalu","Tunisia","Myanmar","Malawi","Benin","Dominica","Guyana","Albania","Saint Lucia"],"Bangladesh":["Saudi Arabia","Iran","Serbia","Kenya","Liberia","Senegal","Ethiopia","Colombia","India","Namibia"],"Barbados":["Bolivia","Ethiopia","Luxembourg","Uruguay","Serbia","Saudi Arabia","Kenya","Sri Lanka","Liechtenstein","Angola"],"Belarus":["Bhutan","Singapore","Romania","Switzerland","Central African Republic","North Macedonia","Canada","Bulgaria","Burkina Faso","Czechia"],"Belgium":["Lithuania","Ukraine","Turkmenistan","Uzbekistan","Singapore","Jamaica","El Salvador","Guinea-Bissau","Belarus","Romania"],"Belize":["Argentina","Mozambique","South Korea","Madagascar","Qatar","Benin","Albania","Myanmar","Israel","Namibia"],"Benin":["Bahrain","Madagascar","Myanmar","Tunisia","Tuvalu","Israel","Saint Lucia","Qatar","Guyana","Thailand"],"Bhutan":["Romania","Belarus","Singapore","Switzerland","El Salvador","North Macedonia","Tajikistan","Central African Republic","Bulgaria","Czechia"],"Bolivia":["Uruguay","Barbados","Luxembourg","Ethiopia","Saudi Arabia","Botswana","Angola","Senegal","Serbia","Côte d'Ivoire"],"Bosnia and Herzegovina":["Venezuela","Iran","Guinea-Bissau","Poland","Guinea","Belgium","Brazil","Azerbaijan","Lithuania","Saudi Arabia"],"Botswana":["Sudan","Bolivia","Nigeria","Côte d'Ivoire","Uruguay","Andorra","Sierra Leone","Germany","Egypt","Nauru"],"Brazil":["Venezuela","Bosnia and Herzegovina","Moldova","Dominica","Sierra Leone","Costa Rica","Tanzania","Kenya","Nauru","Guinea-Bissau"],"Brunei":["Honduras","North Korea","Slovenia","Central African Republic","Netherlands","Singapore","Panama","North Macedonia","Niger","Rwanda"],"Bulgaria":["Hungary","Slovenia","Singapore","Romania","Honduras","China","North Macedonia","Switzerland","Bhutan","Yemen"],"Burkina Faso":["Central African Republic","Monaco","North Macedonia","Belarus","Singapore","Andorra","Afghanistan","Bhutan","Switzerland","Yemen"],"Burundi":["Nauru","Gabon","Chad","Grenada","Lesotho","Madagascar","Qatar","Ghana","Mauritius","Saint Lucia"],"Cabo Verde":["Palau","Marshall Islands","Tonga","Maldives","France","Portugal","São Tomé and Príncipe","Micronesia","Vanuatu","Solomon Islands"],"Cambodia":["Nigeria","San Marino","Germany","Vatican City","Lesotho","Sudan","Andorra","Nauru","Montenegro","Côte d'Ivoire"],"Cameroon":["Saint Lucia","Madagascar","Trinidad and Tobago","Qatar","Oman","Grenada","Chad","Sri Lanka","Liechtenstein","Pakistan"],"Canada":["Romania","Czechia","Kazakhstan","Switzerland","Ukraine","Hungary","Belarus","El Salvador","Türkiye","Singapore"],"Central African Republic":["Burkina Faso","Switzerland","Belarus","Monaco","North Macedonia","Yemen","Singapore","Bhutan","Kazakhstan","Romania"],"Chad":["Qatar","Ghana","Sri Lanka","Albania","Grenada","Saint Lucia","South Korea","Dominica","Burundi","Madagascar"],"Chile":["Maldives","Palau","Marshall Islands","Antigua and Barbuda","Tonga","Saint Vincent and the Grenadines","Israel","São Tomé and Príncipe","Vanuatu","France"],"China":["Slovenia","Hungary","Bulgaria","Lithuania","Singapore","Romania","Honduras","Cyprus","Canada","Mongolia"],"Colombia":["Sri Lanka","Kenya","South Korea","Qatar","Albania","Dominica","Tunisia","Chad","Guyana","Saudi Arabia"],"Comoros":["Marshall Islands","Palau","Tonga","Solomon Islands","Maldives","France","São Tomé and Príncipe","Micronesia","Portugal","Bahamas"],"Congo (Republic of the)":["Grenada","Oman","Lebanon","Madagascar","Chad","Pakistan","Cameroon","Saint Lucia","Finland","Djibouti"],"Costa Rica":["Guinea","Armenia","Seychelles","Laos","Bosnia and Herzegovina","Moldova","Paraguay","Liberia","Belgium","Iran"],"Côte d'Ivoire":["Germany","Nauru","Sudan","San Marino","Eswatini","Sierra Leone","Tanzania","Suriname","Cambodia","Nigeria"],"Croatia":["Myanmar","Guinea-Bissau","Solomon Islands","South Africa","Lithuania","Belgium","Portugal","Spain","Papua New Guinea","Palau"],"Cuba":["Samoa","Georgia","Jamaica","Micronesia","United States","Mongolia","Estonia","Palau","Ecuador","Indonesia"],"Cyprus":["Kyrgyzstan","Slovakia","Mongolia","Türkiye","Iceland","Jamaica","Czechia","Kazakhstan","Honduras","Latvia"],"Czechia":["Türkiye","Jamaica","Mongolia","Kazakhstan","Ukraine","Switzerland","Iceland","Latvia","Cyprus","El Salvador"],"Democratic Republic of the Congo":["Algeria","Nicaragua","Kuwait","Zimbabwe","Iraq","Suriname","San Marino","Eswatini","Mauritania","Gabon"],"Denmark":["Papua New Guinea","Cyprus","Solomon Islands","Malaysia","Slovenia","Samoa","Mongolia","Indonesia","Slovakia","Palau"],"Djibouti":["Uganda","Mauritius","San Marino","Mauritania","Nauru","Sudan","Sweden","Finland","Lebanon","Jordan"],"Dominica":["Guyana","Albania","Tunisia","Bahrain","Peru","Sri Lanka","Qatar","Moldova","Saint Lucia","Colombia"],"Dominican Republic":["Singapore","Central African Republic","Switzerland","Jamaica","Turkmenistan","Andorra","Monaco","Czechia","Bhutan","Türkiye"],"Ecuador":["Portugal","Malaysia","Palau","Micronesia","Marshall Islands","Tonga","Maldives","Austria","France","Timor-Leste"],"Egypt":["Uruguay","Germany","Côte d'Ivoire","Nigeria","Botswana","Sudan","Tanzania","Luxembourg","Sierra Leone","Finland"],"El Salvador":["Czechia","Tajikistan","Turkmenistan","Romania","Nepal","Bhutan","Canada","Jamaica","Singapore","Mongolia"],"Equatorial Guinea":["Malta","Cabo Verde","Antigua and Barbuda","Marshall Islands","Saint Kitts and Nevis","Palau","Comoros","Tonga","Maldives","Chile"],"Eritrea":["Nepal","Armenia","Mexico","Laos","Denmark","Samoa","Uzbekistan","Turkmenistan","Greece","Dominican Republic"],"Estonia":["Latvia","Kazakhstan","Ukraine","Austria","Iceland","Czechia","Türkiye","Jamaica","Mongolia","Hungary"],"Eswatini":["Nauru","Sierra Leone","Gabon","San Marino","Germany","Mauritius","Algeria","Côte d'Ivoire","Suriname","Vatican City"],"Ethiopia":["Saudi Arabia","Senegal","Barbados","Luxembourg","Iraq","Bolivia","Vatican City","San Marino","Colombia","Sri Lanka"],"Fiji":["Kiribati","Micronesia","Russia","Palau","Marshall Islands","Tonga","Maldives","France","Portugal","São Tomé and Príncipe"],"Finland":["Mauritius","Uganda","Mauritania","Grenada","Ghana","Guatemala","Ireland","Nauru","Djibouti","Angola"],"France":["Palau","Marshall Islands","Tonga","Maldives","Micronesia","Portugal","São Tomé and Príncipe","Cabo Verde","Solomon Islands","Vanuatu"],"Gabon":["Lesotho","Nauru","Vatican City","Sierra Leone","Eswatini","San Marino","Suriname","Burundi","Sudan","Rwanda"],"Gambia":["Slovakia","Latvia","Iceland","Indonesia","Mongolia","Micronesia","Austria","Kazakhstan","Cyprus","Türkiye"],"Georgia":["Jamaica","Mongolia","Uzbekistan","Czechia","Nepal","United States","Iceland","Cuba","Ukraine","Indonesia"],"Germany":["San Marino","Cambodia","Sudan","Vatican City","Côte d'Ivoire","Nauru","Nigeria","Eswatini","Sierra Leone","Lesotho"],"Ghana":["Chad","Qatar","Albania","Sri Lanka","Guatemala","Dominica","South Korea","Liechtenstein","Saint Lucia","Tunisia"],"Greece":["South Africa","Eritrea","Solomon Islands","Denmark","Samoa","Namibia","Vanuatu","Nepal","Papua New Guinea","Marshall Islands"],"Grenada":["Saint Lucia","Chad","Lebanon","Congo (Republic of the)","Madagascar","Qatar","Mauritius","Burundi","Oman","Finland"],"Guatemala":["Ghana","Nauru","Mauritius","Uganda","Finland","Chad","Sierra Leone","Mauritania","Eswatini","Qatar"],"Guinea":["Australia","Iran","Costa Rica","Bosnia and Herzegovina","Belgium","Armenia","Poland","Venezuela","Libya","Liberia"],"Guinea-Bissau":["Lithuania","Belgium","Monaco","Bosnia and Herzegovina","Singapore","Netherlands","China","Ukraine","North Macedonia","Honduras"],"Guyana":["Dominica","Bahrain","Albania","Sri Lanka","Togo","Benin","Qatar","Tuvalu","Myanmar","Tunisia"],"Haiti":["Niger","Palestine","United Arab Emirates","Mali","Ecuador","Oman","Vatican City","Burkina Faso","New Zealand","Portugal"],"Honduras":["Hungary","Singapore","Cyprus","Kyrgyzstan","Slovenia","Yemen","Switzerland","Slovakia","Bulgaria","Monaco"],"Hungary":["Slovenia","Bulgaria","Honduras","Kazakhstan","Switzerland","Türkiye","Kyrgyzstan","Czechia","Estonia","Cyprus"],"Iceland":["Mongolia","Türkiye","Kazakhstan","Jamaica","Slovakia","Czechia","Cyprus","Latvia","Austria","Ukraine"],"India":["Montenegro","Honduras","Slovenia","Afghanistan","Andorra","Hungary","China","Dominican Republic","Bangladesh","Singapore"],"Indonesia":["Jamaica","Mongolia","Gambia","Iceland","Georgia","Solomon Islands","Czechia","Cyprus","Türkiye","Cuba"],"Iran":["Bosnia and Herzegovina","Poland","South Sudan","Guinea","Saudi Arabia","Senegal","Venezuela","Liberia","Armenia","Libya"],"Iraq":["Kuwait","Algeria","Senegal","Ethiopia","United Kingdom","Liberia","Kenya","Colombia","Zimbabwe","Peru"],"Ireland":["Mauritius","Rwanda","Vatican City","Lesotho","Finland","Gabon","San Marino","Ethiopia","Zimbabwe","Senegal"],"Israel":["Chile","Saint Vincent and the Grenadines","Benin","Tuvalu","Maldives","Madagascar","Palau","Tonga","Marshall Islands","Antigua and Barbuda"],"Italy":["Seychelles","Laos","Philippines","Saint Kitts and Nevis","Costa Rica","Moldova","Armenia","South Africa","Vanuatu","Vietnam"],"Jamaica":["Czechia","Mongolia","Türkiye","Iceland","Georgia","Ukraine","Kazakhstan","Cyprus","Latvia","Uzbekistan"],"Japan":["Somalia","New Zealand","France","Morocco","Marshall Islands","Palau","Tonga","Norway","Pakistan","Maldives"],"Jordan":["Sweden","Syria","Lebanon","Djibouti","Nigeria","Zambia","Sudan","North Korea","Afghanistan","Rwanda"],"Kazakhstan":["Türkiye","Czechia","Ukraine","Iceland","Mongolia","Latvia","Estonia","Slovakia","Switzerland","Jamaica"],"Kenya":["Colombia","Dominica","Algeria","Nauru","Iraq","Sierra Leone","Chad","Barbados","Tanzania","Sri Lanka"],"Kiribati":["Fiji","Micronesia","Russia","Palau","Marshall Islands","Tonga","Maldives","Portugal","France","São Tomé and Príncipe"],"Kuwait":["Iraq","Algeria","Democratic Republic of the Congo","Zimbabwe","Peru","Australia","Nicaragua","Kenya","Liberia","San Marino"],"Kyrgyzstan":["Cyprus","Slovakia","Timor-Leste","Hungary","Honduras","Iceland","Switzerland","Estonia","Jamaica","Türkiye"],"Laos":["Seychelles","Armenia","Saint Kitts and Nevis","Eritrea","Costa Rica","Paraguay","Liberia","Mexico","Peru","Italy"],"Latvia":["Estonia","Kazakhstan","Iceland","Czechia","Türkiye","Ukraine","Jamaica","Austria","Mongolia","Slovakia"],"Lebanon":["Grenada","Congo (Republic of the)","Madagascar","Mozambique","North Korea","Somalia","New Zealand","Morocco","Sweden","Belize"],"Lesotho":["San Marino","Rwanda","Zambia","Vatican City","Sudan","Gabon","Cambodia","Nigeria","North Macedonia","Nauru"],"Liberia":["Paraguay","Iran","Iraq","Armenia","Saudi Arabia","Serbia","Senegal","Bangladesh","Seychelles","Costa Rica"],"Libya":["Poland","Australia","Vatican City","Iran","Cambodia","Guinea","Zimbabwe","Bosnia and Herzegovina","Nigeria","Venezuela"],"Liechtenstein":["Sri Lanka","Qatar","Albania","Chad","Ghana","Colombia","Belize","Guyana","Barbados","Trinidad and Tobago"],"Lithuania":["Ukraine","Belgium","Singapore","Jamaica","Kazakhstan","Romania","Mongolia","Switzerland","Czechia","Türkiye"],"Luxembourg":["Uruguay","Ethiopia","Barbados","Bolivia","Saudi Arabia","Sierra Leone","Angola","Eswatini","Senegal","Serbia"],"Madagascar":["Saint Lucia","Benin","Qatar","Mozambique","Grenada","Belize","Israel","Argentina","Chad","Cameroon"],"Malawi":["Togo","Tuvalu","Myanmar","Bahrain","Vietnam","Tunisia","Israel","Antigua and Barbuda","Albania","Vanuatu"],"Malaysia":["Ecuador","Portugal","Micronesia","Palau","Marshall Islands","Tonga","Maldives","Solomon Islands","Austria","France"],"Maldives":["Palau","Tonga","Marshall Islands","Micronesia","France","São Tomé and Príncipe","Portugal","Saint Vincent and the Grenadines","Antigua and Barbuda","Vanuatu"],"Mali":["Oman","Rwanda","Burkina Faso","Lesotho","Niger","North Macedonia","Chad","Guatemala","Zambia","Ireland"],"Malta":["United States","Mexico","Nepal","Marshall Islands","Palau","Samoa","Solomon Islands","Tonga","Vanuatu","Maldives"],"Marshall Islands":["Palau","Tonga","Maldives","Micronesia","France","São Tomé and Príncipe","Portugal","Vanuatu","Solomon Islands","Cabo Verde"],"Mauritania":["Mauritius","Uganda","Algeria","Eswatini","Finland","Nicaragua","Djibouti","Grenada","San Marino","Nauru"],"Mauritius":["Mauritania","Uganda","Finland","Nauru","Eswatini","Grenada","Djibouti","Guatemala","San Marino","Ireland"],"Mexico":["Nepal","El Salvador","Uzbekistan","Turkmenistan","Malta","Samoa","Georgia","United States","Belgium","Armenia"],"Micronesia":["Palau","Marshall Islands","Tonga","Maldives","France","Portugal","São Tomé and Príncipe","Russia","Solomon Islands","Fiji"],"Moldova":["Dominica","Venezuela","Brazil","Seychelles","Guyana","Costa Rica","Bosnia and Herzegovina","Bahrain","Benin","Colombia"],"Monaco":["Burkina Faso","North Macedonia","Andorra","Yemen","Honduras","Central African Republic","Singapore","Afghanistan","Hungary","Bulgaria"],"Mongolia":["Iceland","Türkiye","Jamaica","Czechia","Kazakhstan","Cyprus","Slovakia","Ukraine","Georgia","Latvia"],"Montenegro":["Andorra","India","Honduras","Monaco","North Macedonia","Syria","Nigeria","Dominican Republic","Cambodia","Singapore"],"Morocco":["Spain","Somalia","Japan","Lebanon","France","North Korea","Netherlands","Palau","Marshall Islands","Mozambique"],"Mozambique":["Madagascar","Belize","Argentina","Benin","Thailand","Lebanon","South Korea","Israel","Myanmar","Saint Lucia"],"Myanmar":["Bahrain","Malawi","Benin","Togo","Tuvalu","Argentina","Tunisia","Saint Vincent and the Grenadines","Vanuatu","Guyana"],"Namibia":["Belize","Albania","Qatar","Argentina","Madagascar","Sri Lanka","Burundi","Guyana","Benin","Chad"],"Nauru":["Eswatini","Sierra Leone","Sudan","Germany","Gabon","Lesotho","Côte d'Ivoire","Uganda","San Marino","Mauritius"],"Nepal":["Uzbekistan","Samoa","Georgia","El Salvador","Turkmenistan","United States","Jamaica","Mexico","Tajikistan","Czechia"],"Netherlands":["Niger","Belarus","Monaco","Guinea-Bissau","Central African Republic","Azerbaijan","Burkina Faso","Yemen","Singapore","Slovenia"],"New Zealand":["Japan","Oman","Somalia","Lebanon","São Tomé and Príncipe","Palau","Marshall Islands","Tonga","Norway","North Korea"],"Nicaragua":["Zimbabwe","Algeria","Democratic Republic of the Congo","San Marino","Vatican City","Eswatini","Mauritania","South Sudan","Germany","Kuwait"],"Niger":["Netherlands","Rwanda","Zambia","San Marino","Belarus","North Macedonia","Burkina Faso","Vatican City","Pakistan","Haiti"],"Nigeria":["Cambodia","Sudan","Lesotho","Germany","San Marino","Syria","Andorra","Montenegro","Vatican City","Côte d'Ivoire"],"North Korea":["Afghanistan","Yemen","Somalia","Honduras","Lebanon","Slovenia","Hungary","Switzerland","Brunei","Kyrgyzstan"],"North Macedonia":["Andorra","Monaco","Singapore","Burkina Faso","Bhutan","Belarus","Central African Republic","Bulgaria","Romania","Poland"],"Norway":["Saint Vincent and the Grenadines","Palau","Marshall Islands","São Tomé and Príncipe","Tonga","Maldives","France","Portugal","Japan","Timor-Leste"],"Oman":["Congo (Republic of the)","Mali","Grenada","New Zealand","Madagascar","Cameroon","Saint Lucia","Chad","Trinidad and Tobago","North Korea"],"Pakistan":["Zambia","United Arab Emirates","Niger","Rwanda","Japan","Cameroon","North Korea","Netherlands","Congo (Republic of the)","Oman"],"Palau":["Marshall Islands","Tonga","Maldives","Micronesia","France","São Tomé and Príncipe","Portugal","Vanuatu","Solomon Islands","Cabo Verde"],"Palestine":["Haiti","Spain","Niger","Ecuador","Morocco","Japan","Pakistan","Netherlands","United Arab Emirates","France"],"Panama":["Latvia","Jamaica","Türkiye","Ukraine","Iceland","Kazakhstan","Indonesia","Cyprus","Switzerland","Estonia"],"Papua New Guinea":["Denmark","Cyprus","Panama","Solomon Islands","Slovenia","China","Yemen","Gambia","Bulgaria","Indonesia"],"Paraguay":["Liberia","Tanzania","Serbia","Costa Rica","Laos","Armenia","Iran","Saudi Arabia","Brazil","Guinea"],"Peru":["Dominica","Tunisia","Seychelles","Guyana","Qatar","Albania","Malawi","Iraq","Bahrain","Myanmar"],"Philippines":["Seychelles","Vietnam","Malawi","Togo","Tuvalu","Bahrain","Myanmar","Vanuatu","Peru","Palau"],"Poland":["Romania","Andorra","Australia","Singapore","North Macedonia","Belarus","Bulgaria","El Salvador","Bhutan","Belgium"],"Portugal":["Palau","Marshall Islands","Tonga","Micronesia","Maldives","France","São Tomé and Príncipe","Ecuador","Cabo Verde","Solomon Islands"],"Qatar":["Sri Lanka","Saint Lucia","Chad","Albania","Tunisia","Ghana","Madagascar","Liechtenstein","Dominica","Bahrain"],"Romania":["Bhutan","Singapore","Belarus","Canada","Switzerland","El Salvador","Bulgaria","Czechia","Lithuania","Hungary"],"Russia":["Micronesia","Kiribati","Fiji","Portugal","Palau","Marshall Islands","Tonga","Maldives","Ecuador","France"],"Rwanda":["Lesotho","Zambia","San Marino","Vatican City","Niger","North Macedonia","Gabon","Burkina Faso","Ireland","Mali"],"Saint Kitts and Nevis":["Laos","Bahamas","Marshall Islands","Cabo Verde","Palau","Vanuatu","Malta","Tonga","Comoros","Maldives"],"Saint Lucia":["Qatar","Madagascar","Tunisia","Grenada","Chad","Albania","Benin","Bahrain","Cameroon","Dominica"],"Saint Vincent and the Grenadines":["Maldives","Palau","Tonga","Marshall Islands","Chile","São Tomé and Príncipe","France","Micronesia","Vanuatu","Antigua and Barbuda"],"Samoa":["Nepal","Cuba","United States","Solomon Islands","Georgia","Uzbekistan","Palau","Marshall Islands","Bahamas","Tonga"],"San Marino":["Vatican City","Lesotho","Germany","Cambodia","Sudan","Nicaragua","Zimbabwe","Rwanda","Nauru","Eswatini"],"São Tomé and Príncipe":["Tonga","Palau","Marshall Islands","Maldives","France","Micronesia","Portugal","Vanuatu","Cabo Verde","Solomon Islands"],"Saudi Arabia":["Ethiopia","Poland","Senegal","Iran","Romania","Bangladesh","Bolivia","South Sudan","Turkmenistan","El Salvador"],"Senegal":["Ethiopia","Saudi Arabia","Iraq","Iran","Vatican City","Serbia","Romania","Poland","Andorra","Uruguay"],"Serbia":["Tanzania","Uruguay","Senegal","Paraguay","Barbados","Saudi Arabia","Liberia","Iran","Bangladesh","Bolivia"],"Seychelles":["Philippines","Laos","Dominica","Peru","Italy","Guyana","Costa Rica","Armenia","Moldova","Myanmar"],"Sierra Leone":["Nauru","Suriname","Eswatini","Gabon","Germany","Tanzania","Sudan","Algeria","Côte d'Ivoire","Kenya"],"Singapore":["Romania","Switzerland","Lithuania","Belarus","Bhutan","Ukraine","Honduras","Bulgaria","North Macedonia","Kazakhstan"],"Slovakia":["Türkiye","Cyprus","Iceland","Kazakhstan","Mongolia","Kyrgyzstan","Gambia","Czechia","Latvia","Estonia"],"Slovenia":["Hungary","Bulgaria","China","Honduras","Cyprus","Yemen","Kazakhstan","Kyrgyzstan","Türkiye","Iceland"],"Solomon Islands":["Palau","Marshall Islands","Tonga","Maldives","Micronesia","France","Portugal","São Tomé and Príncipe","Comoros","Vanuatu"],"Somalia":["Morocco","Japan","North Korea","Lebanon","New Zealand","Palau","Afghanistan","São Tomé and Príncipe","Marshall Islands","Tonga"],"South Africa":["Saint Vincent and the Grenadines","Myanmar","Greece","Vanuatu","Thailand","Palau","Maldives","Marshall Islands","Benin","Tonga"],"South Korea":["Argentina","Belize","Tunisia","Chad","Colombia","Qatar","Ghana","Albania","Myanmar","Saint Lucia"],"South Sudan":["Iran","Algeria","Zimbabwe","Poland","Romania","Saudi Arabia","Nicaragua","China","Senegal","Bulgaria"],"Spain":["France","Saint Vincent and the Grenadines","Morocco","Palau","Marshall Islands","Tonga","Maldives","Portugal","Vanuatu","Chile"],"Sri Lanka":["Qatar","Albania","Liechtenstein","Chad","Guyana","Colombia","Dominica","Ghana","Tunisia","Saint Lucia"],"Sudan":["San Marino","Germany","Nigeria","Nauru","Lesotho","Cambodia","Vatican City","Côte d'Ivoire","Sierra Leone","Uganda"],"Suriname":["Sierra Leone","Gabon","Eswatini","Côte d'Ivoire","Nauru","Tanzania","Democratic Republic of the Congo","Algeria","Sudan","Germany"],"Sweden":["Jordan","Lebanon","Djibouti","Mozambique","Belize","Argentina","Syria","Lesotho","North Korea","Nauru"],"Switzerland":["Singapore","Czechia","Kazakhstan","Ukraine","Hungary","Romania","Türkiye","Belarus","Bhutan","Central African Republic"],"Syria":["Andorra","Afghanistan","Monaco","Nigeria","Yemen","Burkina Faso","Montenegro","North Macedonia","Dominican Republic","Cambodia"],"Tajikistan":["El Salvador","Bhutan","Czechia","Turkmenistan","Nepal","Romania","Georgia","Canada","Belarus","Jamaica"],"Tanzania":["Sierra Leone","Serbia","Côte d'Ivoire","Eswatini","Paraguay","Uruguay","Kenya","Algeria","Iraq","Suriname"],"Thailand":["Argentina","Benin","Mozambique","Myanmar","South Korea","South Africa","Albania","Madagascar","Spain","Belize"],"Timor-Leste":["Kyrgyzstan","Austria","Iceland","Cyprus","Slovakia","Estonia","Portugal","Mongolia","Ecuador","Palau"],"Togo":["Bahrain","Tuvalu","Malawi","Myanmar","Vietnam","Guyana","Tunisia","Antigua and Barbuda","Chile","Dominica"],"Tonga":["Palau","Marshall Islands","Maldives","São Tomé and Príncipe","Micronesia","France","Portugal","Vanuatu","Cabo Verde","Saint Vincent and the Grenadines"],"Trinidad and Tobago":["Madagascar","Tuvalu","Cameroon","Israel","Liechtenstein","Saint Lucia","Togo","São Tomé and Príncipe","Sri Lanka","Chile"],"Tunisia":["Bahrain","Qatar","Albania","Saint Lucia","Dominica","Benin","Myanmar","South Korea","Malawi","Sri Lanka"],"Türkiye":["Czechia","Iceland","Mongolia","Kazakhstan","Jamaica","Slovakia","Ukraine","Cyprus","Latvia","Switzerland"],"Turkmenistan":["El Salvador","Jamaica","Czechia","Belgium","Nepal","Uzbekistan","Ukraine","Tajikistan","Lithuania","Kazakhstan"],"Tuvalu":["Togo","Bahrain","Malawi","Benin","Chile","Israel","Myanmar","Antigua and Barbuda","Vietnam","Guyana"],"Uganda":["Djibouti","Mauritius","Nauru","Sudan","Finland","Mauritania","San Marino","Eswatini","Lesotho","Germany"],"Ukraine":["Kazakhstan","Czechia","Jamaica","Türkiye","Lithuania","Switzerland","Estonia","Mongolia","Latvia","Singapore"],"United Arab Emirates":["Pakistan","Austria","Niger","Netherlands","Slovenia","Hungary","Haiti","Belarus","Ecuador","China"],"United Kingdom":["Iraq","Sri Lanka","Ethiopia","Liberia","Dominica","Seychelles","Moldova","Senegal","Saudi Arabia","Guyana"],"United States":["Uzbekistan","Georgia","Nepal","Samoa","Solomon Islands","Cuba","Malta","Ecuador","Palau","Turkmenistan"],"Uruguay":["Bolivia","Luxembourg","Barbados","Egypt","Serbia","Angola","Tanzania","Botswana","Ethiopia","Senegal"],"Uzbekistan":["United States","Jamaica","Georgia","Nepal","Ukraine","Turkmenistan","Mongolia","Czechia","Belgium","Lithuania"],"Vanuatu":["Palau","Tonga","Marshall Islands","Maldives","France","São Tomé and Príncipe","Micronesia","Portugal","Saint Vincent and the Grenadines","Cabo Verde"],"Vatican City":["San Marino","Germany","Cambodia","Lesotho","Gabon","Sudan","Rwanda","Zimbabwe","Senegal","Ethiopia"],"Venezuela":["Brazil","Bosnia and Herzegovina","Iran","Moldova","Guinea-Bissau","Guinea","Poland","Saudi Arabia","Cambodia","Costa Rica"],"Vietnam":["Antigua and Barbuda","Togo","Maldives","Tuvalu","Malawi","Saint Vincent and the Grenadines","Palau","Bahrain","Tonga","Marshall Islands"],"Yemen":["Afghanistan","Honduras","Monaco","Hungary","Slovenia","Central African Republic","Bulgaria","Kyrgyzstan","Cyprus","Switzerland"],"Zambia":["Lesotho","Rwanda","Niger","San Marino","Pakistan","Sudan","North Macedonia","Burkina Faso","Nigeria","Cambodia"],"Zimbabwe":["Algeria","Nicaragua","San Marino","Vatican City","South Sudan","Democratic Republic of the Congo","Eswatini","Kuwait","Poland","Iraq"]};
+
 /* QUIZ MODES */
 
 const MODES = {
@@ -1324,6 +1333,20 @@ const MODES = {
     tagline:"Identify the flag of every country. Five tricky choices. Seven seconds each.",
     dataset:COUNTRIES,promptLabel:"Find the flag of",choiceCount:5,timeLimit:7000,
     historyKey:"flagRushHistory",newGameSub:"5 similar flags · 7 seconds · no second chances",codeStyle:false
+  },
+
+  outlines:{
+    icon:"🗺️",
+    title:"Outline Rush",
+    eyebrow: n => `${n} countries`,
+    tagline:"Identify the country from its outline. Dark canvas, white silhouette, and four confusing choices. Seven seconds each.",
+    dataset:OUTLINE_COUNTRIES,
+    promptLabel:"Which country is this outline?",
+    choiceCount:4,
+    timeLimit:7000,
+    historyKey:"outlineRushHistory",
+    newGameSub:"4 choices · white silhouette · 7 seconds",
+    codeStyle:false
   },
 
   area:{
@@ -1411,13 +1434,21 @@ function syncHapticButton(){
   $('hapticToggle').title='Vibration works only in browsers that support the Vibration API; iPhone Safari may not.';
 }
 function animateCard(id){const el=$(id);el.classList.remove('questionEntrance');void el.offsetWidth;el.classList.add('questionEntrance');}
+function outlinePath(name){
+  return `./outlines/${FLAG_CODES[name]}.svg`;
+}
+
 function preloadNextFlag(){
   if(quizMode==='airports'||index+1>=run.length)return;
   const next=run[index+1];if(!next)return;
+  if(quizMode==='outlines'){
+    const img=new Image();
+    img.src=outlinePath(next[0]);
+    return;
+  }
   const list=quizMode==='area'?next:[next[0]];
   for(const name of list){if(FLAG_CODES[name]){const img=new Image();img.src=flagPath(name);}}
 }
-
 
 
 /* SHUFFLE */
@@ -1443,6 +1474,9 @@ function makeChoices(correct){
   if(quizMode === "flags"){
     return flagChoices(run[index][0]);
   }
+  if(quizMode === "outlines"){
+    return outlineChoices(correct[0]);
+  }
   if(quizMode === "airports"){
     return airportChoices(correct[0]);
   }
@@ -1457,6 +1491,15 @@ function makeChoices(correct){
       MODES.capitals.choiceCount - correct.length
     )
   ]);
+}
+
+function outlineChoices(country){
+  // Silhouette similarity only: no geographic-neighbor or random-country fillers.
+  // The ranked list is derived from normalized shape proportions and outline raster similarity.
+  const matches=(OUTLINE_SIMILAR[country]||[])
+    .filter(name=>name!==country && Object.prototype.hasOwnProperty.call(FLAG_CODES,name));
+  const distractors=shuffle(matches.slice(0,8)).slice(0,3);
+  return shuffle([country,...distractors]);
 }
 
 
@@ -1878,46 +1921,44 @@ function nextQuestion(){
 
   const needsCheck = correct.length > 1;
 
-  $("counter").textContent =
-    `${index + 1} / ${TOTAL}`;
+  $("counter").textContent = `${index + 1} / ${TOTAL}`;
+  $("score").textContent = `${score} correct`;
+  $("promptLabel").textContent = mode.promptLabel;
 
-  $("score").textContent =
-    `${score} correct`;
-
-  $("promptLabel").textContent =
-    mode.promptLabel;
-
-  $("country").textContent = promptValue;
+  const countryEl = $("country");
   const qFlag = $("questionFlag");
-  qFlag.hidden = quizMode !== "capitals";
-  if(quizMode === "capitals"){
-    qFlag.src = flagPath(promptValue);
-    qFlag.alt = `Flag of ${promptValue}`;
+  countryEl.hidden = false;
+  countryEl.classList.remove("outlinePrompt");
+  qFlag.classList.remove("outlineVisual");
+  qFlag.hidden = true;
+
+  if(quizMode === "outlines"){
+    countryEl.textContent = "";
+    countryEl.hidden = true;
+    countryEl.classList.add("outlinePrompt");
+    qFlag.hidden = false;
+    qFlag.classList.add("outlineVisual");
+    qFlag.src = outlinePath(promptValue);
+    qFlag.alt = "Country outline";
+  }else{
+    countryEl.textContent = promptValue;
+    if(quizMode === "capitals"){
+      qFlag.hidden = false;
+      qFlag.src = flagPath(promptValue);
+      qFlag.alt = `Flag of ${promptValue}`;
+    }
   }
 
-  $("country").classList.toggle(
-    "code",
-    !!mode.codeStyle
-  );
-
-  $("instruction").textContent =
-    instructionText(needsCheck);
-
-  $("submit").style.display =
-    needsCheck
-      ? "block"
-      : "none";
-
+  $("country").classList.toggle("code", !!mode.codeStyle);
+  $("instruction").textContent = instructionText(needsCheck);
+  $("submit").style.display = needsCheck ? "block" : "none";
   $("submit").disabled = true;
 
   $("choices").innerHTML = "";
   $("choices").classList.toggle("flagsChoices",quizMode === "flags");
 
   makeChoices(correct).forEach(capital => {
-
-    const button =
-      document.createElement("button");
-
+    const button = document.createElement("button");
     button.className = "choice";
     button.dataset.answer = capital;
     if(quizMode === "flags"){
@@ -1930,27 +1971,12 @@ function nextQuestion(){
     } else {
       button.textContent = capital;
     }
-
-    button.addEventListener(
-      "click",
-      () =>
-        toggleChoice(
-          button,
-          capital,
-          correct,
-          needsCheck
-        )
-    );
-
-    $("choices")
-      .appendChild(button);
-
+    button.addEventListener("click",() => toggleChoice(button,capital,correct,needsCheck));
+    $("choices").appendChild(button);
   });
 
   if(!practiceMode){
-
     startTimer(mode.timeLimit);
-
   }
 }
 
@@ -1959,18 +1985,13 @@ function nextQuestion(){
 
 function instructionText(needsCheck){
 
-  if(quizMode === "airports"){
-
-    return "Tap the airport that matches the code.";
-
-  }
+  if(quizMode === "airports") return "Tap the airport that matches the code.";
+  if(quizMode === "outlines") return "Tap the country that matches the outline.";
 
   if(practiceMode){
-
     return needsCheck
       ? "Select all correct capitals, then tap Check."
       : "Select the capital.";
-
   }
 
   return "Select all correct capitals, then tap Check.";
@@ -2277,6 +2298,7 @@ function submitAnswer(
 function showPracticeAnswer(isCorrect, correct, selectedAnswers, timeout){
   const country = run[index][0];
   const isFlags = quizMode === "flags";
+  const isOutlines = quizMode === "outlines";
   const correctGroup = $("correctAnswerGroup");
   const yourGroup = $("yourAnswerGroup");
   const correctValue = $("answerValue");
@@ -2287,9 +2309,10 @@ function showPracticeAnswer(isCorrect, correct, selectedAnswers, timeout){
 
   $("answerStatus").textContent = isCorrect ? "You are right!" : "Incorrect";
   $("answerStatus").className = "answerStatus " + (isCorrect ? "correctStatus" : "wrongStatus");
-  $("answerCountry").textContent = isFlags ? country : (quizMode === "airports" ? `Which airport is ${country}?` : `What is the capital of ${country}?`);
+  $("answerCountry").textContent = isFlags
+    ? country
+    : (quizMode === "airports" ? `Which airport is ${country}?` : (isOutlines ? `Outline of ${country}` : `What is the capital of ${country}?`));
 
-  // Build DOM nodes instead of HTML strings: country names are always rendered safely.
   function populate(target, values, wrong){
     target.replaceChildren();
     target.className = "reviewAnswer" + (wrong ? " wrongAnswer" : "");
@@ -2310,10 +2333,14 @@ function showPracticeAnswer(isCorrect, correct, selectedAnswers, timeout){
       }
       const name = document.createElement("span");
       name.className = "reviewName";
-      const capitalCountry = !isFlags && wrong
-        ? (COUNTRIES.find(entry => entry[1].includes(value))?.[0] || "Unknown country")
-        : country;
-      name.textContent = isFlags ? value : (wrong ? `${value} · ${capitalCountry}` : value);
+      if(isFlags || isOutlines){
+        name.textContent = value;
+      }else if(wrong){
+        const capitalCountry = COUNTRIES.find(entry => entry[1].includes(value))?.[0] || "Unknown country";
+        name.textContent = `${value} · ${capitalCountry}`;
+      }else{
+        name.textContent = value;
+      }
       item.appendChild(name);
       target.appendChild(item);
     });
@@ -2323,7 +2350,7 @@ function showPracticeAnswer(isCorrect, correct, selectedAnswers, timeout){
   yourGroup.hidden = false;
   yourLabel.textContent = isCorrect ? "Selected answer" : "Your answer";
   yourLabel.className = "reviewLabel " + (isCorrect ? "rightLabel" : "wrongLabel");
-  correctLabel.textContent = "Correct answer is";
+  correctLabel.textContent = isOutlines ? "Correct country is" : "Correct answer is";
   populate(correctValue, correct, false);
   populate(yourValue, selectedList, !isCorrect);
   if(isCorrect) yourValue.classList.add("rightAnswer");
@@ -2575,12 +2602,12 @@ if("serviceWorker" in navigator){
 
 
 <script>
-/* v12.4 offline status: only green when every local image and PWA file is cached. */
+/* v12.7 offline status: only green when every local game asset is cached, including Outline Rush. */
 (()=>{
  const badge=document.getElementById('offline-status');
  const mini=document.getElementById('offline-game-status');
- const assets=["./","./index.html","./manifest.webmanifest","./icon-180.png","./flags/ad.svg","./flags/ae.svg","./flags/af.svg","./flags/ag.svg","./flags/al.svg","./flags/am.svg","./flags/ao.svg","./flags/ar.svg","./flags/at.svg","./flags/au.svg","./flags/az.svg","./flags/ba.svg","./flags/bb.svg","./flags/bd.svg","./flags/be.svg","./flags/bf.svg","./flags/bg.svg","./flags/bh.svg","./flags/bi.svg","./flags/bj.svg","./flags/bn.svg","./flags/bo.svg","./flags/br.svg","./flags/bs.svg","./flags/bt.svg","./flags/bw.svg","./flags/by.svg","./flags/bz.svg","./flags/ca.svg","./flags/cd.svg","./flags/cf.svg","./flags/cg.svg","./flags/ch.svg","./flags/ci.svg","./flags/cl.svg","./flags/cm.svg","./flags/cn.svg","./flags/co.svg","./flags/cr.svg","./flags/cu.svg","./flags/cv.svg","./flags/cy.svg","./flags/cz.svg","./flags/de.svg","./flags/dj.svg","./flags/dk.svg","./flags/dm.svg","./flags/do.svg","./flags/dz.svg","./flags/ec.svg","./flags/ee.svg","./flags/eg.svg","./flags/er.svg","./flags/es.svg","./flags/et.svg","./flags/fi.svg","./flags/fj.svg","./flags/fm.svg","./flags/fr.svg","./flags/ga.svg","./flags/gb.svg","./flags/gd.svg","./flags/ge.svg","./flags/gh.svg","./flags/gm.svg","./flags/gn.svg","./flags/gq.svg","./flags/gr.svg","./flags/gt.svg","./flags/gw.svg","./flags/gy.svg","./flags/hn.svg","./flags/hr.svg","./flags/ht.svg","./flags/hu.svg","./flags/id.svg","./flags/ie.svg","./flags/il.svg","./flags/in.svg","./flags/iq.svg","./flags/ir.svg","./flags/is.svg","./flags/it.svg","./flags/jm.svg","./flags/jo.svg","./flags/jp.svg","./flags/ke.svg","./flags/kg.svg","./flags/kh.svg","./flags/ki.svg","./flags/km.svg","./flags/kn.svg","./flags/kp.svg","./flags/kr.svg","./flags/kw.svg","./flags/kz.svg","./flags/la.svg","./flags/lb.svg","./flags/lc.svg","./flags/li.svg","./flags/lk.svg","./flags/lr.svg","./flags/ls.svg","./flags/lt.svg","./flags/lu.svg","./flags/lv.svg","./flags/ly.svg","./flags/ma.svg","./flags/mc.svg","./flags/md.svg","./flags/me.svg","./flags/mg.svg","./flags/mh.svg","./flags/mk.svg","./flags/ml.svg","./flags/mm.svg","./flags/mn.svg","./flags/mr.svg","./flags/mt.svg","./flags/mu.svg","./flags/mv.svg","./flags/mw.svg","./flags/mx.svg","./flags/my.svg","./flags/mz.svg","./flags/na.svg","./flags/ne.svg","./flags/ng.svg","./flags/ni.svg","./flags/nl.svg","./flags/no.svg","./flags/np.svg","./flags/nr.svg","./flags/nz.svg","./flags/om.svg","./flags/pa.svg","./flags/pe.svg","./flags/pg.svg","./flags/ph.svg","./flags/pk.svg","./flags/pl.svg","./flags/ps.svg","./flags/pt.svg","./flags/pw.svg","./flags/py.svg","./flags/qa.svg","./flags/ro.svg","./flags/rs.svg","./flags/ru.svg","./flags/rw.svg","./flags/sa.svg","./flags/sb.svg","./flags/sc.svg","./flags/sd.svg","./flags/se.svg","./flags/sg.svg","./flags/si.svg","./flags/sk.svg","./flags/sl.svg","./flags/sm.svg","./flags/sn.svg","./flags/so.svg","./flags/sr.svg","./flags/ss.svg","./flags/st.svg","./flags/sv.svg","./flags/sy.svg","./flags/sz.svg","./flags/td.svg","./flags/tg.svg","./flags/th.svg","./flags/tj.svg","./flags/tl.svg","./flags/tm.svg","./flags/tn.svg","./flags/to.svg","./flags/tr.svg","./flags/tt.svg","./flags/tv.svg","./flags/tz.svg","./flags/ua.svg","./flags/ug.svg","./flags/us.svg","./flags/uy.svg","./flags/uz.svg","./flags/va.svg","./flags/vc.svg","./flags/ve.svg","./flags/vn.svg","./flags/vu.svg","./flags/ws.svg","./flags/ye.svg","./flags/za.svg","./flags/zm.svg","./flags/zw.svg"];
- const cacheName='capital-rush-v12.5-all-modes';
+ const assets=["./","./index.html","./manifest.webmanifest","./icon-180.png","./flags/ad.svg","./flags/ae.svg","./flags/af.svg","./flags/ag.svg","./flags/al.svg","./flags/am.svg","./flags/ao.svg","./flags/ar.svg","./flags/at.svg","./flags/au.svg","./flags/az.svg","./flags/ba.svg","./flags/bb.svg","./flags/bd.svg","./flags/be.svg","./flags/bf.svg","./flags/bg.svg","./flags/bh.svg","./flags/bi.svg","./flags/bj.svg","./flags/bn.svg","./flags/bo.svg","./flags/br.svg","./flags/bs.svg","./flags/bt.svg","./flags/bw.svg","./flags/by.svg","./flags/bz.svg","./flags/ca.svg","./flags/cd.svg","./flags/cf.svg","./flags/cg.svg","./flags/ch.svg","./flags/ci.svg","./flags/cl.svg","./flags/cm.svg","./flags/cn.svg","./flags/co.svg","./flags/cr.svg","./flags/cu.svg","./flags/cv.svg","./flags/cy.svg","./flags/cz.svg","./flags/de.svg","./flags/dj.svg","./flags/dk.svg","./flags/dm.svg","./flags/do.svg","./flags/dz.svg","./flags/ec.svg","./flags/ee.svg","./flags/eg.svg","./flags/er.svg","./flags/es.svg","./flags/et.svg","./flags/fi.svg","./flags/fj.svg","./flags/fm.svg","./flags/fr.svg","./flags/ga.svg","./flags/gb.svg","./flags/gd.svg","./flags/ge.svg","./flags/gh.svg","./flags/gm.svg","./flags/gn.svg","./flags/gq.svg","./flags/gr.svg","./flags/gt.svg","./flags/gw.svg","./flags/gy.svg","./flags/hn.svg","./flags/hr.svg","./flags/ht.svg","./flags/hu.svg","./flags/id.svg","./flags/ie.svg","./flags/il.svg","./flags/in.svg","./flags/iq.svg","./flags/ir.svg","./flags/is.svg","./flags/it.svg","./flags/jm.svg","./flags/jo.svg","./flags/jp.svg","./flags/ke.svg","./flags/kg.svg","./flags/kh.svg","./flags/ki.svg","./flags/km.svg","./flags/kn.svg","./flags/kp.svg","./flags/kr.svg","./flags/kw.svg","./flags/kz.svg","./flags/la.svg","./flags/lb.svg","./flags/lc.svg","./flags/li.svg","./flags/lk.svg","./flags/lr.svg","./flags/ls.svg","./flags/lt.svg","./flags/lu.svg","./flags/lv.svg","./flags/ly.svg","./flags/ma.svg","./flags/mc.svg","./flags/md.svg","./flags/me.svg","./flags/mg.svg","./flags/mh.svg","./flags/mk.svg","./flags/ml.svg","./flags/mm.svg","./flags/mn.svg","./flags/mr.svg","./flags/mt.svg","./flags/mu.svg","./flags/mv.svg","./flags/mw.svg","./flags/mx.svg","./flags/my.svg","./flags/mz.svg","./flags/na.svg","./flags/ne.svg","./flags/ng.svg","./flags/ni.svg","./flags/nl.svg","./flags/no.svg","./flags/np.svg","./flags/nr.svg","./flags/nz.svg","./flags/om.svg","./flags/pa.svg","./flags/pe.svg","./flags/pg.svg","./flags/ph.svg","./flags/pk.svg","./flags/pl.svg","./flags/ps.svg","./flags/pt.svg","./flags/pw.svg","./flags/py.svg","./flags/qa.svg","./flags/ro.svg","./flags/rs.svg","./flags/ru.svg","./flags/rw.svg","./flags/sa.svg","./flags/sb.svg","./flags/sc.svg","./flags/sd.svg","./flags/se.svg","./flags/sg.svg","./flags/si.svg","./flags/sk.svg","./flags/sl.svg","./flags/sm.svg","./flags/sn.svg","./flags/so.svg","./flags/sr.svg","./flags/ss.svg","./flags/st.svg","./flags/sv.svg","./flags/sy.svg","./flags/sz.svg","./flags/td.svg","./flags/tg.svg","./flags/th.svg","./flags/tj.svg","./flags/tl.svg","./flags/tm.svg","./flags/tn.svg","./flags/to.svg","./flags/tr.svg","./flags/tt.svg","./flags/tv.svg","./flags/tz.svg","./flags/ua.svg","./flags/ug.svg","./flags/us.svg","./flags/uy.svg","./flags/uz.svg","./flags/va.svg","./flags/vc.svg","./flags/ve.svg","./flags/vn.svg","./flags/vu.svg","./flags/ws.svg","./flags/ye.svg","./flags/za.svg","./flags/zm.svg","./flags/zw.svg","./outlines/ad.svg","./outlines/ae.svg","./outlines/af.svg","./outlines/ag.svg","./outlines/al.svg","./outlines/am.svg","./outlines/ao.svg","./outlines/ar.svg","./outlines/at.svg","./outlines/au.svg","./outlines/az.svg","./outlines/ba.svg","./outlines/bb.svg","./outlines/bd.svg","./outlines/be.svg","./outlines/bf.svg","./outlines/bg.svg","./outlines/bh.svg","./outlines/bi.svg","./outlines/bj.svg","./outlines/bn.svg","./outlines/bo.svg","./outlines/br.svg","./outlines/bs.svg","./outlines/bt.svg","./outlines/bw.svg","./outlines/by.svg","./outlines/bz.svg","./outlines/ca.svg","./outlines/cd.svg","./outlines/cf.svg","./outlines/cg.svg","./outlines/ch.svg","./outlines/ci.svg","./outlines/cl.svg","./outlines/cm.svg","./outlines/cn.svg","./outlines/co.svg","./outlines/cr.svg","./outlines/cu.svg","./outlines/cv.svg","./outlines/cy.svg","./outlines/cz.svg","./outlines/de.svg","./outlines/dj.svg","./outlines/dk.svg","./outlines/dm.svg","./outlines/do.svg","./outlines/dz.svg","./outlines/ec.svg","./outlines/ee.svg","./outlines/eg.svg","./outlines/er.svg","./outlines/es.svg","./outlines/et.svg","./outlines/fi.svg","./outlines/fj.svg","./outlines/fm.svg","./outlines/fr.svg","./outlines/ga.svg","./outlines/gb.svg","./outlines/gd.svg","./outlines/ge.svg","./outlines/gh.svg","./outlines/gm.svg","./outlines/gn.svg","./outlines/gq.svg","./outlines/gr.svg","./outlines/gt.svg","./outlines/gw.svg","./outlines/gy.svg","./outlines/hn.svg","./outlines/hr.svg","./outlines/ht.svg","./outlines/hu.svg","./outlines/id.svg","./outlines/ie.svg","./outlines/il.svg","./outlines/in.svg","./outlines/iq.svg","./outlines/ir.svg","./outlines/is.svg","./outlines/it.svg","./outlines/jm.svg","./outlines/jo.svg","./outlines/jp.svg","./outlines/ke.svg","./outlines/kg.svg","./outlines/kh.svg","./outlines/ki.svg","./outlines/km.svg","./outlines/kn.svg","./outlines/kp.svg","./outlines/kr.svg","./outlines/kw.svg","./outlines/kz.svg","./outlines/la.svg","./outlines/lb.svg","./outlines/lc.svg","./outlines/li.svg","./outlines/lk.svg","./outlines/lr.svg","./outlines/ls.svg","./outlines/lt.svg","./outlines/lu.svg","./outlines/lv.svg","./outlines/ly.svg","./outlines/ma.svg","./outlines/mc.svg","./outlines/md.svg","./outlines/me.svg","./outlines/mg.svg","./outlines/mh.svg","./outlines/mk.svg","./outlines/ml.svg","./outlines/mm.svg","./outlines/mn.svg","./outlines/mr.svg","./outlines/mt.svg","./outlines/mu.svg","./outlines/mv.svg","./outlines/mw.svg","./outlines/mx.svg","./outlines/my.svg","./outlines/mz.svg","./outlines/na.svg","./outlines/ne.svg","./outlines/ng.svg","./outlines/ni.svg","./outlines/nl.svg","./outlines/no.svg","./outlines/np.svg","./outlines/nr.svg","./outlines/nz.svg","./outlines/om.svg","./outlines/pa.svg","./outlines/pe.svg","./outlines/pg.svg","./outlines/ph.svg","./outlines/pk.svg","./outlines/pl.svg","./outlines/ps.svg","./outlines/pt.svg","./outlines/pw.svg","./outlines/py.svg","./outlines/qa.svg","./outlines/ro.svg","./outlines/rs.svg","./outlines/ru.svg","./outlines/rw.svg","./outlines/sa.svg","./outlines/sb.svg","./outlines/sc.svg","./outlines/sd.svg","./outlines/se.svg","./outlines/sg.svg","./outlines/si.svg","./outlines/sk.svg","./outlines/sl.svg","./outlines/sm.svg","./outlines/sn.svg","./outlines/so.svg","./outlines/sr.svg","./outlines/ss.svg","./outlines/st.svg","./outlines/sv.svg","./outlines/sy.svg","./outlines/sz.svg","./outlines/td.svg","./outlines/tg.svg","./outlines/th.svg","./outlines/tj.svg","./outlines/tl.svg","./outlines/tm.svg","./outlines/tn.svg","./outlines/to.svg","./outlines/tr.svg","./outlines/tt.svg","./outlines/tv.svg","./outlines/tz.svg","./outlines/ua.svg","./outlines/ug.svg","./outlines/us.svg","./outlines/uy.svg","./outlines/uz.svg","./outlines/va.svg","./outlines/vc.svg","./outlines/ve.svg","./outlines/vn.svg","./outlines/vu.svg","./outlines/ws.svg","./outlines/ye.svg","./outlines/za.svg","./outlines/zm.svg","./outlines/zw.svg"];
+ const cacheName='capital-rush-v12.7-all-modes';
  let checking=false;
  const paint=(state,message,small)=>{
    badge.dataset.state=state;badge.textContent=message;
@@ -2601,7 +2628,7 @@ if("serviceWorker" in navigator){
      }
      let missing=0;
      for(const url of assets){if(!await cache.match(url))missing++;}
-     if(!missing)paint('ready','✓ Ready offline · all modes','✓ Offline ready');
+     if(!missing)paint('ready','✓ Ready offline · all 5 modes','✓ Offline ready');
      else paint('incomplete','! Offline incomplete · '+missing+' files','! Offline incomplete');
    }catch(err){paint('incomplete','! Offline setup unavailable','! Offline unavailable');}
    finally{checking=false;}

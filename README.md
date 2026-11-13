@@ -1,29 +1,25 @@
-# Capital Rush v12.5 — Premium Hybrid
-
-An iPhone-friendly, installable offline geography game with **Capitals**, **Flags**, **Airports**, and **Area Rush**. The original timed game rules remain: one wrong answer ends a timed run; 7 seconds per standard question; 15 seconds per Area round. Practice has no timer.
+# Capital Rush v12.7 — Outline Lookalikes
 
 ## What's new
 
-- 2-column touch-friendly mode selection on iPhone and improved responsive typography and spacing.
-- A permanent **personal best** for each mode (stored separately from the last 10 timed results). Previous retained history is automatically used to initialize bests.
-- **Review mistakes**: incorrect questions are saved separately for each mode on this device. Tap **Review mistakes** to practise only those questions without a timer; correct review answers clear the mistake. Area Rush saves missed sets of four countries.
-- **Across-session anti-repetition**: recent question IDs are stored locally and less recently presented questions are prioritized when the next run is shuffled. Every run still includes the complete relevant dataset unless in mistake review.
-- Optional haptic switch (only activates on browsers exposing the Vibration API; iPhone Safari typically does not support vibration from web pages).
-- Improved touch sizes, screen reader semantics, subtle motion, reduced-motion support, and light next-question flag preloading.
-- All-mode offline readiness indicator maintained. Tap it to retry caching missing files.
+- **Outline Rush** displays an offline white country silhouette against the app's dark background.
+- Each question offers **exactly four country names**: the correct country and three silhouette lookalikes. Distractors are chosen from the eight closest computed shapes, then shuffled. **No neighbor-based selection or random unrelated filler** is used.
+- Timed mode retains the **7-second** limit and one-mistake-ends-run rule. Practice is untimed.
+- Outline Rush has its own records, last-10 timed history, recent-question memory, and mistake review, following the other game modes.
+- The offline-ready check verifies cached files across **all five modes** including 195 country outline SVG assets.
+- Original modes and saved progress are preserved. Existing v12.5 local-storage keys remain unchanged.
 
-## Offline on iPhone
+## How to install
 
-Host the whole folder under HTTPS, including all SVG files in `flags/`. Open in Safari online and wait for **Ready offline · all modes**, then use **Share → Add to Home Screen**. Open the installed app while online at least once. Cached files may be evicted by iOS when storage is constrained. Best scores, recent questions and mistakes are stored in browser local storage (not cloud-synced).
-
-## Deploy
-
-Upload the entire project, keeping filenames and the `flags/` directory. The new service worker uses cache `capital-rush-v12.5-all-modes` so updated sources are cached on next online visit.
+Deploy all files and directories with their structure intact (`flags/` and `outlines/` are both required). Open the deployed site in iPhone Safari while online, then select **Share → Add to Home Screen**. Launch it online at least once and wait for **Ready offline · all 5 modes** before using it without connectivity.
 
 ## Files
 
-- `index.html` – entire app and game logic
-- `sw.js`, `offline-assets.js` – offline caching
-- `manifest.webmanifest`, `icon-180.png` – installable PWA metadata and icon
-- `flags/` – offline flag images
-- `README.md` – this guide
+- `index.html`: complete game interface, questions, gameplay, and outline distractor data.
+- `outlines/`: 195 standalone country silhouette SVGs generated from the existing world GeoJSON data.
+- `flags/`: 195 local national flag SVGs.
+- `sw.js` and `offline-assets.js`: versioned offline cache and asset inventory.
+- `manifest.webmanifest`, `icon-180.png`: iPhone/PWA installation resources.
+- `README.md`: this document.
+
+Notes: silhouettes are derived from a simplified world dataset, so very small islands and outlying territories may have reduced detail. Local Safari storage can be evicted by iOS, and installed webapps do not sync progress to the cloud.
