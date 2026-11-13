@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-180.png">
   <title>Capital Rush</title>
-  <meta name="app-version" content="10">
+  <meta name="app-version" content="12.4">
 
   <style>
     .questionFlag{display:block;width:108px;height:72px;object-fit:contain;margin:3px 0 12px;border:0;border-radius:0;filter:drop-shadow(0 6px 12px #0006)}
@@ -679,6 +679,20 @@
 .flagRunReviewOther .flagRunReviewItem{font-size:11px;gap:7px;margin:0;padding:6px}
 .flagRunReviewOther .flagRunReviewItem img{width:45px;height:29px}
 @media(max-width:370px){.flagRunReviewOther{grid-template-columns:1fr}}
+
+/* v12.4: focus and responsiveness, no gameplay changes */
+.offline-status{display:inline-flex;align-items:center;justify-content:flex-start;gap:6px;margin:0 0 12px;padding:8px 11px;min-height:35px;max-width:100%;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--muted);font:650 12px/1.2 -apple-system,BlinkMacSystemFont,Arial,sans-serif;text-align:left}
+.offline-status[data-state="ready"],.offline-game-status[data-state="ready"]{color:var(--ok)}
+.offline-status[data-state="incomplete"],.offline-game-status[data-state="incomplete"]{color:#ffc36c}
+.offline-status[data-state="checking"],.offline-game-status[data-state="checking"]{color:var(--muted)}
+.offline-game-status{position:fixed;right:calc(12px + env(safe-area-inset-right));bottom:calc(7px + env(safe-area-inset-bottom));z-index:15;pointer-events:none;font-size:11px;font-weight:700;color:var(--muted);display:none;padding:5px 8px;border-radius:999px;background:var(--bg);border:1px solid var(--line)}
+body:has(#gameScreen.active) .offline-game-status{display:block}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media(hover:hover){.choice:not(:disabled):hover{border-color:var(--accent);transform:translateY(-1px)}.modeBtn:hover{color:var(--text)}.newGame:hover,.practiceGame:hover{filter:brightness(1.07)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+@media(max-width:430px){.screen{padding:13px 12px 12px}.modeSwitch{gap:2px}.modeBtn{font-size:clamp(10px,2.65vw,12px);padding:11px 1px}.newGame,.practiceGame{padding:16px;min-height:146px}.newGame strong,.practiceGame strong{font-size:clamp(20px,6vw,25px)}.questionCard{border-radius:19px}.choice{min-height:52px}}
+@media(max-height:680px){.brand{margin:auto 0 12px}.history{padding:10px 12px}.footer{margin-top:9px}.offline-status{margin-bottom:7px}}
+
 </style>
 </head>
 
@@ -694,6 +708,7 @@
 
       <h1 id="mainTitle">Capital Rush</h1>
 
+      <button id="offline-status" class="offline-status" type="button" aria-live="polite" title="Tap to verify offline files">◌ Checking offline files…</button>
       <div class="tagline" id="taglineText">
         Name every capital. One mistake ends the run.
         You have 7 seconds per country.
@@ -748,11 +763,13 @@
     </div>
 
     <div class="footer">
-      Works offline after first load · Add to Home Screen
+      Add to Home Screen · All four modes available offline when ready
     </div>
 
   </main>
 
+
+  <div id="offline-game-status" class="offline-game-status" aria-live="polite" title="Offline availability"></div>
 
   <!-- GAME SCREEN -->
   <main id="gameScreen" class="screen">
@@ -2467,5 +2484,45 @@ if("serviceWorker" in navigator){
 
 </script>
 
+
+<script>
+/* v12.4 offline status: only green when every local image and PWA file is cached. */
+(()=>{
+ const badge=document.getElementById('offline-status');
+ const mini=document.getElementById('offline-game-status');
+ const assets=["./","./index.html","./manifest.webmanifest","./icon-180.png","./flags/ad.svg","./flags/ae.svg","./flags/af.svg","./flags/ag.svg","./flags/al.svg","./flags/am.svg","./flags/ao.svg","./flags/ar.svg","./flags/at.svg","./flags/au.svg","./flags/az.svg","./flags/ba.svg","./flags/bb.svg","./flags/bd.svg","./flags/be.svg","./flags/bf.svg","./flags/bg.svg","./flags/bh.svg","./flags/bi.svg","./flags/bj.svg","./flags/bn.svg","./flags/bo.svg","./flags/br.svg","./flags/bs.svg","./flags/bt.svg","./flags/bw.svg","./flags/by.svg","./flags/bz.svg","./flags/ca.svg","./flags/cd.svg","./flags/cf.svg","./flags/cg.svg","./flags/ch.svg","./flags/ci.svg","./flags/cl.svg","./flags/cm.svg","./flags/cn.svg","./flags/co.svg","./flags/cr.svg","./flags/cu.svg","./flags/cv.svg","./flags/cy.svg","./flags/cz.svg","./flags/de.svg","./flags/dj.svg","./flags/dk.svg","./flags/dm.svg","./flags/do.svg","./flags/dz.svg","./flags/ec.svg","./flags/ee.svg","./flags/eg.svg","./flags/er.svg","./flags/es.svg","./flags/et.svg","./flags/fi.svg","./flags/fj.svg","./flags/fm.svg","./flags/fr.svg","./flags/ga.svg","./flags/gb.svg","./flags/gd.svg","./flags/ge.svg","./flags/gh.svg","./flags/gm.svg","./flags/gn.svg","./flags/gq.svg","./flags/gr.svg","./flags/gt.svg","./flags/gw.svg","./flags/gy.svg","./flags/hn.svg","./flags/hr.svg","./flags/ht.svg","./flags/hu.svg","./flags/id.svg","./flags/ie.svg","./flags/il.svg","./flags/in.svg","./flags/iq.svg","./flags/ir.svg","./flags/is.svg","./flags/it.svg","./flags/jm.svg","./flags/jo.svg","./flags/jp.svg","./flags/ke.svg","./flags/kg.svg","./flags/kh.svg","./flags/ki.svg","./flags/km.svg","./flags/kn.svg","./flags/kp.svg","./flags/kr.svg","./flags/kw.svg","./flags/kz.svg","./flags/la.svg","./flags/lb.svg","./flags/lc.svg","./flags/li.svg","./flags/lk.svg","./flags/lr.svg","./flags/ls.svg","./flags/lt.svg","./flags/lu.svg","./flags/lv.svg","./flags/ly.svg","./flags/ma.svg","./flags/mc.svg","./flags/md.svg","./flags/me.svg","./flags/mg.svg","./flags/mh.svg","./flags/mk.svg","./flags/ml.svg","./flags/mm.svg","./flags/mn.svg","./flags/mr.svg","./flags/mt.svg","./flags/mu.svg","./flags/mv.svg","./flags/mw.svg","./flags/mx.svg","./flags/my.svg","./flags/mz.svg","./flags/na.svg","./flags/ne.svg","./flags/ng.svg","./flags/ni.svg","./flags/nl.svg","./flags/no.svg","./flags/np.svg","./flags/nr.svg","./flags/nz.svg","./flags/om.svg","./flags/pa.svg","./flags/pe.svg","./flags/pg.svg","./flags/ph.svg","./flags/pk.svg","./flags/pl.svg","./flags/ps.svg","./flags/pt.svg","./flags/pw.svg","./flags/py.svg","./flags/qa.svg","./flags/ro.svg","./flags/rs.svg","./flags/ru.svg","./flags/rw.svg","./flags/sa.svg","./flags/sb.svg","./flags/sc.svg","./flags/sd.svg","./flags/se.svg","./flags/sg.svg","./flags/si.svg","./flags/sk.svg","./flags/sl.svg","./flags/sm.svg","./flags/sn.svg","./flags/so.svg","./flags/sr.svg","./flags/ss.svg","./flags/st.svg","./flags/sv.svg","./flags/sy.svg","./flags/sz.svg","./flags/td.svg","./flags/tg.svg","./flags/th.svg","./flags/tj.svg","./flags/tl.svg","./flags/tm.svg","./flags/tn.svg","./flags/to.svg","./flags/tr.svg","./flags/tt.svg","./flags/tv.svg","./flags/tz.svg","./flags/ua.svg","./flags/ug.svg","./flags/us.svg","./flags/uy.svg","./flags/uz.svg","./flags/va.svg","./flags/vc.svg","./flags/ve.svg","./flags/vn.svg","./flags/vu.svg","./flags/ws.svg","./flags/ye.svg","./flags/za.svg","./flags/zm.svg","./flags/zw.svg"];
+ const cacheName='capital-rush-v12.4-all-modes';
+ let checking=false;
+ const paint=(state,message,small)=>{
+   badge.dataset.state=state;badge.textContent=message;
+   mini.dataset.state=state;mini.textContent=small;
+   badge.title=state==='ready'?'All required files are cached on this device':'Tap to retry verifying/downloading offline files';
+ };
+ async function verify(retry=false){
+   if(checking)return;checking=true;
+   paint('checking','◌ Checking offline files…','◌ Offline check');
+   try{
+     if(!('caches' in window)||!('serviceWorker' in navigator))throw Error('Offline storage unsupported');
+     const cache=await caches.open(cacheName);
+     if(retry&&navigator.onLine){
+       await Promise.all(assets.map(async (url)=>{
+         if(await cache.match(url))return;
+         try{const r=await fetch(url,{cache:'reload'});if(r.ok)await cache.put(url,r.clone());}catch(_e){}
+       }));
+     }
+     let missing=0;
+     for(const url of assets){if(!await cache.match(url))missing++;}
+     if(!missing)paint('ready','✓ Ready offline · all modes','✓ Offline ready');
+     else paint('incomplete','! Offline incomplete · '+missing+' files','! Offline incomplete');
+   }catch(err){paint('incomplete','! Offline setup unavailable','! Offline unavailable');}
+   finally{checking=false;}
+ }
+ badge.addEventListener('click',()=>verify(true));
+ window.addEventListener('online',()=>verify(true));
+ navigator.serviceWorker?.addEventListener('controllerchange',()=>verify(false));
+ navigator.serviceWorker?.addEventListener('message',()=>verify(false));
+ window.addEventListener('load',()=>{verify(false);navigator.serviceWorker?.ready.then(()=>verify(false)).catch(()=>{});});
+})();
+</script>
 </body>
 </html>
