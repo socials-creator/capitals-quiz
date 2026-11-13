@@ -1,3 +1,39 @@
+# Capital Rush v12.9 — Expanded Airport Rush and current flags
+
+## Changes from v12.8
+
+- Airport Rush expanded from **100 to 371** distinct IATA-code questions covering global hubs and smaller regional airports.
+- Four-choice distractors now prefer other airports within the **same metropolitan region**, falling back to exact city, then same country, then elsewhere. Explicit metro groups support IAD/DCA/BWI, BOM/NMI, YYZ/YTZ/YHM/YKF, JFK/LGA/EWR, and many others.
+- Updated `flags/af.svg` to the **de facto flag used by the Taliban-led administration since August 2021** (white field, black Shahada), represented as a locally generated Arabic calligraphic rendering. The older black-red-green tricolor remains used by some Afghan diplomatic and diaspora representatives; this app chooses the de facto flag.
+- Existing files for Syria (green-white-black with three red stars), Kyrgyzstan (straight sun rays), and Honduras (navy blue) already reflected their more recent designs, so they were not reuploaded.
+- Service-worker cache bumped to **v12.9** to refresh the flag and application code. All five modes remain offline-ready after caching.
+
+Note: This quiz is a geography and airport-code learning game. Some airports in the dataset are primarily general-aviation, low-scheduled-service, or secondary-city facilities; inclusion does not imply current scheduled passenger service.
+
+## Deployment from v12.8
+
+Only upload **`index.html`**, **`sw.js`**, **`flags/af.svg`**, and optionally **`README.md`**. The other 194 flag SVGs, 195 outline SVGs, offline-assets.js, icon, and manifest are unchanged.
+
+---
+
+# Capital Rush v12.9 — Expanded Airport Rush and current flags
+
+## Changes from v12.8
+
+- Airport Rush expanded from **75 to 371** distinct IATA-code questions covering global hubs and smaller regional airports.
+- Four-choice distractors now prefer other airports within the **same metropolitan region**, falling back to exact city, then same country, then elsewhere. Explicit metro groups support IAD/DCA/BWI, BOM/NMI, YYZ/YTZ/YHM/YKF, JFK/LGA/EWR, and many others.
+- Updated `flags/af.svg` to the **de facto flag used by the Taliban-led administration since August 2021** (white field, black Shahada), represented as a locally generated Arabic calligraphic rendering. The older black-red-green tricolor remains used by some Afghan diplomatic and diaspora representatives; this app chooses the de facto flag.
+- Existing files for Syria (green-white-black with three red stars), Kyrgyzstan (straight sun rays), and Honduras (navy blue) already reflected their more recent designs, so they were not reuploaded.
+- Service-worker cache bumped to **v12.9** to refresh the flag and application code. All five modes remain offline-ready after caching.
+
+Note: This quiz is a geography and airport-code learning game. Some airports in the dataset are primarily general-aviation, low-scheduled-service, or secondary-city facilities; inclusion does not imply current scheduled passenger service.
+
+## Deployment from v12.8
+
+Only upload **`index.html`**, **`sw.js`**, **`flags/af.svg`**, and optionally **`README.md`**. The other 194 flag SVGs, 195 outline SVGs, offline-assets.js, icon, and manifest are unchanged.
+
+---
+
 # Capital Rush v12.8 — true-proportion outlines
 
 ## What's new
