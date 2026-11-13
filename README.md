@@ -1,3 +1,21 @@
+# Capital Rush v12.8 — true-proportion outlines
+
+## What's new
+- Redrawn all 195 country silhouettes using a country-centered geographic distance projection and **one uniform scale** for both axes, correcting high-latitude distortions such as Finland.
+- The outline has a transparent background, with no rectangular border, inset panel or gradient. Only white country shapes appear against the app's dark surface.
+- Refreshed the shape-only distractor similarities to match the corrected SVGs.
+- Offline readiness covers all 195 updated outlines and the existing flag library.
+
+## Minimum files to upload (if already using v12.7)
+1. `index.html`
+2. `sw.js`
+3. **all files inside `outlines/`** (195 updated SVGs)
+
+`offline-assets.js`, `manifest.webmanifest`, `icon-180.png`, and the whole `flags/` directory are **unchanged**. Keep them on your web host. README.md is optional for deployment but recommended for GitHub.
+
+## Offline updates
+Launch the newly deployed app while connected. The app version changes the cache name, so the updated outline assets can be downloaded. Wait for **Ready offline · all 5 modes**, then test in Airplane Mode. iOS may evict cached files when storage is constrained.
+
 # Capital Rush v12.7 — Outline Lookalikes
 
 ## What's new
