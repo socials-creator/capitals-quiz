@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-180.png">
   <title>Capital Rush</title>
-  <meta name="app-version" content="12.4">
+  <meta name="app-version" content="12.5">
 
   <style>
     .questionFlag{display:block;width:108px;height:72px;object-fit:contain;margin:3px 0 12px;border:0;border-radius:0;filter:drop-shadow(0 6px 12px #0006)}
@@ -693,6 +693,44 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 @media(max-width:430px){.screen{padding:13px 12px 12px}.modeSwitch{gap:2px}.modeBtn{font-size:clamp(10px,2.65vw,12px);padding:11px 1px}.newGame,.practiceGame{padding:16px;min-height:146px}.newGame strong,.practiceGame strong{font-size:clamp(20px,6vw,25px)}.questionCard{border-radius:19px}.choice{min-height:52px}}
 @media(max-height:680px){.brand{margin:auto 0 12px}.history{padding:10px 12px}.footer{margin-top:9px}.offline-status{margin-bottom:7px}}
 
+
+/* Capital Rush v12.5 · Premium Hybrid · responsive and accessible */
+:root{color-scheme:dark;--shadow:0 14px 42px rgba(0,0,0,.17)}
+.screen{max-width:800px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+#startScreen{justify-content:flex-start;gap:0}
+.brand{margin:clamp(22px,5vh,58px) 0 18px}
+h1{font-size:clamp(36px,7vw,52px)}
+.modeSwitch{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.modeBtn{display:flex;align-items:center;justify-content:flex-start;min-height:68px;padding:14px 16px;border-radius:17px;text-align:left;font-size:clamp(14px,3.7vw,17px);font-weight:750;background:var(--card);border:1px solid var(--line);transition:background .14s,border-color .14s,transform .14s;white-space:normal}
+.modeBtn.active{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 13%,var(--card));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 25%,transparent)}
+.modeBtn:active,.choice:active{transform:scale(.985)}
+.modeDetails{color:var(--muted);font-size:12px;line-height:1.45;padding:1px 4px 13px;min-height:30px}
+.startButtons{gap:10px}
+.newGame,.practiceGame{border-radius:19px;min-height:126px;padding:18px 16px}
+.newGame strong,.practiceGame strong{font-size:22px}
+.history{border-radius:19px;padding:16px;margin-top:12px}
+.historyHeader{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.recordMode{font-size:11px;color:var(--muted)}
+.bestScore{font-size:clamp(27px,5vw,36px);font-weight:850;letter-spacing:-.04em;margin:0 0 14px;font-variant-numeric:tabular-nums;color:var(--text)}
+.learnTools{display:flex;gap:9px;flex-wrap:wrap;align-items:center;padding:15px 0 4px}
+.learnTools>div{display:flex;flex-direction:column;gap:3px;flex:1 1 100%;font-size:13px}
+.learnTools>div span{color:var(--muted);font-size:12px}
+.learnTools button{background:var(--card2);border:1px solid var(--line);padding:11px 13px;border-radius:12px;font-size:12px;font-weight:750;min-height:44px}
+.learnTools button:disabled{opacity:.42;cursor:not-allowed}
+.questionCard{box-shadow:var(--shadow)}
+.choice{transition:background .12s,border-color .12s,transform .12s;min-height:58px;touch-action:manipulation}
+.choice:focus-visible,.modeBtn:focus-visible,.learnTools button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+#standardCard.questionEntrance,#areaCard.questionEntrance{animation:questionEnter .13s ease-out}
+@keyframes questionEnter{from{opacity:.7;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.resultBest{font-size:13px;font-weight:750;color:var(--ok);margin-top:9px;min-height:20px}
+#gameScreen .gameTop{flex-shrink:0}
+#timer{will-change:width}
+/* Feedback remains readable without obscuring whole playfield on shorter phones. */
+.answerPopup .answerCard{max-height:min(85dvh,730px);overflow-y:auto;overscroll-behavior:contain}
+@media(max-width:430px){.screen{padding:15px 13px}.modeBtn{padding:12px;min-height:63px;font-size:14px}.brand{margin-top:18px}.newGame,.practiceGame{min-height:112px;padding:13px}.history{padding:13px}.country{overflow-wrap:anywhere}}
+@media(max-height:700px){.brand{margin-top:12px}.modeBtn{min-height:55px}.newGame,.practiceGame{min-height:100px}.startButtons{gap:8px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
 </style>
 </head>
 
@@ -717,7 +755,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
     <div class="startArea">
 
-      <div class="modeSwitch" role="tablist">
+      <div class="modeSwitch" role="group" aria-label="Choose a game mode">
         <button class="modeBtn" data-mode="capitals" type="button">
           🌍 Capitals
         </button>
@@ -732,6 +770,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
         </button>
       </div>
 
+      <div class="modeDetails" id="modeDetails" aria-live="polite"></div>
       <div class="startButtons">
 
         <button class="newGame" id="newGame">
@@ -750,15 +789,17 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
       </div>
 
-      <aside class="history">
-
-        <div class="historyTitle">
-          Last 10
-        </div>
-
+      <aside class="history" aria-label="Personal records and game history">
+        <div class="historyHeader"><div class="historyTitle">🏆 All-time personal best</div><span id="bestModeLabel" class="recordMode"></span></div>
+        <div id="bestScore" class="bestScore">—</div>
+        <div class="historyTitle">Last 10 timed games</div>
         <div id="historyList" class="historyList"></div>
-
       </aside>
+      <section class="learnTools" aria-label="Practice tools">
+        <div><strong>Learning tools</strong><span id="mistakeCount">No saved mistakes yet</span></div>
+        <button type="button" id="reviewMistakes" disabled>Review mistakes</button>
+        <button type="button" id="hapticToggle" aria-pressed="false">Feedback: Off</button>
+      </section>
 
     </div>
 
@@ -859,6 +900,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
     </div>
 
     <div id="resultMeta" class="resultMeta"></div>
+    <div id="resultBest" class="resultBest" aria-live="polite"></div>
     <div id="flagRunReview" class="flagRunReview" hidden>
       <div class="flagRunReviewTitle incorrect">Your selected flag</div>
       <div id="flagRunSelected"></div>
@@ -1329,6 +1371,53 @@ let timerId = null;
 let deadline = 0;
 let locked = false;
 let practiceMode = false;
+let reviewMistakesMode=false;
+let earnedNewBest=false;
+const UX_STORAGE='capitalRush_v125_';
+const readLocal=(key,fallback)=>{try{const v=JSON.parse(localStorage.getItem(UX_STORAGE+key));return v===null?fallback:v;}catch{return fallback;}};
+const writeLocal=(key,value)=>{try{localStorage.setItem(UX_STORAGE+key,JSON.stringify(value));}catch(_){}};
+const keyOfItem=item=>Array.isArray(item)?(item.length===4?item.slice().sort().join('|'):String(item[0])):String(item);
+const getMistakes=()=>readLocal('mistakes_'+quizMode,[]);
+function setMistakes(items){writeLocal('mistakes_'+quizMode,items.slice(-250));updateMistakeUI();}
+function trackQuestion(item){
+  const key=keyOfItem(item),seen=readLocal('recent_'+quizMode,[]).filter(k=>k!==key);
+  seen.push(key);writeLocal('recent_'+quizMode,seen.slice(-Math.min(170,Math.max(16,MODES[quizMode].dataset.length-1))));
+}
+function variedRun(items){
+  const recent=readLocal('recent_'+quizMode,[]);
+  const recency=new Map(recent.map((key,i)=>[key,i]));
+  const fresh=shuffle(items),old=[],unused=[];
+  for(const item of fresh)(recency.has(keyOfItem(item))?old:unused).push(item);
+  old.sort((a,b)=>recency.get(keyOfItem(a))-recency.get(keyOfItem(b)));
+  return unused.concat(old);
+}
+let haptics=readLocal('haptics',false);
+function feedback(ok){if(!haptics)return;try{navigator.vibrate?.(ok?12:[20,40,20]);}catch(_){}}
+function updateMistakeUI(){
+  const n=getMistakes().length;
+  $('mistakeCount').textContent=n?`${n} saved ${quizMode==='area'?'rounds':'questions'} to review`:'No saved mistakes yet';
+  $('reviewMistakes').disabled=!n;
+}
+function registerMistake(item,right){
+  const memory=getMistakes();const key=keyOfItem(item);
+  const i=memory.findIndex(entry=>keyOfItem(entry)===key);
+  if(right){if(reviewMistakesMode&&i>=0){memory.splice(i,1);setMistakes(memory);}return;}
+  if(i>=0)memory.splice(i,1);
+  memory.push(item);setMistakes(memory);
+}
+function syncHapticButton(){
+  $('hapticToggle').textContent='Haptics: '+(haptics?'On':'Off');
+  $('hapticToggle').setAttribute('aria-pressed',String(haptics));
+  $('hapticToggle').title='Vibration works only in browsers that support the Vibration API; iPhone Safari may not.';
+}
+function animateCard(id){const el=$(id);el.classList.remove('questionEntrance');void el.offsetWidth;el.classList.add('questionEntrance');}
+function preloadNextFlag(){
+  if(quizMode==='airports'||index+1>=run.length)return;
+  const next=run[index+1];if(!next)return;
+  const list=quizMode==='area'?next:[next[0]];
+  for(const name of list){if(FLAG_CODES[name]){const img=new Image();img.src=flagPath(name);}}
+}
+
 
 
 /* SHUFFLE */
@@ -1453,67 +1542,34 @@ function airportChoices(correctName){
 /* HISTORY */
 
 function renderHistory(){
-
-  const mode = MODES[quizMode];
-
-  const history = JSON.parse(
-    localStorage.getItem(
-      mode.historyKey
-    ) || "[]"
-  );
-
-  if(!history.length){
-
-    $("historyList").innerHTML =
-      `<div class="empty">No runs yet.</div>`;
-
-    return;
-  }
-
-  $("historyList").innerHTML =
-    history
-      .slice(0,10)
-      .map(item =>
-        `<div class="hist">
-          <span>${item.date}</span>
-          <span>${item.score}/${
-            item.total ?? mode.dataset.length
-          }</span>
-        </div>`
-      )
-      .join("");
-}
-
-
-function saveHistory(){
-
-  const mode = MODES[quizMode];
-
-  const history = JSON.parse(
-    localStorage.getItem(
-      mode.historyKey
-    ) || "[]"
-  );
-
-  history.unshift({
-    score:score,
-    total:TOTAL,
-    date:new Date().toLocaleDateString(
-      undefined,
-      {
-        month:"short",
-        day:"numeric"
-      }
-    )
+  const mode=MODES[quizMode];
+  let history=[];
+  try{history=JSON.parse(localStorage.getItem(mode.historyKey)||'[]');if(!Array.isArray(history))history=[];}catch(_){history=[];}
+  let best=readLocal('best_'+quizMode,null);
+  const legacyBest=history.reduce((max,item)=>Math.max(max,Number(item.score)||0),0);
+  if(best===null && history.length){best=legacyBest;writeLocal('best_'+quizMode,best);}
+  else if(best!==null && legacyBest>best){best=legacyBest;writeLocal('best_'+quizMode,best);}
+  $('bestModeLabel').textContent=mode.title;
+  $('bestScore').textContent=best===null?'—':`${best} correct`;
+  $('historyList').replaceChildren();
+  if(!history.length){const e=document.createElement('div');e.className='empty';e.textContent='No timed runs yet.';$('historyList').append(e);}
+  else history.slice(0,10).forEach(item=>{
+    const line=document.createElement('div');line.className='hist';
+    const date=document.createElement('span');date.textContent=String(item.date||'');
+    const value=document.createElement('span');value.textContent=`${item.score}/${item.total??mode.dataset.length}`;
+    line.append(date,value);$('historyList').append(line);
   });
-
-  localStorage.setItem(
-    mode.historyKey,
-    JSON.stringify(
-      history.slice(0,10)
-    )
-  );
-
+  updateMistakeUI();
+}
+function saveHistory(){
+  const mode=MODES[quizMode];
+  let history=[];
+  try{history=JSON.parse(localStorage.getItem(mode.historyKey)||'[]');if(!Array.isArray(history))history=[];}catch(_){history=[];}
+  history.unshift({score,total:TOTAL,date:new Date().toLocaleDateString(undefined,{month:'short',day:'numeric'})});
+  try{localStorage.setItem(mode.historyKey,JSON.stringify(history.slice(0,10)));}catch(_){}
+  const previous=readLocal('best_'+quizMode,null);
+  earnedNewBest=previous===null||score>previous;
+  if(earnedNewBest)writeLocal('best_'+quizMode,score);
   renderHistory();
 }
 
@@ -1548,7 +1604,7 @@ function updateModeUI(){
     mode.newGameSub;
 
   document.title = mode.title;
-
+  $('modeDetails').textContent=mode.newGameSub+' · choose a mode to begin';
   renderHistory();
 }
 
@@ -1590,7 +1646,7 @@ function buildAreaRounds(){
 function beginArea(){
   $("result").classList.remove("show");
   $("answerPopup").classList.remove("show");
-  areaRounds=buildAreaRounds();run=areaRounds;TOTAL=run.length;
+  areaRounds=reviewMistakesMode?getMistakes().filter(x=>Array.isArray(x)&&x.length===4):buildAreaRounds();run=areaRounds;TOTAL=run.length;
   index=0;score=0;areaResolved=false;areaRunEnded=false;
   $("areaPopup").classList.remove("show");
   $("standardCard").hidden=true;$("areaCard").hidden=false;
@@ -1600,6 +1656,8 @@ function nextAreaRound(){
   clearInterval(timerId);areaResolved=false;areaSelected=-1;
   if(index>=areaRounds.length){finishArea();return;}
   areaOrder=shuffle(areaRounds[index]);
+  trackQuestion([areaRounds[index].slice().sort().join('|')]);
+  animateCard('areaCard');preloadNextFlag();
   $("counter").textContent=`${index+1} / ${TOTAL}`;
   $("score").textContent=`${score} correct`;
   renderArea();
@@ -1643,6 +1701,7 @@ function checkArea(timeout=false){
   const selected=[...areaOrder];
   const right=ordered.every((name,i)=>name===selected[i]);
   if(right){score++;$("score").textContent=`${score} correct`;}
+  registerMistake(areaRounds[index],right);feedback(right);
   areaRunEnded=!practiceMode&&!right;
   const verdict=$("areaVerdict");verdict.textContent=right?"You are right!":(timeout?"Time's up!":"Incorrect");
   verdict.className="answerStatus "+(right?"correctStatus":"wrongStatus");
@@ -1660,6 +1719,7 @@ function nextArea(){
 function finishArea(){
   clearInterval(timerId);
   if(!practiceMode)saveHistory();
+  $('resultBest').textContent=practiceMode?'':earnedNewBest?'🏆 New personal best!':`Personal best: ${readLocal('best_'+quizMode,0)} correct`;
   $("flagRunReview").hidden=true;
   $("resultTitle").textContent=practiceMode?"Area Rush practice complete":areaRunEnded?"Game over":"Area Rush complete";
   $("resultScore").textContent=`${score}/${TOTAL}`;
@@ -1680,6 +1740,7 @@ function startGame(){
   clearInterval(timerId);
 
   practiceMode = false;
+  reviewMistakesMode=false;
 
   $("gameScreen")
     .classList.remove("practiceMode");
@@ -1690,7 +1751,7 @@ function startGame(){
   TOTAL = MODES[quizMode].dataset.length;
   if(quizMode === "area"){beginArea();return;}
   $("standardCard").hidden=false;$("areaCard").hidden=true;
-  run = shuffle(MODES[quizMode].dataset);
+  run = variedRun(MODES[quizMode].dataset);
   index = 0;
   score = 0;
 
@@ -1714,6 +1775,7 @@ function startPractice(){
   clearInterval(timerId);
 
   practiceMode = true;
+  reviewMistakesMode=false;
 
   $("gameScreen")
     .classList.add("practiceMode");
@@ -1724,7 +1786,7 @@ function startPractice(){
   TOTAL = MODES[quizMode].dataset.length;
   if(quizMode === "area"){beginArea();return;}
   $("standardCard").hidden=false;$("areaCard").hidden=true;
-  run = shuffle(MODES[quizMode].dataset);
+  run = variedRun(MODES[quizMode].dataset);
   index = 0;
   score = 0;
 
@@ -1741,6 +1803,17 @@ function startPractice(){
 }
 
 
+function startMistakeReview(){
+  const mistakes=getMistakes();if(!mistakes.length)return;
+  practiceMode=true;reviewMistakesMode=true;clearInterval(timerId);
+  $('gameScreen').classList.add('practiceMode');$('timerWrap').classList.add('practiceTimer');
+  $('result').classList.remove('show');$('answerPopup').classList.remove('show');$('areaPopup').classList.remove('show');
+  if(quizMode==='area'){beginArea();return;}
+  run=variedRun(mistakes.filter(entry=>Array.isArray(entry)&&entry.length===2));
+  TOTAL=run.length;index=0;score=0;
+  $('standardCard').hidden=false;$('areaCard').hidden=true;
+  showScreen('gameScreen');nextQuestion();
+}
 /* EXIT PRACTICE */
 
 function exitPractice(){
@@ -1748,6 +1821,7 @@ function exitPractice(){
   clearInterval(timerId);
 
   practiceMode = false;
+  reviewMistakesMode=false;
 
   $("answerPopup")
     .classList.remove("show");
@@ -1799,6 +1873,7 @@ function nextQuestion(){
   const mode = MODES[quizMode];
 
   const [promptValue, rawCorrect] = run[index];
+  trackQuestion(run[index]);animateCard('standardCard');preloadNextFlag();
   const correct = quizMode === "flags" ? [promptValue] : rawCorrect;
 
   const needsCheck = correct.length > 1;
@@ -2031,7 +2106,7 @@ function startTimer(ms){
 
     }
 
-  },40);
+  },80);
 }
 
 
@@ -2128,6 +2203,7 @@ function submitAnswer(
   });
 
 
+  registerMistake(run[index],isCorrect);feedback(isCorrect);
   if(isCorrect){
 
     score++;
@@ -2286,8 +2362,10 @@ function endPractice(){
   $("resultScore").textContent =
     `${score}/${TOTAL}`;
 
-  $("resultMeta").textContent =
-    `You completed all ${TOTAL} countries in practice mode.`;
+  $("resultMeta").textContent =reviewMistakesMode
+    ? `Reviewed ${TOTAL} saved questions. Correct answers have been removed from the review list.`
+    : `You completed ${TOTAL} questions in practice mode.`;
+  $('resultBest').textContent='';
 
   /*
     Practice results are NOT
@@ -2321,6 +2399,7 @@ function endGame(
   }
 
 
+  $('resultBest').textContent=earnedNewBest?'🏆 New personal best!':`Personal best: ${readLocal('best_'+quizMode,0)} correct`;
   if(quizMode!=="flags" || completed) $("flagRunReview").hidden=true;
   $("resultTitle").textContent =
     completed
@@ -2376,6 +2455,9 @@ document
   });
 
 
+$('reviewMistakes').addEventListener('click',startMistakeReview);
+$('hapticToggle').addEventListener('click',()=>{haptics=!haptics;writeLocal('haptics',haptics);syncHapticButton();feedback(true);});
+syncHapticButton();
 $("newGame").addEventListener(
   "click",
   startGame
@@ -2420,6 +2502,7 @@ $("homeBtn").addEventListener(
 
     $("result")
       .classList.remove("show");
+    reviewMistakesMode=false;
 
     $("answerPopup")
       .classList.remove("show");
@@ -2444,6 +2527,12 @@ $("homeBtn").addEventListener(
 );
 
 
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden&&timerId!==null&&!practiceMode&&deadline&&performance.now()>=deadline&&!locked){
+    clearInterval(timerId);timerId=null;
+    if(quizMode==='area')checkArea(true);else submitAnswer(true);
+  }
+});
 /* INITIALIZE */
 
 updateModeUI();
@@ -2491,7 +2580,7 @@ if("serviceWorker" in navigator){
  const badge=document.getElementById('offline-status');
  const mini=document.getElementById('offline-game-status');
  const assets=["./","./index.html","./manifest.webmanifest","./icon-180.png","./flags/ad.svg","./flags/ae.svg","./flags/af.svg","./flags/ag.svg","./flags/al.svg","./flags/am.svg","./flags/ao.svg","./flags/ar.svg","./flags/at.svg","./flags/au.svg","./flags/az.svg","./flags/ba.svg","./flags/bb.svg","./flags/bd.svg","./flags/be.svg","./flags/bf.svg","./flags/bg.svg","./flags/bh.svg","./flags/bi.svg","./flags/bj.svg","./flags/bn.svg","./flags/bo.svg","./flags/br.svg","./flags/bs.svg","./flags/bt.svg","./flags/bw.svg","./flags/by.svg","./flags/bz.svg","./flags/ca.svg","./flags/cd.svg","./flags/cf.svg","./flags/cg.svg","./flags/ch.svg","./flags/ci.svg","./flags/cl.svg","./flags/cm.svg","./flags/cn.svg","./flags/co.svg","./flags/cr.svg","./flags/cu.svg","./flags/cv.svg","./flags/cy.svg","./flags/cz.svg","./flags/de.svg","./flags/dj.svg","./flags/dk.svg","./flags/dm.svg","./flags/do.svg","./flags/dz.svg","./flags/ec.svg","./flags/ee.svg","./flags/eg.svg","./flags/er.svg","./flags/es.svg","./flags/et.svg","./flags/fi.svg","./flags/fj.svg","./flags/fm.svg","./flags/fr.svg","./flags/ga.svg","./flags/gb.svg","./flags/gd.svg","./flags/ge.svg","./flags/gh.svg","./flags/gm.svg","./flags/gn.svg","./flags/gq.svg","./flags/gr.svg","./flags/gt.svg","./flags/gw.svg","./flags/gy.svg","./flags/hn.svg","./flags/hr.svg","./flags/ht.svg","./flags/hu.svg","./flags/id.svg","./flags/ie.svg","./flags/il.svg","./flags/in.svg","./flags/iq.svg","./flags/ir.svg","./flags/is.svg","./flags/it.svg","./flags/jm.svg","./flags/jo.svg","./flags/jp.svg","./flags/ke.svg","./flags/kg.svg","./flags/kh.svg","./flags/ki.svg","./flags/km.svg","./flags/kn.svg","./flags/kp.svg","./flags/kr.svg","./flags/kw.svg","./flags/kz.svg","./flags/la.svg","./flags/lb.svg","./flags/lc.svg","./flags/li.svg","./flags/lk.svg","./flags/lr.svg","./flags/ls.svg","./flags/lt.svg","./flags/lu.svg","./flags/lv.svg","./flags/ly.svg","./flags/ma.svg","./flags/mc.svg","./flags/md.svg","./flags/me.svg","./flags/mg.svg","./flags/mh.svg","./flags/mk.svg","./flags/ml.svg","./flags/mm.svg","./flags/mn.svg","./flags/mr.svg","./flags/mt.svg","./flags/mu.svg","./flags/mv.svg","./flags/mw.svg","./flags/mx.svg","./flags/my.svg","./flags/mz.svg","./flags/na.svg","./flags/ne.svg","./flags/ng.svg","./flags/ni.svg","./flags/nl.svg","./flags/no.svg","./flags/np.svg","./flags/nr.svg","./flags/nz.svg","./flags/om.svg","./flags/pa.svg","./flags/pe.svg","./flags/pg.svg","./flags/ph.svg","./flags/pk.svg","./flags/pl.svg","./flags/ps.svg","./flags/pt.svg","./flags/pw.svg","./flags/py.svg","./flags/qa.svg","./flags/ro.svg","./flags/rs.svg","./flags/ru.svg","./flags/rw.svg","./flags/sa.svg","./flags/sb.svg","./flags/sc.svg","./flags/sd.svg","./flags/se.svg","./flags/sg.svg","./flags/si.svg","./flags/sk.svg","./flags/sl.svg","./flags/sm.svg","./flags/sn.svg","./flags/so.svg","./flags/sr.svg","./flags/ss.svg","./flags/st.svg","./flags/sv.svg","./flags/sy.svg","./flags/sz.svg","./flags/td.svg","./flags/tg.svg","./flags/th.svg","./flags/tj.svg","./flags/tl.svg","./flags/tm.svg","./flags/tn.svg","./flags/to.svg","./flags/tr.svg","./flags/tt.svg","./flags/tv.svg","./flags/tz.svg","./flags/ua.svg","./flags/ug.svg","./flags/us.svg","./flags/uy.svg","./flags/uz.svg","./flags/va.svg","./flags/vc.svg","./flags/ve.svg","./flags/vn.svg","./flags/vu.svg","./flags/ws.svg","./flags/ye.svg","./flags/za.svg","./flags/zm.svg","./flags/zw.svg"];
- const cacheName='capital-rush-v12.4-all-modes';
+ const cacheName='capital-rush-v12.5-all-modes';
  let checking=false;
  const paint=(state,message,small)=>{
    badge.dataset.state=state;badge.textContent=message;

@@ -1,17 +1,29 @@
-# Capital Rush — v12.4
+# Capital Rush v12.5 — Premium Hybrid
 
-An offline-capable, installable iPhone-friendly geography quiz with four modes: **Capitals, Flags, Airports, and Area**. Timed and Practice modes are preserved from v12.3.
+An iPhone-friendly, installable offline geography game with **Capitals**, **Flags**, **Airports**, and **Area Rush**. The original timed game rules remain: one wrong answer ends a timed run; 7 seconds per standard question; 15 seconds per Area round. Practice has no timer.
 
-## Offline readiness
+## What's new
 
-The status pill on the home screen verifies the entire local asset inventory, including every flag SVG needed by any mode. It shows **Ready offline · all modes** only when all assets are in browser Cache Storage. Tap to recheck/retry while online. The miniature game badge shows the same result.
+- 2-column touch-friendly mode selection on iPhone and improved responsive typography and spacing.
+- A permanent **personal best** for each mode (stored separately from the last 10 timed results). Previous retained history is automatically used to initialize bests.
+- **Review mistakes**: incorrect questions are saved separately for each mode on this device. Tap **Review mistakes** to practise only those questions without a timer; correct review answers clear the mistake. Area Rush saves missed sets of four countries.
+- **Across-session anti-repetition**: recent question IDs are stored locally and less recently presented questions are prioritized when the next run is shuffled. Every run still includes the complete relevant dataset unless in mistake review.
+- Optional haptic switch (only activates on browsers exposing the Vibration API; iPhone Safari typically does not support vibration from web pages).
+- Improved touch sizes, screen reader semantics, subtle motion, reduced-motion support, and light next-question flag preloading.
+- All-mode offline readiness indicator maintained. Tap it to retry caching missing files.
 
-Open the webapp online using Safari, allow it to finish installing its offline resources, and wait for the green status. Then use Share → Add to Home Screen. Safari can evict cached resources if storage is constrained; the readiness indicator will detect this the next time the app opens.
+## Offline on iPhone
 
-## Deployment
+Host the whole folder under HTTPS, including all SVG files in `flags/`. Open in Safari online and wait for **Ready offline · all modes**, then use **Share → Add to Home Screen**. Open the installed app while online at least once. Cached files may be evicted by iOS when storage is constrained. Best scores, recent questions and mistakes are stored in browser local storage (not cloud-synced).
 
-Upload every file and the `flags/` directory together to the same HTTPS origin. Do not deploy `index.html` alone. A service worker requires HTTPS (except localhost), and local files opened with `file://` will not support the PWA cache.
+## Deploy
 
-## UX v12.4
+Upload the entire project, keeping filenames and the `flags/` directory. The new service worker uses cache `capital-rush-v12.5-all-modes` so updated sources are cached on next online visit.
 
-Improved compact-screen spacing, keyboard focus visibility, optional pointer hover states, reduced-motion accessibility, status checking on online/service-worker changes, while leaving the original game modes, questions, timers, scoring and saved history intact.
+## Files
+
+- `index.html` – entire app and game logic
+- `sw.js`, `offline-assets.js` – offline caching
+- `manifest.webmanifest`, `icon-180.png` – installable PWA metadata and icon
+- `flags/` – offline flag images
+- `README.md` – this guide

@@ -1,6 +1,6 @@
-/* Capital Rush v12.4: pre-cache all 4 modes including flags. */
+/* Capital Rush v12.5: pre-cache all 4 modes including flags. */
 importScripts('./offline-assets.js');
-const CACHE = 'capital-rush-v12.4-all-modes';
+const CACHE = 'capital-rush-v12.5-all-modes';
 const ASSETS = self.OFFLINE_ASSETS;
 async function seedCache(){
   const cache = await caches.open(CACHE);
